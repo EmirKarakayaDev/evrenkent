@@ -51,7 +51,8 @@ class BookResource extends Resource
                     ->label('Kapak Görseli')
                     ->image()
                     ->disk('public')
-                    ->directory('covers/books'),
+                    ->directory('covers/books')
+                    ->maxSize(5120),
                 Forms\Components\TextInput::make('price')
                     ->label('Fiyat')
                     ->required()

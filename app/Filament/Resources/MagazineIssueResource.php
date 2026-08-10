@@ -47,7 +47,8 @@ class MagazineIssueResource extends Resource
                     ->label('Kapak Görseli')
                     ->image()
                     ->disk('public')
-                    ->directory('covers/magazine-issues'),
+                    ->directory('covers/magazine-issues')
+                    ->maxSize(5120),
                 Forms\Components\Select::make('status')
                     ->label('Durum')
                     ->options(collect(ContentStatus::cases())->mapWithKeys(fn ($case) => [$case->value => $case->label()]))
