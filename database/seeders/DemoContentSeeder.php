@@ -1,0 +1,148 @@
+<?php
+
+namespace Database\Seeders;
+
+use App\Enums\ContentStatus;
+use App\Models\Article;
+use App\Models\Book;
+use App\Models\Category;
+use App\Models\MagazineIssue;
+use App\Models\User;
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
+
+/**
+ * Deneme/demo amaçlı gerçekçi içerik üretir (kitap, makale, dergi sayısı, kategori).
+ * Ana seed zincirine dahil değildir — ayrıca çalıştırılır:
+ *   php artisan db:seed --class=DemoContentSeeder
+ */
+class DemoContentSeeder extends Seeder
+{
+    public function run(): void
+    {
+        $categories = collect(['Roman', 'Şiir', 'Tarih', 'Deneme', 'Bilim Kurgu'])
+            ->mapWithKeys(fn (string $name) => [
+                $name => Category::firstOrCreate(
+                    ['slug' => Str::slug($name)],
+                    ['name' => $name]
+                ),
+            ]);
+
+        $author1 = User::firstOrCreate(
+            ['email' => 'author@evrenkent.test'],
+            ['name' => 'Yazar', 'password' => bcrypt('password')]
+        );
+        if (! $author1->hasRole('yazar')) {
+            $author1->assignRole('yazar');
+        }
+
+        $author2 = User::firstOrCreate(
+            ['email' => 'elif.nazli@evrenkent.test'],
+            ['name' => 'Elif Nazlı', 'password' => bcrypt('password')]
+        );
+        if (! $author2->hasRole('yazar')) {
+            $author2->assignRole('yazar');
+        }
+
+        $editor = User::firstOrCreate(
+            ['email' => 'editor@evrenkent.test'],
+            ['name' => 'Dergi Editörü', 'password' => bcrypt('password')]
+        );
+        if (! $editor->hasRole('dergi_editoru')) {
+            $editor->assignRole('dergi_editoru');
+        }
+
+        $admin = User::where('email', 'admin@evrenkent.test')->first();
+
+        // --- Kitaplar ---
+        $books = [
+            ['title' => 'Sislerin Ardındaki Fener', 'author' => $author2, 'category' => 'Roman', 'price' => 189, 'status' => ContentStatus::Yayinda],
+            ['title' => 'Kökler ve Kanatlar', 'author' => $author2, 'category' => 'Şiir', 'price' => 120, 'status' => ContentStatus::Yayinda],
+            ['title' => 'Zamanın İzinde', 'author' => $author1, 'category' => 'Tarih', 'price' => 245, 'status' => ContentStatus::Gonderildi],
+            ['title' => 'Dinginliğin Kıyısında', 'author' => $author1, 'category' => 'Deneme', 'price' => 150, 'status' => ContentStatus::Taslak],
+            ['title' => 'Medeniyetin Ayak İzleri', 'author' => $author2, 'category' => 'Tarih', 'price' => 210, 'status' => ContentStatus::RevizyonIstendi],
+        ];
+
+        foreach ($books as $data) {
+            $book = Book::firstOrCreate(
+                ['slug' => Str::slug($data['title'])],
+                [
+                    'author_id' => $data['author']->id,
+                    'title' => $data['title'],
+                    'description' => fake()->paragraphs(3, true),
+                    'price' => $data['price'],
+                    'status' => $data['status'],
+                    'published_at' => $data['status'] === ContentStatus::Yayinda ? now()->subDays(random_int(1, 60)) : null,
+                ]
+            );
+
+            $book->categories()->syncWithoutDetaching([$categories[$data['category']]->id]);
+
+            if ($data['status'] === ContentStatus::RevizyonIstendi && $admin) {
+                $book->reviews()->firstOrCreate([
+                    'reviewer_id' => $admin->id,
+                    'action' => 'revizyon_istendi',
+                ], [
+                    'note' => 'Kapak görseli eksik, lütfen ekleyip tekrar gönderin.',
+                ]);
+            }
+
+            if ($data['status'] === ContentStatus::Gonderildi && $admin) {
+                $book->reviews()->firstOrCreate([
+                    'reviewer_id' => $author1->id,
+                    'action' => 'gonderildi',
+                ], [
+                    'note' => 'Yazar tarafından Süper Admin onayına gönderildi.',
+                ]);
+            }
+        }
+
+        // --- Dergi Sayıları ---
+        $issues = [
+            ['title' => 'Bilim Tarihi Dergisi - Sayı 23', 'number' => 23, 'status' => ContentStatus::Yayinda],
+            ['title' => 'Astronomi Dergisi - Sayı 15', 'number' => 15, 'status' => ContentStatus::Yayinda],
+            ['title' => 'Felsefe Dergisi - Sayı 10', 'number' => 10, 'status' => ContentStatus::Gonderildi],
+            ['title' => 'Edebiyat Dergisi - Sayı 8', 'number' => 8, 'status' => ContentStatus::Taslak],
+        ];
+
+        $issueModels = [];
+        foreach ($issues as $data) {
+            $issueModels[$data['title']] = MagazineIssue::firstOrCreate(
+                ['title' => $data['title']],
+                [
+                    'editor_id' => $editor->id,
+                    'issue_number' => $data['number'],
+                    'status' => $data['status'],
+                    'publish_date' => $data['status'] === ContentStatus::Yayinda ? now()->subDays(random_int(1, 90)) : null,
+                ]
+            );
+        }
+
+        // --- Makaleler ---
+        $articles = [
+            ['title' => 'Evrenin Yaşı ve Genişlemesi', 'author' => $author1, 'issue' => 'Astronomi Dergisi - Sayı 15', 'category' => 'Bilim Kurgu', 'status' => ContentStatus::Yayinda],
+            ['title' => 'Kara Deliklerin Sırları', 'author' => $author2, 'issue' => 'Astronomi Dergisi - Sayı 15', 'category' => 'Bilim Kurgu', 'status' => ContentStatus::Onaylandi],
+            ['title' => 'Galileo\'nun Gözlemleri', 'author' => $author1, 'issue' => 'Bilim Tarihi Dergisi - Sayı 23', 'category' => 'Tarih', 'status' => ContentStatus::Yayinda],
+            ['title' => 'Yıldızların Yaşam Döngüsü', 'author' => $author2, 'issue' => 'Felsefe Dergisi - Sayı 10', 'category' => 'Bilim Kurgu', 'status' => ContentStatus::Incelemede],
+            ['title' => 'Kozmik Işınlar ve Dünya', 'author' => $author1, 'issue' => null, 'category' => 'Deneme', 'status' => ContentStatus::Taslak],
+        ];
+
+        foreach ($articles as $data) {
+            $article = Article::firstOrCreate(
+                ['slug' => Str::slug($data['title'])],
+                [
+                    'author_id' => $data['author']->id,
+                    'magazine_issue_id' => $data['issue'] ? $issueModels[$data['issue']]->id : null,
+                    'title' => $data['title'],
+                    'content' => fake()->paragraphs(4, true),
+                    'status' => $data['status'],
+                    'published_at' => $data['status'] === ContentStatus::Yayinda ? now()->subDays(random_int(1, 60)) : null,
+                ]
+            );
+
+            $article->categories()->syncWithoutDetaching([$categories[$data['category']]->id]);
+        }
+
+        $this->command?->info('Demo içerik oluşturuldu: '.count($categories).' kategori, '.count($books).' kitap, '.count($issues).' dergi sayısı, '.count($articles).' makale.');
+    }
+}
