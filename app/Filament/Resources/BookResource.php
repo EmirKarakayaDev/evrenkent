@@ -49,7 +49,9 @@ class BookResource extends Resource
                     ->columnSpanFull(),
                 Forms\Components\FileUpload::make('cover_image')
                     ->label('Kapak Görseli')
-                    ->image(),
+                    ->image()
+                    ->disk('public')
+                    ->directory('covers/books'),
                 Forms\Components\TextInput::make('price')
                     ->label('Fiyat')
                     ->required()

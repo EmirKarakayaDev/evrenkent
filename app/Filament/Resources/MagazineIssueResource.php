@@ -45,7 +45,9 @@ class MagazineIssueResource extends Resource
                     ->numeric(),
                 Forms\Components\FileUpload::make('cover_image')
                     ->label('Kapak Görseli')
-                    ->image(),
+                    ->image()
+                    ->disk('public')
+                    ->directory('covers/magazine-issues'),
                 Forms\Components\Select::make('status')
                     ->label('Durum')
                     ->options(collect(ContentStatus::cases())->mapWithKeys(fn ($case) => [$case->value => $case->label()]))

@@ -51,8 +51,12 @@
         <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-5">
             @foreach ($books as $book)
                 <div class="group">
-                    <div class="aspect-[3/4] bg-slate-100 border border-slate-200 rounded-md flex items-center justify-center text-slate-300 group-hover:border-slate-400 transition-colors">
-                        <x-heroicon-o-book-open class="w-7 h-7" />
+                    <div class="aspect-[3/4] bg-slate-100 border border-slate-200 rounded-md flex items-center justify-center text-slate-300 group-hover:border-slate-400 transition-colors overflow-hidden">
+                        @if ($book->cover_image)
+                            <img src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($book->cover_image) }}" alt="{{ $book->title }}" class="w-full h-full object-cover">
+                        @else
+                            <x-heroicon-o-book-open class="w-7 h-7" />
+                        @endif
                     </div>
                     <div class="pt-3">
                         <div class="text-xs text-orange-700 font-medium uppercase tracking-wide">{{ $book->author->name }}</div>
