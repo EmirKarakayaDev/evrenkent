@@ -9,6 +9,7 @@ use Filament\Panel;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -49,6 +50,47 @@ class User extends Authenticatable implements FilamentUser
     public function editedMagazineIssues(): HasMany
     {
         return $this->hasMany(MagazineIssue::class, 'editor_id');
+    }
+
+    public function favorites(): HasMany
+    {
+        return $this->hasMany(Favorite::class);
+    }
+
+    public function readingListItems(): HasMany
+    {
+        return $this->hasMany(ReadingListItem::class);
+    }
+
+    public function notes(): HasMany
+    {
+        return $this->hasMany(Note::class);
+    }
+
+    public function purchases(): HasMany
+    {
+        return $this->hasMany(Purchase::class);
+    }
+
+    public function hasFavorited(Model $favoritable): bool
+    {
+        return $this->favorites()
+            ->where('favoritable_type', $favoritable::class)
+            ->where('favoritable_id', $favoritable->getKey())
+            ->exists();
+    }
+
+    public function hasPurchased(Book $book): bool
+    {
+        return $this->purchases()->where('book_id', $book->id)->exists();
+    }
+
+    public function readingListItemFor(Model $readable): ?ReadingListItem
+    {
+        return $this->readingListItems()
+            ->where('readable_type', $readable::class)
+            ->where('readable_id', $readable->getKey())
+            ->first();
     }
 
     public function canAccessPanel(Panel $panel): bool

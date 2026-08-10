@@ -50,7 +50,7 @@
     @else
         <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-5">
             @foreach ($books as $book)
-                <div class="group">
+                <a href="{{ route('kitaplar.show', $book) }}" class="group block">
                     <div class="aspect-[3/4] bg-slate-100 border border-slate-200 rounded-md flex items-center justify-center text-slate-300 group-hover:border-slate-400 transition-colors overflow-hidden">
                         @if ($book->cover_image)
                             <img src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($book->cover_image) }}" alt="{{ $book->title }}" class="w-full h-full object-cover">
@@ -63,7 +63,7 @@
                         <div class="font-medium text-slate-900 text-sm truncate mt-0.5">{{ $book->title }}</div>
                         <div class="text-sm text-slate-500 mt-1">{{ number_format($book->price, 2, ',', '.') }} TL</div>
                     </div>
-                </div>
+                </a>
             @endforeach
         </div>
     @endif

@@ -1,21 +1,39 @@
 <?php
 
+use App\Http\Controllers\FavoriteController;
+use App\Http\Controllers\NoteController;
 use App\Http\Controllers\PanelController;
 use App\Http\Controllers\PublicationController;
+use App\Http\Controllers\PurchaseController;
+use App\Http\Controllers\ReadingListController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth')->prefix('panel')->as('panel.')->group(function () {
     Route::get('/', [PanelController::class, 'index'])->name('index');
-    Route::get('/favorilerim', [PanelController::class, 'favorilerim'])->name('favorilerim');
-    Route::get('/okuma-listem', [PanelController::class, 'okumaListem'])->name('okuma-listem');
-    Route::get('/okuduklarim', [PanelController::class, 'okuduklarim'])->name('okuduklarim');
-    Route::get('/defterim', [PanelController::class, 'defterim'])->name('defterim');
-    Route::get('/notlarim', [PanelController::class, 'notlarim'])->name('notlarim');
-    Route::get('/alintilarim', [PanelController::class, 'alintilarim'])->name('alintilarim');
-    Route::get('/satin-aldiklarim', [PanelController::class, 'satinAldiklarim'])->name('satin-aldiklarim');
     Route::get('/aboneligim', [PanelController::class, 'aboneligim'])->name('aboneligim');
     Route::get('/yardim', [PanelController::class, 'yardim'])->name('yardim');
     Route::get('/iletisim', [PanelController::class, 'iletisim'])->name('iletisim');
+
+    Route::get('/favorilerim', [FavoriteController::class, 'index'])->name('favorilerim');
+    Route::post('/favoriler/kitap/{book}/toggle', [FavoriteController::class, 'toggleBook'])->name('favoriler.kitap.toggle');
+    Route::delete('/favoriler/{favorite}', [FavoriteController::class, 'destroy'])->name('favoriler.sil');
+
+    Route::get('/okuma-listem', [ReadingListController::class, 'okumaListem'])->name('okuma-listem');
+    Route::get('/okuduklarim', [ReadingListController::class, 'okuduklarim'])->name('okuduklarim');
+    Route::post('/okuma-listesi/kitap/{book}', [ReadingListController::class, 'addBook'])->name('okuma-listesi.kitap.ekle');
+    Route::patch('/okuma-listesi/{readingListItem}/tamamla', [ReadingListController::class, 'complete'])->name('okuma-listesi.tamamla');
+    Route::patch('/okuma-listesi/{readingListItem}/listeye-al', [ReadingListController::class, 'reopen'])->name('okuma-listesi.listeye-al');
+    Route::delete('/okuma-listesi/{readingListItem}', [ReadingListController::class, 'destroy'])->name('okuma-listesi.sil');
+
+    Route::get('/defterim', [NoteController::class, 'defterim'])->name('defterim');
+    Route::get('/notlarim', [NoteController::class, 'notlarim'])->name('notlarim');
+    Route::get('/alintilarim', [NoteController::class, 'alintilarim'])->name('alintilarim');
+    Route::post('/notlar', [NoteController::class, 'store'])->name('notlar.ekle');
+    Route::put('/notlar/{note}', [NoteController::class, 'update'])->name('notlar.guncelle');
+    Route::delete('/notlar/{note}', [NoteController::class, 'destroy'])->name('notlar.sil');
+
+    Route::get('/satin-aldiklarim', [PurchaseController::class, 'index'])->name('satin-aldiklarim');
+    Route::post('/satin-al/{book}', [PurchaseController::class, 'store'])->name('satin-al');
 
     // Yayın Yönetimi: sadece Yazar rolündeki kullanıcılar erişebilir.
     Route::middleware('role:yazar')->prefix('yayinlarim')->as('yayinlarim.')->group(function () {

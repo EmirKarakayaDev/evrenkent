@@ -47,4 +47,9 @@ class Article extends Model
     {
         return $this->morphMany(ContentReview::class, 'reviewable');
     }
+
+    public function favorites(): MorphMany
+    {
+        return $this->morphMany(Favorite::class, 'favoritable');
+    }
 }
