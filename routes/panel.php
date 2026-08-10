@@ -29,5 +29,9 @@ Route::middleware('auth')->prefix('panel')->as('panel.')->group(function () {
         Route::get('/istatistiklerim', [PublicationController::class, 'istatistiklerim'])->name('istatistiklerim');
         Route::post('/kitap/{book}/gonder', [PublicationController::class, 'submitBook'])->name('kitap.gonder');
         Route::post('/makale/{article}/gonder', [PublicationController::class, 'submitArticle'])->name('makale.gonder');
+        Route::get('/kitap/{book}/duzenle', [PublicationController::class, 'editBook'])->name('kitap.duzenle');
+        Route::put('/kitap/{book}', [PublicationController::class, 'updateBook'])->name('kitap.guncelle');
+        Route::get('/makale/{article}/duzenle', [PublicationController::class, 'editArticle'])->name('makale.duzenle');
+        Route::put('/makale/{article}', [PublicationController::class, 'updateArticle'])->name('makale.guncelle');
     });
 });

@@ -54,6 +54,67 @@ class PublicationController extends Controller
         return view('panel.yayinlarim.yeni');
     }
 
+    public function editBook(Book $book): View
+    {
+        $this->authorize('update', $book);
+
+        return view('panel.yayinlarim.kitap-duzenle', compact('book'));
+    }
+
+    public function updateBook(Request $request, Book $book): RedirectResponse
+    {
+        $this->authorize('update', $book);
+
+        $data = $request->validate([
+            'title' => ['required', 'string', 'max:255'],
+            'body' => ['required', 'string'],
+            'price' => ['nullable', 'numeric', 'min:0'],
+        ]);
+
+        $book->update([
+            'title' => $data['title'],
+            'description' => $data['body'],
+            'price' => $data['price'] ?? 0,
+        ]);
+
+        return redirect()->route($this->listRouteFor($book->status))->with('status', 'Kitap güncellendi.');
+    }
+
+    public function editArticle(Article $article): View
+    {
+        $this->authorize('update', $article);
+
+        return view('panel.yayinlarim.makale-duzenle', compact('article'));
+    }
+
+    public function updateArticle(Request $request, Article $article): RedirectResponse
+    {
+        $this->authorize('update', $article);
+
+        $data = $request->validate([
+            'title' => ['required', 'string', 'max:255'],
+            'body' => ['required', 'string'],
+        ]);
+
+        $article->update([
+            'title' => $data['title'],
+            'content' => $data['body'],
+        ]);
+
+        return redirect()->route($this->listRouteFor($article->status))->with('status', 'Makale güncellendi.');
+    }
+
+    /**
+     * Düzenleme sonrası hangi listeye dönüleceğini kaydın durumuna göre belirler
+     * (Taslak -> Taslaklarım, Revizyon İstendi -> Geri Dönenler).
+     */
+    private function listRouteFor(ContentStatus $status): string
+    {
+        return $status === ContentStatus::RevizyonIstendi
+            ? 'panel.yayinlarim.geri-donenler'
+            : 'panel.yayinlarim.taslaklarim';
+    }
+
     public function storeTaslak(Request $request): RedirectResponse
     {
         $data = $request->validate([
@@ -132,11 +193,13 @@ class PublicationController extends Controller
         $user = auth()->user();
 
         $books = $user->books()
+            ->with(['reviews' => fn ($query) => $query->latest()])
             ->when($status, fn ($query) => $query->whereIn('status', is_array($status) ? $status : [$status]))
             ->latest()
             ->get();
 
         $articles = $user->articles()
+            ->with(['reviews' => fn ($query) => $query->latest()])
             ->when($status, fn ($query) => $query->whereIn('status', is_array($status) ? $status : [$status]))
             ->latest()
             ->get();

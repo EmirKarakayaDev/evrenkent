@@ -9,7 +9,7 @@ class HomeController extends Controller
 {
     public function index(): View
     {
-        $books = Book::published()->latest('published_at')->take(6)->get();
+        $books = Book::published()->with('author')->latest('published_at')->take(6)->get();
 
         return view('home', ['books' => $books]);
     }
