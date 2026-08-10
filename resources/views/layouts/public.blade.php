@@ -49,6 +49,12 @@
             </header>
 
             <main class="flex-1 max-w-6xl mx-auto px-6 py-10 w-full">
+                @if (session('status'))
+                    <div class="mb-6 bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm rounded-md px-4 py-2.5">
+                        {{ session('status') }}
+                    </div>
+                @endif
+
                 @yield('content')
             </main>
 

@@ -22,6 +22,9 @@
                 </div>
                 <div class="flex items-center gap-3 shrink-0">
                     @can('update', $book)
+                        <a href="{{ route('panel.yayinlarim.kitap.bolumler', $book) }}" class="text-sm px-3.5 py-1.5 border border-slate-300 text-slate-700 rounded-md hover:bg-slate-50 transition-colors">
+                            Bölümler
+                        </a>
                         <a href="{{ route('panel.yayinlarim.kitap.duzenle', $book) }}" class="text-sm px-3.5 py-1.5 border border-slate-300 text-slate-700 rounded-md hover:bg-slate-50 transition-colors">
                             Düzenle
                         </a>

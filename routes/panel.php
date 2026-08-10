@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ChapterController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\NoteController;
 use App\Http\Controllers\PanelController;
@@ -51,5 +52,12 @@ Route::middleware('auth')->prefix('panel')->as('panel.')->group(function () {
         Route::put('/kitap/{book}', [PublicationController::class, 'updateBook'])->name('kitap.guncelle');
         Route::get('/makale/{article}/duzenle', [PublicationController::class, 'editArticle'])->name('makale.duzenle');
         Route::put('/makale/{article}', [PublicationController::class, 'updateArticle'])->name('makale.guncelle');
+
+        Route::get('/kitap/{book}/bolumler', [ChapterController::class, 'index'])->name('kitap.bolumler');
+        Route::get('/kitap/{book}/bolumler/yeni', [ChapterController::class, 'create'])->name('kitap.bolumler.yeni');
+        Route::post('/kitap/{book}/bolumler', [ChapterController::class, 'store'])->name('kitap.bolumler.store');
+        Route::get('/kitap/{book}/bolumler/{chapter}/duzenle', [ChapterController::class, 'edit'])->name('kitap.bolumler.duzenle');
+        Route::put('/kitap/{book}/bolumler/{chapter}', [ChapterController::class, 'update'])->name('kitap.bolumler.guncelle');
+        Route::delete('/kitap/{book}/bolumler/{chapter}', [ChapterController::class, 'destroy'])->name('kitap.bolumler.sil');
     });
 });

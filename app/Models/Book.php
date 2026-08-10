@@ -56,6 +56,11 @@ class Book extends Model
         return $this->hasMany(Purchase::class);
     }
 
+    public function chapters(): HasMany
+    {
+        return $this->hasMany(Chapter::class)->orderBy('order');
+    }
+
     public function scopePublished(Builder $query): Builder
     {
         return $query->where('status', ContentStatus::Yayinda);

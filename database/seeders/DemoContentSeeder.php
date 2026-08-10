@@ -8,6 +8,7 @@ use App\Enums\ReadingStatus;
 use App\Models\Article;
 use App\Models\Book;
 use App\Models\Category;
+use App\Models\Chapter;
 use App\Models\MagazineIssue;
 use App\Models\User;
 use Illuminate\Database\Seeder;
@@ -183,6 +184,31 @@ class DemoContentSeeder extends Seeder
                 ], [
                     'note' => 'Kaynakça eksik, lütfen ekleyin.',
                 ]);
+            }
+        }
+
+        // --- Bölümler (Okuma Modu demo içeriği) ---
+        // 'Sislerin Ardındaki Fener' reader tarafından zaten satın alınmış (aşağıda) — kilidi açık okunabilir.
+        // 'Kökler ve Kanatlar' satın alınmamış, ücretli — okuma sayfasında kilitli görünmeli.
+        $chapterSets = [
+            'Sislerin Ardındaki Fener' => [
+                ['title' => 'Uyanış', 'content' => fake()->paragraphs(6, true)],
+                ['title' => 'Sisin İçinde', 'content' => fake()->paragraphs(6, true)],
+                ['title' => 'Fenerin Işığı', 'content' => fake()->paragraphs(6, true)],
+            ],
+            'Kökler ve Kanatlar' => [
+                ['title' => 'İlk Dize', 'content' => fake()->paragraphs(4, true)],
+                ['title' => 'Rüzgârın Sesi', 'content' => fake()->paragraphs(4, true)],
+            ],
+        ];
+
+        foreach ($chapterSets as $title => $chapters) {
+            $book = $bookModels[$title];
+            foreach ($chapters as $index => $data) {
+                Chapter::firstOrCreate(
+                    ['book_id' => $book->id, 'order' => $index + 1],
+                    ['title' => $data['title'], 'content' => $data['content']]
+                );
             }
         }
 

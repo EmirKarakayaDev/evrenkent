@@ -15,7 +15,7 @@ class ReadingListItem extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id', 'readable_type', 'readable_id', 'status', 'completed_at',
+        'user_id', 'readable_type', 'readable_id', 'status', 'completed_at', 'last_chapter_number',
     ];
 
     protected function casts(): array

@@ -23,6 +23,21 @@
 
             <div class="text-xl font-medium text-slate-900 mt-5">{{ number_format($book->price, 2, ',', '.') }} TL</div>
 
+            @php
+                $isAuthor = auth()->check() && auth()->id() === $book->author_id;
+                $locked = $book->price > 0 && ! ($isAuthor || $hasPurchased);
+            @endphp
+
+            @if ($book->status === \App\Enums\ContentStatus::Yayinda)
+                @if (! $locked)
+                    <a href="{{ route('kitaplar.oku', $book) }}" class="inline-flex items-center gap-1.5 mt-4 px-4 py-2 bg-slate-900 text-white text-sm font-medium rounded-md hover:bg-slate-800 transition-colors">
+                        <x-heroicon-o-book-open class="w-4 h-4" /> Oku
+                    </a>
+                @else
+                    <p class="text-sm text-slate-500 mt-4">Bu kitabı okumak için satın almanız gerekiyor.</p>
+                @endif
+            @endif
+
             @auth
                 <div class="flex flex-wrap items-center gap-3 mt-5">
                     <form method="POST" action="{{ route('panel.favoriler.kitap.toggle', $book) }}">
