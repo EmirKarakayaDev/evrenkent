@@ -22,7 +22,7 @@
                     @foreach ($chapters as $c)
                         <a
                             href="{{ route('kitaplar.oku', [$book, $c->order]) }}"
-                            class="block px-3 py-1.5 rounded-md text-sm {{ $chapter && $chapter->id === $c->id ? 'bg-slate-900 text-white font-medium' : 'text-slate-600 hover:bg-slate-100' }}"
+                            class="block px-3 py-1.5 rounded-lg text-sm {{ $chapter && $chapter->id === $c->id ? 'bg-slate-900 text-white font-medium' : 'text-slate-600 hover:bg-slate-100' }}"
                         >
                             {{ $c->order }}. {{ $c->title }}
                         </a>
@@ -39,7 +39,7 @@
 
                     <div class="flex items-center justify-between mt-10 pt-6 border-t border-slate-200">
                         @if ($prevChapter)
-                            <a href="{{ route('kitaplar.oku', [$book, $prevChapter->order]) }}" class="text-sm px-3.5 py-1.5 border border-slate-300 text-slate-700 rounded-md hover:bg-slate-50 transition-colors">
+                            <a href="{{ route('kitaplar.oku', [$book, $prevChapter->order]) }}" class="text-sm px-3.5 py-1.5 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 transition-colors">
                                 &larr; Önceki Bölüm
                             </a>
                         @else
@@ -47,14 +47,14 @@
                         @endif
 
                         @if ($nextChapter)
-                            <a href="{{ route('kitaplar.oku', [$book, $nextChapter->order]) }}" class="text-sm px-3.5 py-1.5 bg-slate-900 text-white rounded-md hover:bg-slate-800 transition-colors">
+                            <a href="{{ route('kitaplar.oku', [$book, $nextChapter->order]) }}" class="text-sm px-3.5 py-1.5 bg-slate-900 text-white rounded-lg hover:bg-slate-800 transition-colors">
                                 Sonraki Bölüm &rarr;
                             </a>
                         @elseif (auth()->check() && $readingListItem)
                             <form method="POST" action="{{ route('panel.okuma-listesi.tamamla', $readingListItem) }}">
                                 @csrf
                                 @method('PATCH')
-                                <button type="submit" class="text-sm px-3.5 py-1.5 bg-slate-900 text-white rounded-md hover:bg-slate-800 transition-colors">
+                                <button type="submit" class="text-sm px-3.5 py-1.5 bg-slate-900 text-white rounded-lg hover:bg-slate-800 transition-colors">
                                     Tamamlandı Olarak İşaretle
                                 </button>
                             </form>

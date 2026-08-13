@@ -10,7 +10,7 @@
                 &larr; Kitaba dön
             </a>
         </div>
-        <a href="{{ route('panel.yayinlarim.kitap.bolumler.yeni', $book) }}" class="text-sm px-4 py-2 bg-slate-900 text-white rounded-md hover:bg-slate-800 transition-colors">
+        <a href="{{ route('panel.yayinlarim.kitap.bolumler.yeni', $book) }}" class="text-sm px-4 py-2 bg-slate-900 text-white rounded-lg hover:bg-slate-800 transition-colors">
             Yeni Bölüm
         </a>
     </div>
@@ -29,13 +29,13 @@
                         <div class="font-medium text-slate-900">{{ $chapter->title }}</div>
                     </div>
                     <div class="flex items-center gap-3 shrink-0">
-                        <a href="{{ route('panel.yayinlarim.kitap.bolumler.duzenle', [$book, $chapter]) }}" class="text-sm px-3.5 py-1.5 border border-slate-300 text-slate-700 rounded-md hover:bg-slate-50 transition-colors">
+                        <a href="{{ route('panel.yayinlarim.kitap.bolumler.duzenle', [$book, $chapter]) }}" class="text-sm px-3.5 py-1.5 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 transition-colors">
                             Düzenle
                         </a>
                         <form method="POST" action="{{ route('panel.yayinlarim.kitap.bolumler.sil', [$book, $chapter]) }}" onsubmit="return confirm('Bu bölümü silmek istediğinize emin misiniz?');">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="text-sm px-3.5 py-1.5 border border-slate-300 text-slate-700 rounded-md hover:bg-slate-50 transition-colors">
+                            <button type="submit" class="text-sm px-3.5 py-1.5 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 transition-colors">
                                 Sil
                             </button>
                         </form>

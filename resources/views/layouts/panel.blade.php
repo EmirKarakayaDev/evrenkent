@@ -12,7 +12,7 @@
 
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="font-sans antialiased bg-orange-50 text-slate-800">
+    <body class="font-sans antialiased bg-paper text-slate-800">
         <nav class="bg-white border-b border-slate-200">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex justify-between h-16 items-center">
@@ -72,7 +72,7 @@
                                 'panel.yayinlarim.yayinlananlar' => ['Yayınlananlar', route('panel.yayinlarim.yayinlananlar')],
                                 'panel.yayinlarim.istatistiklerim' => ['İstatistiklerim', route('panel.yayinlarim.istatistiklerim')],
                             ] as $routeName => [$label, $href])
-                                <a href="{{ $href }}" class="block px-3 py-1.5 rounded-md text-sm {{ request()->routeIs($routeName) ? 'bg-orange-50 text-orange-800 font-medium ring-1 ring-inset ring-orange-200' : 'text-slate-600 hover:bg-slate-100' }}">
+                                <a href="{{ $href }}" class="block px-3 py-1.5 rounded-lg text-sm {{ request()->routeIs($routeName) ? 'bg-orange-50 text-orange-800 font-medium ring-1 ring-inset ring-orange-200' : 'text-slate-600 hover:bg-slate-100' }}">
                                     {{ $label }}
                                 </a>
                             @endforeach
@@ -85,7 +85,7 @@
                         <div class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2.5">{{ $group }}</div>
                         <div class="space-y-0.5">
                             @foreach ($links as $routeName => [$label, $href])
-                                <a href="{{ $href }}" class="block px-3 py-1.5 rounded-md text-sm {{ request()->routeIs($routeName) ? 'bg-slate-900 text-white font-medium' : 'text-slate-600 hover:bg-slate-100' }}">
+                                <a href="{{ $href }}" class="block px-3 py-1.5 rounded-lg text-sm {{ request()->routeIs($routeName) ? 'bg-slate-900 text-white font-medium' : 'text-slate-600 hover:bg-slate-100' }}">
                                     {{ $label }}
                                 </a>
                             @endforeach

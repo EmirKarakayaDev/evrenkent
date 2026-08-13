@@ -15,6 +15,9 @@ export default {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
                 serif: ['Fraunces', ...defaultTheme.fontFamily.serif],
             },
+            colors: {
+                paper: '#FBF9F4',
+            },
         },
     },
 

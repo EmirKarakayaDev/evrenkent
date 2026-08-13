@@ -22,7 +22,7 @@
                 <form method="POST" action="{{ route('panel.notlar.sil', $note) }}" class="shrink-0">
                     @csrf
                     @method('DELETE')
-                    <button type="submit" class="text-sm px-3.5 py-1.5 border border-slate-300 text-slate-700 rounded-md hover:bg-slate-50 transition-colors">
+                    <button type="submit" class="text-sm px-3.5 py-1.5 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 transition-colors">
                         Sil
                     </button>
                 </form>

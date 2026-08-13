@@ -16,14 +16,14 @@
                 </div>
                 <div class="flex items-center gap-3 shrink-0">
                     @if ($favorite->favoritable instanceof \App\Models\Book)
-                        <a href="{{ route('kitaplar.show', $favorite->favoritable) }}" class="text-sm px-3.5 py-1.5 border border-slate-300 text-slate-700 rounded-md hover:bg-slate-50 transition-colors">
+                        <a href="{{ route('kitaplar.show', $favorite->favoritable) }}" class="text-sm px-3.5 py-1.5 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 transition-colors">
                             Görüntüle
                         </a>
                     @endif
                     <form method="POST" action="{{ route('panel.favoriler.sil', $favorite) }}">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="text-sm px-3.5 py-1.5 border border-slate-300 text-slate-700 rounded-md hover:bg-slate-50 transition-colors">
+                        <button type="submit" class="text-sm px-3.5 py-1.5 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 transition-colors">
                             Favoriden Çıkar
                         </button>
                     </form>

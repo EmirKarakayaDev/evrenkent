@@ -12,9 +12,9 @@
 
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="font-sans antialiased bg-orange-50 text-slate-800">
+    <body class="font-sans antialiased bg-paper text-slate-800">
         <div class="min-h-screen flex flex-col">
-            <header class="sticky top-0 z-20 bg-orange-50/90 backdrop-blur border-b border-slate-200">
+            <header class="sticky top-0 z-20 bg-paper/90 backdrop-blur border-b border-slate-200">
                 <div class="max-w-6xl mx-auto px-6">
                     <div class="flex justify-between h-16 items-center">
                         <a href="{{ url('/') }}" class="flex items-center gap-2.5 group">
@@ -39,7 +39,7 @@
                                 <a href="{{ route('login') }}" class="text-sm text-slate-600 hover:text-slate-900 transition-colors">
                                     Giriş Yap
                                 </a>
-                                <a href="{{ route('register') }}" class="inline-flex items-center px-4 py-2 bg-slate-900 text-white text-sm font-medium rounded-md hover:bg-slate-800 transition-colors">
+                                <a href="{{ route('register') }}" class="inline-flex items-center px-4 py-2 bg-slate-900 text-white text-sm font-medium rounded-lg hover:bg-slate-800 transition-colors">
                                     Kayıt Ol
                                 </a>
                             @endauth

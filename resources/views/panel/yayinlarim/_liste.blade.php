@@ -22,17 +22,17 @@
                 </div>
                 <div class="flex items-center gap-3 shrink-0">
                     @can('update', $book)
-                        <a href="{{ route('panel.yayinlarim.kitap.bolumler', $book) }}" class="text-sm px-3.5 py-1.5 border border-slate-300 text-slate-700 rounded-md hover:bg-slate-50 transition-colors">
+                        <a href="{{ route('panel.yayinlarim.kitap.bolumler', $book) }}" class="text-sm px-3.5 py-1.5 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 transition-colors">
                             Bölümler
                         </a>
-                        <a href="{{ route('panel.yayinlarim.kitap.duzenle', $book) }}" class="text-sm px-3.5 py-1.5 border border-slate-300 text-slate-700 rounded-md hover:bg-slate-50 transition-colors">
+                        <a href="{{ route('panel.yayinlarim.kitap.duzenle', $book) }}" class="text-sm px-3.5 py-1.5 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 transition-colors">
                             Düzenle
                         </a>
                     @endcan
                     @if ($showActions ?? false)
                         <form method="POST" action="{{ route('panel.yayinlarim.kitap.gonder', $book) }}">
                             @csrf
-                            <button type="submit" class="text-sm px-3.5 py-1.5 bg-slate-900 text-white rounded-md hover:bg-slate-800 transition-colors">
+                            <button type="submit" class="text-sm px-3.5 py-1.5 bg-slate-900 text-white rounded-lg hover:bg-slate-800 transition-colors">
                                 Gönder
                             </button>
                         </form>
@@ -58,14 +58,14 @@
                 </div>
                 <div class="flex items-center gap-3 shrink-0">
                     @can('update', $article)
-                        <a href="{{ route('panel.yayinlarim.makale.duzenle', $article) }}" class="text-sm px-3.5 py-1.5 border border-slate-300 text-slate-700 rounded-md hover:bg-slate-50 transition-colors">
+                        <a href="{{ route('panel.yayinlarim.makale.duzenle', $article) }}" class="text-sm px-3.5 py-1.5 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 transition-colors">
                             Düzenle
                         </a>
                     @endcan
                     @if ($showActions ?? false)
                         <form method="POST" action="{{ route('panel.yayinlarim.makale.gonder', $article) }}">
                             @csrf
-                            <button type="submit" class="text-sm px-3.5 py-1.5 bg-slate-900 text-white rounded-md hover:bg-slate-800 transition-colors">
+                            <button type="submit" class="text-sm px-3.5 py-1.5 bg-slate-900 text-white rounded-lg hover:bg-slate-800 transition-colors">
                                 Gönder
                             </button>
                         </form>

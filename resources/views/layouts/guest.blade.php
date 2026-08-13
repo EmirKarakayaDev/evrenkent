@@ -13,7 +13,7 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body class="font-sans text-slate-800 antialiased">
-        <div class="min-h-screen flex flex-col items-center justify-center bg-orange-50 px-6 py-12">
+        <div class="min-h-screen flex flex-col items-center justify-center bg-paper px-6 py-12">
             <a href="{{ url('/') }}" class="flex items-center gap-2.5 mb-8">
                 <span class="flex items-center justify-center w-9 h-9 rounded-full bg-slate-900 text-white">
                     <x-heroicon-o-book-open class="w-4 h-4" />

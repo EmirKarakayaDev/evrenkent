@@ -22,7 +22,7 @@
                         <form method="POST" action="{{ route('panel.okuma-listesi.tamamla', $item) }}">
                             @csrf
                             @method('PATCH')
-                            <button type="submit" class="text-sm px-3.5 py-1.5 bg-slate-900 text-white rounded-md hover:bg-slate-800 transition-colors">
+                            <button type="submit" class="text-sm px-3.5 py-1.5 bg-slate-900 text-white rounded-lg hover:bg-slate-800 transition-colors">
                                 Tamamlandı Olarak İşaretle
                             </button>
                         </form>
@@ -31,7 +31,7 @@
                         <form method="POST" action="{{ route('panel.okuma-listesi.listeye-al', $item) }}">
                             @csrf
                             @method('PATCH')
-                            <button type="submit" class="text-sm px-3.5 py-1.5 border border-slate-300 text-slate-700 rounded-md hover:bg-slate-50 transition-colors">
+                            <button type="submit" class="text-sm px-3.5 py-1.5 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 transition-colors">
                                 Listeye Geri Al
                             </button>
                         </form>
@@ -39,7 +39,7 @@
                     <form method="POST" action="{{ route('panel.okuma-listesi.sil', $item) }}">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="text-sm px-3.5 py-1.5 border border-slate-300 text-slate-700 rounded-md hover:bg-slate-50 transition-colors">
+                        <button type="submit" class="text-sm px-3.5 py-1.5 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 transition-colors">
                             Kaldır
                         </button>
                     </form>

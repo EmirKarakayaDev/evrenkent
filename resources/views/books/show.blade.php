@@ -4,13 +4,7 @@
 
 @section('content')
     <div class="grid grid-cols-1 sm:grid-cols-[220px_1fr] gap-8">
-        <div class="aspect-[3/4] bg-slate-100 border border-slate-200 rounded-md flex items-center justify-center text-slate-300 overflow-hidden">
-            @if ($book->cover_image)
-                <img src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($book->cover_image) }}" alt="{{ $book->title }}" class="w-full h-full object-cover">
-            @else
-                <x-heroicon-o-book-open class="w-10 h-10" />
-            @endif
-        </div>
+        <x-book-cover :book="$book" class="aspect-[3/4] rounded-lg border border-slate-200" icon-class="w-10 h-10" />
 
         <div>
             <div class="text-xs text-orange-700 font-medium uppercase tracking-wide">{{ $book->author->name }}</div>
@@ -30,7 +24,7 @@
 
             @if ($book->status === \App\Enums\ContentStatus::Yayinda)
                 @if (! $locked)
-                    <a href="{{ route('kitaplar.oku', $book) }}" class="inline-flex items-center gap-1.5 mt-4 px-4 py-2 bg-slate-900 text-white text-sm font-medium rounded-md hover:bg-slate-800 transition-colors">
+                    <a href="{{ route('kitaplar.oku', $book) }}" class="inline-flex items-center gap-1.5 mt-4 px-4 py-2 bg-slate-900 text-white text-sm font-medium rounded-lg hover:bg-slate-800 transition-colors">
                         <x-heroicon-o-book-open class="w-4 h-4" /> Oku
                     </a>
                 @else
@@ -42,37 +36,37 @@
                 <div class="flex flex-wrap items-center gap-3 mt-5">
                     <form method="POST" action="{{ route('panel.favoriler.kitap.toggle', $book) }}">
                         @csrf
-                        <button type="submit" class="text-sm px-4 py-2 border border-slate-300 text-slate-700 rounded-md hover:bg-slate-50 transition-colors inline-flex items-center gap-1.5">
+                        <button type="submit" class="text-sm px-4 py-2 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 transition-colors inline-flex items-center gap-1.5">
                             <x-heroicon-o-heart class="w-4 h-4 {{ $hasFavorited ? 'text-orange-600' : '' }}" />
                             {{ $hasFavorited ? 'Favorilerde' : 'Favorile' }}
                         </button>
                     </form>
 
                     @if ($readingListItem && $readingListItem->status === \App\Enums\ReadingStatus::Tamamlandi)
-                        <span class="text-sm px-4 py-2 rounded-md bg-slate-100 text-slate-500 inline-flex items-center gap-1.5">
+                        <span class="text-sm px-4 py-2 rounded-lg bg-slate-100 text-slate-500 inline-flex items-center gap-1.5">
                             <x-heroicon-o-check class="w-4 h-4" /> Okundu
                         </span>
                     @elseif ($readingListItem)
-                        <span class="text-sm px-4 py-2 rounded-md bg-slate-100 text-slate-500 inline-flex items-center gap-1.5">
+                        <span class="text-sm px-4 py-2 rounded-lg bg-slate-100 text-slate-500 inline-flex items-center gap-1.5">
                             <x-heroicon-o-bookmark class="w-4 h-4" /> Okuma Listesinde
                         </span>
                     @else
                         <form method="POST" action="{{ route('panel.okuma-listesi.kitap.ekle', $book) }}">
                             @csrf
-                            <button type="submit" class="text-sm px-4 py-2 border border-slate-300 text-slate-700 rounded-md hover:bg-slate-50 transition-colors inline-flex items-center gap-1.5">
+                            <button type="submit" class="text-sm px-4 py-2 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 transition-colors inline-flex items-center gap-1.5">
                                 <x-heroicon-o-bookmark class="w-4 h-4" /> Okuma Listesine Ekle
                             </button>
                         </form>
                     @endif
 
                     @if ($hasPurchased)
-                        <span class="text-sm px-4 py-2 rounded-md bg-slate-900 text-white inline-flex items-center gap-1.5">
+                        <span class="text-sm px-4 py-2 rounded-lg bg-emerald-50 text-emerald-700 ring-1 ring-inset ring-emerald-200 inline-flex items-center gap-1.5">
                             <x-heroicon-o-check-circle class="w-4 h-4" /> Satın Alındı
                         </span>
                     @elseif ($book->status === \App\Enums\ContentStatus::Yayinda)
                         <form method="POST" action="{{ route('panel.satin-al', $book) }}">
                             @csrf
-                            <button type="submit" class="text-sm px-4 py-2 bg-slate-900 text-white rounded-md hover:bg-slate-800 transition-colors">
+                            <button type="submit" class="text-sm px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors">
                                 Satın Al
                             </button>
                         </form>

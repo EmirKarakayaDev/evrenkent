@@ -5,7 +5,7 @@
 @section('content')
     <div class="flex items-center justify-between mb-5 max-w-2xl">
         <h1 class="font-serif text-xl font-semibold text-slate-900">Kitabı Düzenle</h1>
-        <a href="{{ route('panel.yayinlarim.kitap.bolumler', $book) }}" class="text-sm px-3.5 py-1.5 border border-slate-300 text-slate-700 rounded-md hover:bg-slate-50 transition-colors">
+        <a href="{{ route('panel.yayinlarim.kitap.bolumler', $book) }}" class="text-sm px-3.5 py-1.5 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 transition-colors">
             Bölümler
         </a>
     </div>
@@ -33,7 +33,7 @@
         </div>
 
         <div class="flex items-center gap-4 pt-1">
-            <button type="submit" class="px-4 py-2.5 bg-slate-900 text-white text-sm font-medium rounded-md hover:bg-slate-800 transition-colors">
+            <button type="submit" class="px-4 py-2.5 bg-slate-900 text-white text-sm font-medium rounded-lg hover:bg-slate-800 transition-colors">
                 Kaydet
             </button>
             <a href="{{ route('panel.yayinlarim.taslaklarim') }}" class="text-sm text-slate-500 hover:text-slate-900 transition-colors">

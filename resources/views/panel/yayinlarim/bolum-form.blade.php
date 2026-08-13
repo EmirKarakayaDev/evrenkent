@@ -34,7 +34,7 @@
         </div>
 
         <div class="flex items-center gap-4 pt-1">
-            <button type="submit" class="px-4 py-2.5 bg-slate-900 text-white text-sm font-medium rounded-md hover:bg-slate-800 transition-colors">
+            <button type="submit" class="px-4 py-2.5 bg-slate-900 text-white text-sm font-medium rounded-lg hover:bg-slate-800 transition-colors">
                 Kaydet
             </button>
             <a href="{{ route('panel.yayinlarim.kitap.bolumler', $book) }}" class="text-sm text-slate-500 hover:text-slate-900 transition-colors">

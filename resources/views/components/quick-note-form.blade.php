@@ -24,7 +24,7 @@
         @error('content') <p class="text-sm text-red-600 mt-1">{{ $message }}</p> @enderror
     </div>
 
-    <button type="submit" class="text-sm px-4 py-2 bg-slate-900 text-white rounded-md hover:bg-slate-800 transition-colors">
+    <button type="submit" class="text-sm px-4 py-2 bg-slate-900 text-white rounded-lg hover:bg-slate-800 transition-colors">
         Kaydet
     </button>
 </form>
