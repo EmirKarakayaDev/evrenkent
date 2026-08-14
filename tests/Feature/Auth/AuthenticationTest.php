@@ -27,8 +27,9 @@ class AuthenticationTest extends TestCase
         ]);
 
         $this->assertAuthenticated();
-        // Rolsüz bir kullanıcı (test fixture'ı) varsayılan olarak /panel'e yönlendirilir.
-        $response->assertRedirect('/panel');
+        // Rolsüz bir kullanıcı (test fixture'ı) varsayılan olarak anasayfaya yönlendirilir
+        // (sidebar açık geliyor, panele zorla düşürülmüyor — bkz. User::redirectPath()).
+        $response->assertRedirect('/');
     }
 
     public function test_users_can_not_authenticate_with_invalid_password(): void

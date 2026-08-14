@@ -12,23 +12,19 @@
 
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="font-sans antialiased bg-paper text-slate-800" @auth x-data="{ sidebarOpen: false }" @endauth>
-        <div class="min-h-screen flex flex-col">
+    <body class="font-sans antialiased bg-paper text-slate-800">
+        <div class="min-h-screen flex flex-col" x-data>
             <header class="sticky top-0 z-20 bg-paper/90 backdrop-blur border-b border-slate-200">
                 <div class="max-w-6xl mx-auto px-6">
                     <div class="flex justify-between h-16 items-center gap-6">
                         <div class="flex items-center gap-4 shrink-0">
                             {{-- Hamburger: YouTube tarzı — sayfayı örtmez, içerik alanını daraltarak yandan panel
-                                 menüsünü açar/kapatır ("Panelim" yazısının yerini aldı). Ziyaretçide henüz bir
-                                 mega-menü yok, görsel iskelet olarak kalıyor. --}}
+                                 menüsünü açar/kapatır. Ziyaretçide gösterilecek bir menü içeriği (mega-menü) henüz
+                                 yok, o yüzden ziyaretçide hiç render edilmiyor. --}}
                             @auth
-                                <button type="button" title="Menü" @click="sidebarOpen = !sidebarOpen" class="text-slate-700 hover:text-slate-900 transition-colors">
+                                <button type="button" title="Menü" @click="$store.ui.sidebarOpen = !$store.ui.sidebarOpen" class="text-slate-700 hover:text-slate-900 transition-colors">
                                     <x-heroicon-o-bars-3 class="w-6 h-6" />
                                 </button>
-                            @else
-                                <span title="Yakında" class="text-slate-300 cursor-not-allowed">
-                                    <x-heroicon-o-bars-3 class="w-6 h-6" />
-                                </span>
                             @endauth
 
                             <a href="{{ url('/') }}" class="flex items-center gap-2.5 group">
@@ -75,7 +71,7 @@
                     {{-- Panel menüsü: overlay değil, normal akışta — açılınca içerik alanı daralır (YouTube'daki gibi).
                          İçteki w-72'lik sabit genişlik, dıştaki genişlik animasyonu sırasında metnin kırılmasını önler. --}}
                     <aside
-                        :class="sidebarOpen ? 'w-72 border-r border-slate-200' : 'w-0 border-r-0'"
+                        :class="$store.ui.sidebarOpen ? 'w-72 border-r border-slate-200' : 'w-0 border-r-0'"
                         class="shrink-0 bg-white transition-all duration-200 sticky top-16 self-start h-[calc(100vh-4rem)] overflow-x-hidden overflow-y-auto"
                     >
                         <div class="w-72 p-5">

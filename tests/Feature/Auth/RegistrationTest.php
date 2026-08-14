@@ -27,7 +27,7 @@ class RegistrationTest extends TestCase
 
         $this->assertAuthenticated();
         // Kayıt olan kullanıcı otomatik 'okur' rolü alır ve Filament dashboard'una değil,
-        // kendi Kişisel Kütüphanem paneline yönlendirilir (bkz. User::redirectPath()).
-        $response->assertRedirect('/panel');
+        // anasayfaya yönlendirilir; panel sidebar'ı zaten açık geliyor (bkz. User::redirectPath()).
+        $response->assertRedirect('/');
     }
 }

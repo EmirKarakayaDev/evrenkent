@@ -100,7 +100,9 @@ class User extends Authenticatable implements FilamentUser
 
     /**
      * Girişten sonra role göre yönlendirilecek yol.
-     * Süper Admin/Dergi Editörü -> Filament admin paneli, Yazar -> Yayınlarım, Okur -> Kişisel Kütüphanem.
+     * Süper Admin/Dergi Editörü -> Filament admin paneli, Yazar -> Yayınlarım,
+     * Okur -> Anasayfa (panele değil — sidebar zaten açık geliyor, "Kitaplığım"
+     * bir tık uzakta, ayrıca kullanıcı doğrudan panele düşürülmek istemedi).
      */
     public function redirectPath(): string
     {
@@ -112,6 +114,6 @@ class User extends Authenticatable implements FilamentUser
             return '/panel/yayinlarim';
         }
 
-        return '/panel';
+        return '/';
     }
 }
