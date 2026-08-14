@@ -69,6 +69,20 @@ class DemoContentSeeder extends Seeder
             ['title' => 'Medeniyetin Ayak İzleri', 'author' => $author2, 'category' => 'Tarih', 'price' => 210, 'status' => ContentStatus::RevizyonIstendi],
             ['title' => 'Uzak Sahiller', 'author' => $author2, 'category' => 'Bilim Kurgu', 'price' => 175, 'status' => ContentStatus::Onaylandi],
             ['title' => 'Kayıp Zamanın Şiirleri', 'author' => $author1, 'category' => 'Şiir', 'price' => 95, 'status' => ContentStatus::RevizyonIstendi],
+            // Kitaplığım/anasayfa gibi listeleme sayfalarının gerçekçi görünmesi için ek örnekler.
+            ['title' => 'Yıldızların Altında', 'author' => $author1, 'category' => 'Roman', 'price' => 165, 'status' => ContentStatus::Yayinda],
+            ['title' => 'Sessiz Sokaklar', 'author' => $author2, 'category' => 'Roman', 'price' => 140, 'status' => ContentStatus::Yayinda],
+            ['title' => 'Unutulan Mektuplar', 'author' => $author1, 'category' => 'Deneme', 'price' => 130, 'status' => ContentStatus::Yayinda],
+            ['title' => 'Rüzgârın Şarkısı', 'author' => $author2, 'category' => 'Şiir', 'price' => 110, 'status' => ContentStatus::Yayinda],
+            ['title' => 'Toprağın Hafızası', 'author' => $author1, 'category' => 'Tarih', 'price' => 220, 'status' => ContentStatus::Yayinda],
+            ['title' => 'Ayna Kırıkları', 'author' => $author2, 'category' => 'Roman', 'price' => 175, 'status' => ContentStatus::Yayinda],
+            ['title' => 'Zamansız Yolculuk', 'author' => $author1, 'category' => 'Bilim Kurgu', 'price' => 195, 'status' => ContentStatus::Yayinda],
+            ['title' => 'Denizin Çağrısı', 'author' => $author2, 'category' => 'Deneme', 'price' => 145, 'status' => ContentStatus::Yayinda],
+            ['title' => 'Karanlığın Ötesinde', 'author' => $author1, 'category' => 'Bilim Kurgu', 'price' => 210, 'status' => ContentStatus::Yayinda],
+            ['title' => 'Son Mevsim', 'author' => $author2, 'category' => 'Şiir', 'price' => 100, 'status' => ContentStatus::Yayinda],
+            ['title' => 'Kırık Aynalar Şehri', 'author' => $author1, 'category' => 'Roman', 'price' => 185, 'status' => ContentStatus::Taslak],
+            ['title' => 'Geçmişin Gölgesinde', 'author' => $author2, 'category' => 'Tarih', 'price' => 200, 'status' => ContentStatus::Onaylandi],
+            ['title' => 'Uzak Diyarlar', 'author' => $author1, 'category' => 'Bilim Kurgu', 'price' => 160, 'status' => ContentStatus::Gonderildi],
         ];
 
         $bookModels = [];

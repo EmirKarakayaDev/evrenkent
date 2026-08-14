@@ -12,23 +12,45 @@
 
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="font-sans antialiased bg-paper text-slate-800">
+    <body class="font-sans antialiased bg-paper text-slate-800" @auth x-data="{ sidebarOpen: false }" @endauth>
         <div class="min-h-screen flex flex-col">
             <header class="sticky top-0 z-20 bg-paper/90 backdrop-blur border-b border-slate-200">
                 <div class="max-w-6xl mx-auto px-6">
-                    <div class="flex justify-between h-16 items-center">
-                        <a href="{{ url('/') }}" class="flex items-center gap-2.5 group">
-                            <span class="flex items-center justify-center w-8 h-8 rounded-full bg-slate-900 text-white">
-                                <x-heroicon-o-book-open class="w-4 h-4" />
-                            </span>
-                            <span class="font-serif text-lg font-semibold tracking-tight text-slate-900">Evrenkent</span>
-                        </a>
-
-                        <div class="flex items-center gap-6">
+                    <div class="flex justify-between h-16 items-center gap-6">
+                        <div class="flex items-center gap-4 shrink-0">
+                            {{-- Hamburger: YouTube tarzı — sayfayı örtmez, içerik alanını daraltarak yandan panel
+                                 menüsünü açar/kapatır ("Panelim" yazısının yerini aldı). Ziyaretçide henüz bir
+                                 mega-menü yok, görsel iskelet olarak kalıyor. --}}
                             @auth
-                                <a href="{{ auth()->user()->redirectPath() }}" class="text-sm text-slate-600 hover:text-slate-900 transition-colors">
-                                    Panelim
-                                </a>
+                                <button type="button" title="Menü" @click="sidebarOpen = !sidebarOpen" class="text-slate-700 hover:text-slate-900 transition-colors">
+                                    <x-heroicon-o-bars-3 class="w-6 h-6" />
+                                </button>
+                            @else
+                                <span title="Yakında" class="text-slate-300 cursor-not-allowed">
+                                    <x-heroicon-o-bars-3 class="w-6 h-6" />
+                                </span>
+                            @endauth
+
+                            <a href="{{ url('/') }}" class="flex items-center gap-2.5 group">
+                                <span class="flex items-center justify-center w-8 h-8 rounded-full bg-slate-900 text-white">
+                                    <x-heroicon-o-book-open class="w-4 h-4" />
+                                </span>
+                                <span class="font-serif text-lg font-semibold tracking-tight text-slate-900">Evrenkent</span>
+                            </a>
+                        </div>
+
+                        <div class="flex items-center gap-5 shrink-0 ms-auto">
+                            {{-- Arama ve sepet: görsel iskelet — henüz işlevsel değil, "Yakında" ipucu bilinçli. --}}
+                            <button type="button" title="Yakında" class="text-slate-400 cursor-not-allowed">
+                                <x-heroicon-o-magnifying-glass class="w-5 h-5" />
+                            </button>
+
+                            <button type="button" title="Yakında" class="flex items-center gap-1.5 text-sm text-slate-400 cursor-not-allowed">
+                                <x-heroicon-o-shopping-bag class="w-5 h-5" />
+                                Sepetim
+                            </button>
+
+                            @auth
                                 <form method="POST" action="{{ route('logout') }}">
                                     @csrf
                                     <button type="submit" class="text-sm text-slate-500 hover:text-slate-900 transition-colors">
@@ -39,7 +61,7 @@
                                 <a href="{{ route('login') }}" class="text-sm text-slate-600 hover:text-slate-900 transition-colors">
                                     Giriş Yap
                                 </a>
-                                <a href="{{ route('register') }}" class="inline-flex items-center px-4 py-2 bg-slate-900 text-white text-sm font-medium rounded-lg hover:bg-slate-800 transition-colors">
+                                <a href="{{ route('register') }}" class="btn-dark btn-sm">
                                     Kayıt Ol
                                 </a>
                             @endauth
@@ -48,22 +70,39 @@
                 </div>
             </header>
 
-            <main class="flex-1 max-w-6xl mx-auto px-6 py-10 w-full">
-                @if (session('status'))
-                    <div class="mb-6 bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm rounded-md px-4 py-2.5">
-                        {{ session('status') }}
-                    </div>
-                @endif
+            <div class="flex-1 flex items-start">
+                @auth
+                    {{-- Panel menüsü: overlay değil, normal akışta — açılınca içerik alanı daralır (YouTube'daki gibi).
+                         İçteki w-72'lik sabit genişlik, dıştaki genişlik animasyonu sırasında metnin kırılmasını önler. --}}
+                    <aside
+                        :class="sidebarOpen ? 'w-72 border-r border-slate-200' : 'w-0 border-r-0'"
+                        class="shrink-0 bg-white transition-all duration-200 sticky top-16 self-start h-[calc(100vh-4rem)] overflow-x-hidden overflow-y-auto"
+                    >
+                        <div class="w-72 p-5">
+                            <x-panel-nav />
+                        </div>
+                    </aside>
+                @endauth
 
-                @yield('content')
-            </main>
+                <div class="flex-1 min-w-0 flex flex-col">
+                    <main class="flex-1 max-w-6xl mx-auto px-6 py-10 w-full">
+                        @if (session('status'))
+                            <div class="mb-6 bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm rounded-md px-4 py-2.5">
+                                {{ session('status') }}
+                            </div>
+                        @endif
 
-            <footer class="border-t border-slate-200 py-8">
-                <div class="max-w-6xl mx-auto px-6 flex flex-col sm:flex-row justify-between items-center gap-2 text-sm text-slate-400">
-                    <span>&copy; {{ now()->year }} Evrenkent</span>
-                    <span class="font-serif italic">Okumanın yeni bir evreni</span>
+                        @yield('content')
+                    </main>
+
+                    <footer class="border-t border-slate-200 py-8">
+                        <div class="max-w-6xl mx-auto px-6 flex flex-col sm:flex-row justify-between items-center gap-2 text-sm text-slate-400">
+                            <span>&copy; {{ now()->year }} Evrenkent</span>
+                            <span class="font-serif italic">Okumanın yeni bir evreni</span>
+                        </div>
+                    </footer>
                 </div>
-            </footer>
+            </div>
         </div>
     </body>
 </html>

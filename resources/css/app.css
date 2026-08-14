@@ -1,3 +1,60 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+[x-cloak] {
+    display: none !important;
+}
+
+/*
+ * Evrenkent tasarım sistemi — mockup'lardaki (dosyalar/) görünüme yakınsamak için
+ * tekrar kullanılabilir bileşen sınıfları. Tek yerden değiştirilir, her sayfaya yayılır.
+ */
+@layer components {
+    /* Butonlar */
+    .btn {
+        @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium transition-colors duration-150 disabled:opacity-50 disabled:pointer-events-none;
+    }
+    .btn-brand {
+        @apply btn bg-brand-500 text-white shadow-sm shadow-brand-500/20 hover:bg-brand-600;
+    }
+    .btn-dark {
+        @apply btn bg-slate-900 text-white hover:bg-slate-800;
+    }
+    .btn-outline {
+        @apply btn border border-slate-300 text-slate-700 bg-white hover:bg-slate-50;
+    }
+    .btn-outline-brand {
+        @apply btn border border-brand-300 text-brand-700 bg-white hover:bg-brand-50;
+    }
+    .btn-ghost {
+        @apply btn text-slate-600 hover:bg-slate-100;
+    }
+    .btn-sm {
+        @apply px-3 py-1.5 text-xs;
+    }
+
+    /* Kartlar — mockup'takinden daha ölçülü bir köşe yuvarlaklığı (rounded-2xl fazla geldi) */
+    .card {
+        @apply bg-white rounded-lg border border-slate-200 shadow-sm;
+    }
+    .card-hover {
+        @apply card transition-shadow duration-150 hover:shadow-md hover:shadow-slate-900/5;
+    }
+
+    /* Sekme/seçim kutuları (kategori sekmeleri, filtre pilleri) — .card ile aynı
+       köşe yuvarlaklığı ve renk mantığını paylaşır, tutarlı görünsün diye. */
+    .pill {
+        @apply inline-flex items-center gap-1.5 rounded-lg px-3.5 py-1.5 text-sm font-medium border transition-colors;
+    }
+    .pill-active {
+        @apply pill bg-white text-brand-700 border-brand-300;
+    }
+    .pill-idle {
+        @apply pill bg-white text-slate-400 border-slate-200 hover:border-slate-300;
+    }
+    /* Gerçek/etkin etiketler (ör. kitap kategorileri) — .pill-idle'ın aksine "yakında" anlamı taşımaz. */
+    .pill-tag {
+        @apply pill bg-white text-slate-600 border-slate-200;
+    }
+}

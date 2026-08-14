@@ -19,13 +19,41 @@ class BookController extends Controller
             404
         );
 
-        $book->load('author');
+        $book->load(['author', 'categories']);
 
         $hasFavorited = $user?->hasFavorited($book) ?? false;
         $readingListItem = $user?->readingListItemFor($book);
         $hasPurchased = $user?->hasPurchased($book) ?? false;
+        $chapterCount = $book->chapters()->count();
 
-        return view('books.show', compact('book', 'hasFavorited', 'readingListItem', 'hasPurchased'));
+        // Öneri şeridi: önce aynı kategorideki başka yayınlanmış kitaplar; yeterli sayıda yoksa
+        // aynı yazarın diğer kitaplarıyla tamamlanır (hiçbiri yoksa şerit hiç gösterilmez, uydurma yok).
+        $relatedBooks = collect();
+
+        if ($book->categories->isNotEmpty()) {
+            $relatedBooks = Book::published()
+                ->where('id', '!=', $book->id)
+                ->whereHas('categories', fn ($q) => $q->whereIn('categories.id', $book->categories->pluck('id')))
+                ->with('author')
+                ->latest('published_at')
+                ->take(6)
+                ->get();
+        }
+
+        if ($relatedBooks->count() < 6) {
+            $relatedBooks = $relatedBooks->concat(
+                Book::published()
+                    ->where('id', '!=', $book->id)
+                    ->where('author_id', $book->author_id)
+                    ->whereNotIn('id', $relatedBooks->pluck('id'))
+                    ->with('author')
+                    ->latest('published_at')
+                    ->take(6 - $relatedBooks->count())
+                    ->get()
+            );
+        }
+
+        return view('books.show', compact('book', 'hasFavorited', 'readingListItem', 'hasPurchased', 'chapterCount', 'relatedBooks'));
     }
 
     public function read(Book $book, ?int $chapterNumber = null): View|RedirectResponse
