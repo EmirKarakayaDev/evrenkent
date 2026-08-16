@@ -163,11 +163,11 @@
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 @foreach ($relatedBooks as $related)
-                    <a href="{{ route('kitaplar.show', $related) }}" class="group flex gap-3 card-hover overflow-hidden p-3">
-                        <x-book-cover :book="$related" class="w-20 aspect-[3/4] rounded-md shrink-0" icon-class="w-5 h-5" />
+                    <a href="{{ route('kitaplar.show', $related) }}" class="group flex gap-3">
+                        <x-book-cover :book="$related" class="w-20 aspect-[3/4] rounded-md shrink-0 transition-opacity group-hover:opacity-80" />
                         <div class="min-w-0 flex flex-col justify-center">
                             <div class="text-xs text-brand-600 font-medium uppercase tracking-wide">{{ $related->author->name }}</div>
-                            <div class="font-medium text-slate-900 text-sm truncate mt-0.5">{{ $related->title }}</div>
+                            <div class="font-medium text-slate-900 text-sm truncate mt-0.5 group-hover:underline">{{ $related->title }}</div>
                             <div class="text-sm text-slate-500 mt-1">{{ number_format($related->price, 2, ',', '.') }} TL</div>
                         </div>
                     </a>
