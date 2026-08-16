@@ -6,6 +6,9 @@ use App\Enums\ContentStatus;
 use App\Filament\Concerns\RecordsContentReview;
 use App\Filament\Resources\ArticleResource\Pages;
 use App\Models\Article;
+use App\Notifications\ContentApproved;
+use App\Notifications\ContentPublished;
+use App\Notifications\ContentRevisionRequested;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Notifications\Notification;
@@ -132,6 +135,7 @@ class ArticleResource extends Resource
 
                         $record->update(['status' => ContentStatus::Onaylandi]);
                         static::recordReview($record, 'onaylandi');
+                        $record->author->notify(new ContentApproved($record));
 
                         Notification::make()->title('Makale onaylandı')->success()->send();
                     }),
@@ -151,6 +155,7 @@ class ArticleResource extends Resource
 
                         $record->update(['status' => ContentStatus::RevizyonIstendi]);
                         static::recordReview($record, 'revizyon_istendi', $data['note']);
+                        $record->author->notify(new ContentRevisionRequested($record, $data['note']));
 
                         Notification::make()->title('Makale revizyona gönderildi')->warning()->send();
                     }),
@@ -166,6 +171,7 @@ class ArticleResource extends Resource
 
                         $record->update(['status' => ContentStatus::Yayinda, 'published_at' => now()]);
                         static::recordReview($record, 'yayinda');
+                        $record->author->notify(new ContentPublished($record));
 
                         Notification::make()->title('Makale yayınlandı')->success()->send();
                     }),

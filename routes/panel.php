@@ -3,6 +3,7 @@
 use App\Http\Controllers\ChapterController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\NoteController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PanelController;
 use App\Http\Controllers\PublicationController;
 use App\Http\Controllers\PurchaseController;
@@ -14,6 +15,10 @@ Route::middleware('auth')->prefix('panel')->as('panel.')->group(function () {
     Route::get('/aboneligim', [PanelController::class, 'aboneligim'])->name('aboneligim');
     Route::get('/yardim', [PanelController::class, 'yardim'])->name('yardim');
     Route::get('/iletisim', [PanelController::class, 'iletisim'])->name('iletisim');
+
+    // Bildirimler: header'daki zil ikonu için — tüm girişli kullanıcılar (rol farketmez).
+    Route::post('/bildirimler/{notification}/oku', [NotificationController::class, 'read'])->name('bildirimler.oku');
+    Route::post('/bildirimler/tumunu-oku', [NotificationController::class, 'readAll'])->name('bildirimler.tumunu-oku');
 
     Route::get('/favorilerim', [FavoriteController::class, 'index'])->name('favorilerim');
     Route::post('/favoriler/kitap/{book}/toggle', [FavoriteController::class, 'toggleBook'])->name('favoriler.kitap.toggle');

@@ -20,7 +20,7 @@
                  Ana içerik (@yield('content')) hâlâ max-w-6xl ile ortalı, oranı değişmedi. --}}
             <header class="sticky top-0 z-20 bg-paper/90 backdrop-blur border-b border-slate-200">
                 <div class="px-6">
-                    <div class="flex justify-between h-16 items-center gap-6">
+                    <div class="flex h-16 items-center gap-6">
                         <div class="flex items-center gap-4 shrink-0">
                             {{-- Hamburger: YouTube tarzı — sayfayı örtmez, içerik alanını daraltarak yandan panel
                                  menüsünü açar/kapatır. Ziyaretçide gösterilecek bir menü içeriği (mega-menü) henüz
@@ -39,9 +39,18 @@
                             </a>
                         </div>
 
+                        {{-- Arama: mockup'ta gerçek bir input kutusu — arka planda arama motoru/sorgu
+                             henüz yok, o yüzden readonly + "Yakında" ipucu ile görsel/pasif bırakıldı
+                             (sahte bir arama kutusu çalışıyormuş gibi davranmasın diye). --}}
+                        <div class="hidden sm:block flex-1 max-w-md">
+                            <div class="relative" title="Yakında">
+                                <x-heroicon-o-magnifying-glass class="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                                <input type="text" readonly placeholder="Kitap, yazar veya konu ara…" class="w-full rounded-lg border border-slate-200 bg-white pl-9 pr-3 py-2 text-sm text-slate-400 placeholder:text-slate-400 cursor-not-allowed focus:outline-none">
+                            </div>
+                        </div>
+
                         <div class="flex items-center gap-5 shrink-0 ms-auto">
-                            {{-- Arama ve sepet: görsel iskelet — henüz işlevsel değil, "Yakında" ipucu bilinçli. --}}
-                            <button type="button" title="Yakında" class="text-slate-400 cursor-not-allowed">
+                            <button type="button" title="Yakında" class="sm:hidden text-slate-400 cursor-not-allowed">
                                 <x-heroicon-o-magnifying-glass class="w-5 h-5" />
                             </button>
 
@@ -51,6 +60,8 @@
                             </button>
 
                             @auth
+                                <x-notifications-bell />
+
                                 <form method="POST" action="{{ route('logout') }}">
                                     @csrf
                                     <button type="submit" class="text-sm text-slate-500 hover:text-slate-900 transition-colors">

@@ -6,6 +6,9 @@ use App\Enums\ContentStatus;
 use App\Filament\Concerns\RecordsContentReview;
 use App\Filament\Resources\BookResource\Pages;
 use App\Models\Book;
+use App\Notifications\ContentApproved;
+use App\Notifications\ContentPublished;
+use App\Notifications\ContentRevisionRequested;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Notifications\Notification;
@@ -128,6 +131,7 @@ class BookResource extends Resource
 
                         $record->update(['status' => ContentStatus::Onaylandi]);
                         static::recordReview($record, 'onaylandi');
+                        $record->author->notify(new ContentApproved($record));
 
                         Notification::make()->title('Kitap onaylandı')->success()->send();
                     }),
@@ -147,6 +151,7 @@ class BookResource extends Resource
 
                         $record->update(['status' => ContentStatus::RevizyonIstendi]);
                         static::recordReview($record, 'revizyon_istendi', $data['note']);
+                        $record->author->notify(new ContentRevisionRequested($record, $data['note']));
 
                         Notification::make()->title('Kitap revizyona gönderildi')->warning()->send();
                     }),
@@ -162,6 +167,7 @@ class BookResource extends Resource
 
                         $record->update(['status' => ContentStatus::Yayinda, 'published_at' => now()]);
                         static::recordReview($record, 'yayinda');
+                        $record->author->notify(new ContentPublished($record));
 
                         Notification::make()->title('Kitap yayınlandı')->success()->send();
                     }),

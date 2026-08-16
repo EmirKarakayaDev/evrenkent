@@ -7,6 +7,9 @@ use App\Filament\Concerns\RecordsContentReview;
 use App\Filament\Resources\MagazineIssueResource\Pages;
 use App\Filament\Resources\MagazineIssueResource\RelationManagers;
 use App\Models\MagazineIssue;
+use App\Notifications\ContentApproved;
+use App\Notifications\ContentPublished;
+use App\Notifications\ContentRevisionRequested;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Notifications\Notification;
@@ -129,6 +132,7 @@ class MagazineIssueResource extends Resource
 
                         $record->update(['status' => ContentStatus::Onaylandi]);
                         static::recordReview($record, 'onaylandi');
+                        $record->editor->notify(new ContentApproved($record));
 
                         Notification::make()->title('Sayı onaylandı')->success()->send();
                     }),
@@ -148,6 +152,7 @@ class MagazineIssueResource extends Resource
 
                         $record->update(['status' => ContentStatus::RevizyonIstendi]);
                         static::recordReview($record, 'revizyon_istendi', $data['note']);
+                        $record->editor->notify(new ContentRevisionRequested($record, $data['note']));
 
                         Notification::make()->title('Sayı revizyona gönderildi (Dergi Editörüne döndü)')->warning()->send();
                     }),
@@ -166,6 +171,7 @@ class MagazineIssueResource extends Resource
                             'publish_date' => $record->publish_date ?? now()->toDateString(),
                         ]);
                         static::recordReview($record, 'yayinda');
+                        $record->editor->notify(new ContentPublished($record));
 
                         Notification::make()->title('Sayı yayınlandı')->success()->send();
                     }),

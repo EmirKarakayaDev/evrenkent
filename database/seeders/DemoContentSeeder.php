@@ -218,6 +218,7 @@ class DemoContentSeeder extends Seeder
             ['title' => 'Kayıp Uygarlıklar', 'author' => $author2, 'issue' => 'Bilim Tarihi Dergisi - Sayı 23', 'category' => 'Tarih', 'status' => ContentStatus::RevizyonIstendi],
         ];
 
+        $articleModels = [];
         foreach ($articles as $data) {
             $article = Article::firstOrCreate(
                 ['slug' => Str::slug($data['title'])],
@@ -230,6 +231,8 @@ class DemoContentSeeder extends Seeder
                     'published_at' => $data['status'] === ContentStatus::Yayinda ? now()->subDays(random_int(1, 60)) : null,
                 ]
             );
+
+            $articleModels[$data['title']] = $article;
 
             $article->categories()->syncWithoutDetaching([$categories[$data['category']]->id]);
 
@@ -251,6 +254,30 @@ class DemoContentSeeder extends Seeder
                 ]);
             }
         }
+
+        // --- Bildirimler (header'daki zil ikonunun altyapısı) ---
+        // Yukarıdaki revizyon/onay kayıtlarının bir kısmı için gerçek bildirim de
+        // gönderiliyor — böylece Yazar/Dergi Editörü hesaplarıyla girişte zil dolu
+        // görünüyor. notifyOnce() aynı içerik+tip için seeder tekrar çalıştırıldığında
+        // bildirimin çoğalmasını engelliyor (idempotent).
+        $this->notifyOnce($author1, new \App\Notifications\ContentRevisionRequested(
+            $bookModels['Kayıp Zamanın Şiirleri'],
+            'Şiir başlıkları eksik, lütfen tamamlayın.'
+        ));
+        $this->notifyOnce($author2, new \App\Notifications\ContentRevisionRequested(
+            $bookModels['Medeniyetin Ayak İzleri'],
+            'Kapak görseli eksik, lütfen ekleyip tekrar gönderin.'
+        ));
+        $this->notifyOnce($author2, new \App\Notifications\ContentRevisionRequested(
+            $articleModels['Kayıp Uygarlıklar'],
+            'Kaynakça eksik, lütfen ekleyin.'
+        ));
+        $this->notifyOnce($editor, new \App\Notifications\ContentRevisionRequested(
+            $issueModels['Matematik Dergisi - Sayı 12'],
+            'Kapak görseli ve içindekiler eksik, lütfen tamamlayın.'
+        ));
+        $this->notifyOnce($author2, new \App\Notifications\ContentPublished($bookModels['Sislerin Ardındaki Fener']));
+        $this->notifyOnce($author1, new \App\Notifications\ContentPublished($articleModels['Evrenin Yaşı ve Genişlemesi']));
 
         // --- Bölümler (Okuma Modu demo içeriği) ---
         // 'Sislerin Ardındaki Fener' reader tarafından zaten satın alınmış (aşağıda) — kilidi açık okunabilir.
@@ -335,5 +362,23 @@ class DemoContentSeeder extends Seeder
         }
 
         $this->command?->info('Demo içerik oluşturuldu: '.count($categories).' kategori, '.count($books).' kitap, '.count($issues).' dergi sayısı, '.count($articles).' makale.');
+    }
+
+    /**
+     * Bir bildirimi sadece aynı alıcıya, aynı içerik+tip için daha önce gönderilmediyse
+     * yollar — seeder tekrar çalıştırıldığında bildirimlerin çoğalmasını engeller.
+     */
+    private function notifyOnce(User $recipient, \Illuminate\Notifications\Notification $notification): void
+    {
+        $data = $notification->toArray($recipient);
+
+        $alreadySent = $recipient->notifications()
+            ->where('type', $notification::class)
+            ->whereJsonContains('data->url', $data['url'])
+            ->exists();
+
+        if (! $alreadySent) {
+            $recipient->notify($notification);
+        }
     }
 }
