@@ -1,4 +1,4 @@
-<form method="POST" action="{{ route('panel.notlar.ekle') }}" class="bg-white border border-slate-200 rounded-lg p-6 space-y-5 max-w-2xl mb-8">
+<form method="POST" action="{{ route('panel.notlar.ekle') }}" class="card p-6 space-y-5 max-w-2xl mb-8">
     @csrf
     <input type="hidden" name="type" value="{{ $type->value }}">
 
@@ -42,7 +42,7 @@
         @error('content') <p class="text-sm text-red-600 mt-1">{{ $message }}</p> @enderror
     </div>
 
-    <button type="submit" class="px-4 py-2.5 bg-slate-900 text-white text-sm font-medium rounded-lg hover:bg-slate-800 transition-colors">
+    <button type="submit" class="btn-dark">
         Kaydet
     </button>
 </form>

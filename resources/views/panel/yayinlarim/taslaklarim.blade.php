@@ -5,7 +5,7 @@
 @section('content')
     <div class="flex items-center justify-between mb-5">
         <h1 class="font-serif text-xl font-semibold text-slate-900">{{ $title }}</h1>
-        <a href="{{ route('panel.yayinlarim.taslaklarim.yeni') }}" class="inline-flex items-center gap-1.5 text-sm px-4 py-2 bg-slate-900 text-white rounded-lg hover:bg-slate-800 transition-colors">
+        <a href="{{ route('panel.yayinlarim.taslaklarim.yeni') }}" class="btn-dark">
             <x-heroicon-o-plus class="w-4 h-4" />
             Yeni Taslak Oluştur
         </a>
