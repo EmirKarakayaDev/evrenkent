@@ -62,6 +62,15 @@ class BookResource extends Resource
                     ->numeric()
                     ->default(0)
                     ->prefix('₺'),
+                Forms\Components\TextInput::make('discount_price')
+                    ->label('İndirimli Fiyat')
+                    ->numeric()
+                    ->prefix('₺')
+                    ->lt('price')
+                    ->helperText('Doluysa anasayfada/kataloğun "Fırsatlar" rafında gösterilir. Boş bırakılırsa normal fiyatla satılır.'),
+                Forms\Components\Toggle::make('is_editors_pick')
+                    ->label('Editörün Seçkisi')
+                    ->helperText('Aktifse anasayfada/kataloğun "Editörün Seçkisi" rafında gösterilir.'),
                 Forms\Components\Select::make('status')
                     ->label('Durum')
                     ->options(collect(ContentStatus::cases())->mapWithKeys(fn ($case) => [$case->value => $case->label()]))
@@ -98,6 +107,16 @@ class BookResource extends Resource
                     ->label('Fiyat')
                     ->money('TRY')
                     ->sortable(),
+                Tables\Columns\TextColumn::make('discount_price')
+                    ->label('İndirimli Fiyat')
+                    ->money('TRY')
+                    ->placeholder('—')
+                    ->sortable()
+                    ->toggleable(),
+                Tables\Columns\IconColumn::make('is_editors_pick')
+                    ->label('Editörün Seçkisi')
+                    ->boolean()
+                    ->toggleable(),
                 Tables\Columns\TextColumn::make('status')
                     ->label('Durum')
                     ->badge()
