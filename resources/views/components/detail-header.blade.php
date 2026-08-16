@@ -45,12 +45,13 @@
 @endif
 
 @if (count($stats) > 0)
-    <div class="flex flex-wrap items-center gap-x-6 gap-y-2 mt-5 text-sm text-slate-500">
+    <div class="flex flex-wrap divide-x divide-slate-200 rounded-lg border border-slate-200 mt-5 overflow-hidden">
         @foreach ($stats as $stat)
-            <span class="inline-flex items-center gap-1.5">
-                <x-dynamic-component :component="$stat['icon']" class="w-4 h-4 text-slate-400" />
-                {{ $stat['count'] }} {{ $stat['label'] }}
-            </span>
+            <div class="flex-1 min-w-[5.5rem] flex flex-col items-center justify-center gap-1 px-3 py-3.5">
+                <x-dynamic-component :component="$stat['icon']" class="w-6 h-6 text-slate-400" />
+                <div class="text-sm font-semibold text-slate-900">{{ $stat['count'] }}</div>
+                <div class="text-xs text-slate-500">{{ $stat['label'] }}</div>
+            </div>
         @endforeach
     </div>
 @endif
