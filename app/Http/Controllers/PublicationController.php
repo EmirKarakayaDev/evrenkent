@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Enums\ContentStatus;
 use App\Models\Article;
 use App\Models\Book;
+use App\Models\Category;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -58,7 +59,9 @@ class PublicationController extends Controller
     {
         $this->authorize('update', $book);
 
-        return view('panel.yayinlarim.kitap-duzenle', compact('book'));
+        $categories = Category::orderBy('name')->get();
+
+        return view('panel.yayinlarim.kitap-duzenle', compact('book', 'categories'));
     }
 
     public function updateBook(Request $request, Book $book): RedirectResponse
@@ -69,6 +72,8 @@ class PublicationController extends Controller
             'title' => ['required', 'string', 'max:255'],
             'body' => ['required', 'string'],
             'price' => ['nullable', 'numeric', 'min:0'],
+            'categories' => ['nullable', 'array'],
+            'categories.*' => ['integer', 'exists:categories,id'],
             'page_count' => ['nullable', 'integer', 'min:0'],
             'document_count' => ['nullable', 'integer', 'min:0'],
             'video_count' => ['nullable', 'integer', 'min:0'],
@@ -76,6 +81,8 @@ class PublicationController extends Controller
             'author_note_count' => ['nullable', 'integer', 'min:0'],
             'source_count' => ['nullable', 'integer', 'min:0'],
         ]);
+
+        $book->categories()->sync($data['categories'] ?? []);
 
         $book->update([
             'title' => $data['title'],

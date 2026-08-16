@@ -62,6 +62,32 @@ class BookShowPageTest extends TestCase
             ->assertDontSee('değerlendirme');
     }
 
+    public function test_category_tags_link_to_the_catalog_filtered_by_that_category(): void
+    {
+        $category = \App\Models\Category::factory()->create(['name' => 'Roman', 'slug' => 'roman']);
+        $book = Book::factory()->create(['status' => ContentStatus::Yayinda]);
+        $book->categories()->attach($category);
+
+        $this->get(route('kitaplar.show', $book))
+            ->assertOk()
+            ->assertSee(route('kitaplar.index', ['kategori' => 'roman']), false);
+    }
+
+    public function test_yayinda_badge_is_hidden_on_the_public_page_but_shown_to_the_author_previewing_a_draft(): void
+    {
+        $published = Book::factory()->create(['status' => ContentStatus::Yayinda]);
+        $this->get(route('kitaplar.show', $published))->assertOk()->assertDontSee('Yayında');
+
+        $author = User::factory()->create();
+        $author->assignRole('yazar');
+        $draft = Book::factory()->for($author, 'author')->create(['status' => ContentStatus::Taslak]);
+
+        $this->actingAs($author)
+            ->get(route('kitaplar.show', $draft))
+            ->assertOk()
+            ->assertSee('Taslak');
+    }
+
     public function test_content_stats_only_show_the_fields_the_author_actually_filled_in(): void
     {
         $book = Book::factory()->create([

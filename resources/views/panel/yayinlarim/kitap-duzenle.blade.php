@@ -33,6 +33,26 @@
         </div>
 
         <div class="border-t border-slate-100 pt-5">
+            <div class="text-sm font-medium text-slate-700 mb-1">Kategoriler / Etiketler</div>
+            <p class="text-xs text-slate-400 mb-3">Kitap sayfasında tıklanabilir etiket olarak görünür, okur aynı etiketteki diğer kitapları keşfedebilir.</p>
+            <div class="flex flex-wrap gap-x-4 gap-y-2">
+                @foreach ($categories as $category)
+                    <label class="inline-flex items-center gap-1.5 text-sm text-slate-700">
+                        <input
+                            type="checkbox"
+                            name="categories[]"
+                            value="{{ $category->id }}"
+                            {{ collect(old('categories', $book->categories->pluck('id')))->contains($category->id) ? 'checked' : '' }}
+                            class="rounded border-slate-300 text-slate-900 focus:ring-slate-500"
+                        >
+                        {{ $category->name }}
+                    </label>
+                @endforeach
+            </div>
+            @error('categories') <p class="text-xs text-red-600 mt-2">{{ $message }}</p> @enderror
+        </div>
+
+        <div class="border-t border-slate-100 pt-5">
             <div class="text-sm font-medium text-slate-700 mb-1">İçerik İstatistikleri</div>
             <p class="text-xs text-slate-400 mb-3">Satın alma sayfasında sadece doldurduğunuz alanlar gösterilir, boş bıraktıklarınız hiç görünmez.</p>
             <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">

@@ -33,9 +33,16 @@
                 :rating-count="$book->review_count"
                 :stats="$stats->all()"
             >
-                <x-status-badge :status="$book->status" />
+                {{-- Herkese açık sayfada kitap zaten yayında olduğu için "Yayında" etiketi
+                     gereksiz — sadece yazar kendi taslağını/incelemedeki halini önizlerken
+                     durumu görmesi anlamlı olduğu için o durumlarda gösteriliyor. --}}
+                @if ($book->status !== \App\Enums\ContentStatus::Yayinda)
+                    <x-status-badge :status="$book->status" />
+                @endif
                 @foreach ($book->categories as $category)
-                    <span class="pill-tag !py-1 !px-3 !text-xs">{{ $category->name }}</span>
+                    <a href="{{ route('kitaplar.index', ['kategori' => $category->slug]) }}" class="pill-tag !py-1 !px-3 !text-xs hover:border-brand-300 hover:text-brand-700 transition-colors">
+                        {{ $category->name }}
+                    </a>
                 @endforeach
             </x-detail-header>
 

@@ -22,14 +22,14 @@
 
 @php $metaParts = array_filter($meta); @endphp
 @if (count($metaParts) > 0)
-    <div class="text-sm text-slate-500 mt-2.5">{{ implode('  ·  ', $metaParts) }}</div>
+    <div class="text-base text-slate-500 mt-3">{{ implode('  ·  ', $metaParts) }}</div>
 @endif
 
 {{-- Değerlendirme — gerçek bir yorum/puanlama sistemi gelene kadar Süper Admin'in
      elle girdiği özet değer. Hiç girilmediyse hiç gösterilmiyor, sahte
      "0.0 (0 değerlendirme)" yazmıyoruz. --}}
 @if ($ratingCount && $ratingAverage !== null)
-    <div class="flex items-center gap-1.5 mt-5">
+    <div class="flex items-center gap-3 mt-5">
         <div class="flex items-center text-amber-400">
             @for ($i = 1; $i <= 5; $i++)
                 @if ($i <= round($ratingAverage))

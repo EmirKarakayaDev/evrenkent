@@ -124,6 +124,16 @@ class DemoContentSeeder extends Seeder
             }
         }
 
+        // --- Çoklu kategori/etiket örneği (kitap tanıtım sayfasındaki tıklanabilir
+        // etiketlerin altyapısı) — yazar birden fazla kategori seçebiliyor artık,
+        // demo veride de bunu gösterelim diye birkaç kitaba ikinci/üçüncü etiket eklendi.
+        $bookModels['Sislerin Ardındaki Fener']->categories()->syncWithoutDetaching([
+            $categories['Deneme']->id, $categories['Tarih']->id,
+        ]);
+        $bookModels['Zamansız Yolculuk']->categories()->syncWithoutDetaching([
+            $categories['Deneme']->id,
+        ]);
+
         // --- Editörün Seçkisi / Fırsatlar (anasayfa pillerinin altyapısı) ---
         // Süper Admin'in ileride Filament'ten işaretleyeceği alanlar — şimdilik demo
         // amaçlı birkaç yayında kitap üzerinde elle set ediliyor, pil boş görünmesin diye.

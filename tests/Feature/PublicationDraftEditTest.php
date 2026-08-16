@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Enums\ContentStatus;
 use App\Models\Article;
 use App\Models\Book;
+use App\Models\Category;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -65,6 +66,27 @@ class PublicationDraftEditTest extends TestCase
         $this->assertSame(220, $book->page_count);
         $this->assertSame(15, $book->source_count);
         $this->assertNull($book->document_count);
+    }
+
+    public function test_yazar_can_assign_multiple_categories_and_can_also_remove_them(): void
+    {
+        $author = $this->yazar();
+        $roman = Category::factory()->create();
+        $siir = Category::factory()->create();
+        $tarih = Category::factory()->create();
+        $book = Book::factory()->for($author, 'author')->create(['status' => ContentStatus::Taslak]);
+        $book->categories()->attach($tarih);
+
+        $this->actingAs($author)
+            ->put(route('panel.yayinlarim.kitap.guncelle', $book), [
+                'title' => $book->title,
+                'body' => $book->description,
+                'categories' => [$roman->id, $siir->id],
+            ])
+            ->assertRedirect();
+
+        $book->refresh();
+        $this->assertEqualsCanonicalizing([$roman->id, $siir->id], $book->categories->pluck('id')->all());
     }
 
     public function test_another_yazar_cannot_edit_someone_elses_book(): void
