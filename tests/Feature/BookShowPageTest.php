@@ -73,8 +73,7 @@ class BookShowPageTest extends TestCase
 
         $this->get(route('kitaplar.show', $book))
             ->assertOk()
-            ->assertSee('310')
-            ->assertSee('sayfa')
+            ->assertSee('310 sayfa')
             ->assertDontSee('belge')
             ->assertDontSee('video');
     }
