@@ -12,7 +12,7 @@
             <x-status-badge :status="$article->status" />
         </x-detail-header>
 
-        <div class="text-slate-700 leading-relaxed whitespace-pre-line mt-8">{{ $article->content }}</div>
+        <div class="text-slate-700 leading-relaxed whitespace-pre-line mt-9">{{ $article->content }}</div>
 
         @auth
             <div class="mt-10">

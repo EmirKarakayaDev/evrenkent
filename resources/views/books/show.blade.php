@@ -40,7 +40,7 @@
             </x-detail-header>
 
             @if ($book->description)
-                <div class="mt-8">
+                <div class="mt-9">
                     <h2 class="font-serif text-base font-semibold text-slate-900 mb-2">Kitap Hakkında</h2>
                     <p class="text-slate-600 whitespace-pre-line leading-relaxed">{{ $book->description }}</p>
                 </div>

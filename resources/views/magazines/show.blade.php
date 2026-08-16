@@ -15,7 +15,7 @@
                 <x-status-badge :status="$issue->status" />
             </x-detail-header>
 
-            <div class="mt-8">
+            <div class="mt-9">
                 <h2 class="font-serif text-base font-semibold text-slate-900 mb-3">Bu Sayıdaki Makaleler</h2>
 
                 @if ($articles->isEmpty())
