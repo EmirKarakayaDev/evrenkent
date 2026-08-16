@@ -25,14 +25,14 @@ class DatabaseSeeder extends Seeder
         $superAdmin->assignRole('super_admin');
 
         $editor = User::factory()->create([
-            'name' => 'Dergi Editörü',
+            'name' => 'Ayşe Demir',
             'email' => 'editor@evrenkent.test',
             'password' => bcrypt('password'),
         ]);
         $editor->assignRole('dergi_editoru');
 
         $author = User::factory()->create([
-            'name' => 'Yazar',
+            'name' => 'Ahmet Yılmaz',
             'email' => 'author@evrenkent.test',
             'password' => bcrypt('password'),
         ]);

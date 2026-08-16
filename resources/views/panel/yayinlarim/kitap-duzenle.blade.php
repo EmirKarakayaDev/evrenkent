@@ -32,6 +32,27 @@
             @error('body') <p class="text-sm text-red-600 mt-1">{{ $message }}</p> @enderror
         </div>
 
+        <div class="border-t border-slate-100 pt-5">
+            <div class="text-sm font-medium text-slate-700 mb-1">İçerik İstatistikleri</div>
+            <p class="text-xs text-slate-400 mb-3">Satın alma sayfasında sadece doldurduğunuz alanlar gösterilir, boş bıraktıklarınız hiç görünmez.</p>
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                @foreach ([
+                    'page_count' => 'Sayfa',
+                    'document_count' => 'Belge',
+                    'video_count' => 'Video',
+                    'map_count' => 'Harita',
+                    'author_note_count' => 'Yazar Notu',
+                    'source_count' => 'Kaynak',
+                ] as $field => $label)
+                    <div>
+                        <label for="{{ $field }}" class="block text-xs text-slate-500 mb-1">{{ $label }}</label>
+                        <input id="{{ $field }}" name="{{ $field }}" type="number" min="0" value="{{ old($field, $book->$field) }}" class="w-full rounded-md border-slate-300 text-sm focus:border-slate-500 focus:ring-slate-500">
+                        @error($field) <p class="text-xs text-red-600 mt-1">{{ $message }}</p> @enderror
+                    </div>
+                @endforeach
+            </div>
+        </div>
+
         <div class="flex items-center gap-4 pt-1">
             <button type="submit" class="px-4 py-2.5 bg-slate-900 text-white text-sm font-medium rounded-lg hover:bg-slate-800 transition-colors">
                 Kaydet

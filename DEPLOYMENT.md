@@ -10,6 +10,7 @@ Bu proje şu an **yerel geliştirme ortamı** için yapılandırılmıştır. Ge
 - [ ] **`APP_URL`'i gerçek domain'e güncelle.** Şifre sıfırlama linkleri ve diğer imzalı URL'ler bu değere göre üretiliyor.
 - [ ] **Seed edilen tüm hesapların şifresini değiştir veya hesapları sil.** (`admin@evrenkent.test`, `editor@evrenkent.test`, `author@evrenkent.test`, `reader@evrenkent.test`, `elif.nazli@evrenkent.test`, `demo.okur1@evrenkent.test`…`demo.okur6@evrenkent.test` — hepsi `password` şifresiyle oluşturuldu, sadece geliştirme içindir. Demo okurlar "Çok Satanlar" pilini beslemek için satın alma kaydı üretir, canlıda hiç olmamalı.)
 - [ ] **`DemoContentSeeder`'ı canlıda asla çalıştırma.** Sahte kullanıcı/kitap/makale/dergi verisi oluşturur, sadece demo amaçlıdır.
+- [ ] **Kitap `average_rating`/`review_count` alanları şu an elle giriliyor (Filament'ten), gerçek bir yorum sistemi yok.** Demo kitaplardaki örnek puanlar (4.8/128 değerlendirme vb.) canlıya taşınmadan önce ya temizlenmeli ya da gerçek bir yorum/puanlama sistemi kurulup bu alanlar otomatik hesaplanır hale getirilmeli — kullanıcı onayıyla bilinçli bir geçici istisna (bkz. `UI_RESTYLE_NOTES.md` madde 17).
 - [ ] **`php artisan migrate:fresh` gibi yıkıcı komutları canlı veritabanında asla çalıştırma.**
 
 ## 🟠 Önemli

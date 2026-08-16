@@ -88,6 +88,34 @@ class BookResource extends Resource
                     ->preload(),
                 Forms\Components\DateTimePicker::make('published_at')
                     ->label('Yayın Tarihi'),
+
+                Forms\Components\Section::make('Değerlendirme')
+                    ->description('Gerçek bir yorum/puanlama sistemi kurulana kadar özet değerler burada elle girilir.')
+                    ->columns(2)
+                    ->schema([
+                        Forms\Components\TextInput::make('average_rating')
+                            ->label('Ortalama Puan')
+                            ->numeric()
+                            ->minValue(0)
+                            ->maxValue(5)
+                            ->step(0.1),
+                        Forms\Components\TextInput::make('review_count')
+                            ->label('Değerlendirme Sayısı')
+                            ->numeric()
+                            ->minValue(0),
+                    ]),
+
+                Forms\Components\Section::make('İçerik İstatistikleri')
+                    ->description('Satın alma sayfasında sadece doldurulan alanlar gösterilir — kitabı yükleyen yazar da kendi panelinden bunları girebilir.')
+                    ->columns(3)
+                    ->schema([
+                        Forms\Components\TextInput::make('page_count')->label('Sayfa')->numeric()->minValue(0),
+                        Forms\Components\TextInput::make('document_count')->label('Belge')->numeric()->minValue(0),
+                        Forms\Components\TextInput::make('video_count')->label('Video')->numeric()->minValue(0),
+                        Forms\Components\TextInput::make('map_count')->label('Harita')->numeric()->minValue(0),
+                        Forms\Components\TextInput::make('author_note_count')->label('Yazar Notu')->numeric()->minValue(0),
+                        Forms\Components\TextInput::make('source_count')->label('Kaynak')->numeric()->minValue(0),
+                    ]),
             ]);
     }
 

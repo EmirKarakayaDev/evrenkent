@@ -47,6 +47,26 @@ class PublicationDraftEditTest extends TestCase
         $this->assertSame(ContentStatus::Taslak, $book->status);
     }
 
+    public function test_yazar_can_set_content_stats_and_only_filled_ones_are_saved(): void
+    {
+        $author = $this->yazar();
+        $book = Book::factory()->for($author, 'author')->create(['status' => ContentStatus::Taslak]);
+
+        $this->actingAs($author)
+            ->put(route('panel.yayinlarim.kitap.guncelle', $book), [
+                'title' => $book->title,
+                'body' => $book->description,
+                'page_count' => 220,
+                'source_count' => 15,
+            ])
+            ->assertRedirect();
+
+        $book->refresh();
+        $this->assertSame(220, $book->page_count);
+        $this->assertSame(15, $book->source_count);
+        $this->assertNull($book->document_count);
+    }
+
     public function test_another_yazar_cannot_edit_someone_elses_book(): void
     {
         $owner = $this->yazar();

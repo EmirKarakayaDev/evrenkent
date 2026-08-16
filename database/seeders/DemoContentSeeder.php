@@ -35,7 +35,7 @@ class DemoContentSeeder extends Seeder
 
         $author1 = User::firstOrCreate(
             ['email' => 'author@evrenkent.test'],
-            ['name' => 'Yazar', 'password' => bcrypt('password')]
+            ['name' => 'Ahmet Yılmaz', 'password' => bcrypt('password')]
         );
         if (! $author1->hasRole('yazar')) {
             $author1->assignRole('yazar');
@@ -51,7 +51,7 @@ class DemoContentSeeder extends Seeder
 
         $editor = User::firstOrCreate(
             ['email' => 'editor@evrenkent.test'],
-            ['name' => 'Dergi Editörü', 'password' => bcrypt('password')]
+            ['name' => 'Ayşe Demir', 'password' => bcrypt('password')]
         );
         if (! $editor->hasRole('dergi_editoru')) {
             $editor->assignRole('dergi_editoru');
@@ -140,6 +140,24 @@ class DemoContentSeeder extends Seeder
         foreach ($discounted as $title => $discountPrice) {
             $bookModels[$title]->update(['discount_price' => $discountPrice]);
         }
+
+        // --- Değerlendirme / İçerik İstatistikleri (kitap tanıtım sayfasının altyapısı) ---
+        // Gerçek bir yorum sistemi kurulana kadar demo amaçlı elle girildi. Bilerek üç
+        // farklı durumu temsil ediyor: tam dolu, kısmi (bazı istatistik alanları boş —
+        // "sadece doldurulan alan gösterilir" davranışını kanıtlasın diye) ve hiç
+        // girilmemiş (o kitapta bu bölüm hiç görünmemeli, sahte veri değil).
+        $bookModels['Sislerin Ardındaki Fener']->update([
+            'average_rating' => 4.8, 'review_count' => 128,
+            'page_count' => 248, 'document_count' => 17, 'video_count' => 6,
+            'map_count' => 4, 'author_note_count' => 12, 'source_count' => 38,
+        ]);
+        $bookModels['Zamansız Yolculuk']->update([
+            'average_rating' => 4.5, 'review_count' => 42,
+            'page_count' => 310,
+        ]);
+        $bookModels['Toprağın Hafızası']->update([
+            'average_rating' => 4.2, 'review_count' => 15,
+        ]);
 
         // --- Çok Satanlar (anasayfa pilinin altyapısı) ---
         // Gerçek bir "en çok satan" sıralaması satın alma sayısından türetiliyor (sahte

@@ -21,6 +21,9 @@ class Book extends Model
         'author_id', 'title', 'slug', 'description',
         'cover_image', 'price', 'discount_price', 'status',
         'is_editors_pick', 'published_at',
+        'average_rating', 'review_count',
+        'page_count', 'document_count', 'video_count',
+        'map_count', 'author_note_count', 'source_count',
     ];
 
     protected function casts(): array
@@ -31,6 +34,14 @@ class Book extends Model
             'price' => 'decimal:2',
             'discount_price' => 'decimal:2',
             'is_editors_pick' => 'boolean',
+            'average_rating' => 'decimal:2',
+            'review_count' => 'integer',
+            'page_count' => 'integer',
+            'document_count' => 'integer',
+            'video_count' => 'integer',
+            'map_count' => 'integer',
+            'author_note_count' => 'integer',
+            'source_count' => 'integer',
         ];
     }
 
@@ -84,5 +95,26 @@ class Book extends Model
     public function scopeOnSale(Builder $query): Builder
     {
         return $query->whereNotNull('discount_price');
+    }
+
+    /**
+     * Kitap tanıtım sayfasındaki içerik istatistik şeridi — sadece dolu olan
+     * alanlar döner (yazar panelinden hangisini girmişse sadece o gösterilir).
+     *
+     * @return array<int, array{count: int, icon: string, label: string}>
+     */
+    public function contentStats(): array
+    {
+        return collect([
+            ['count' => $this->page_count, 'icon' => 'heroicon-o-document-text', 'label' => 'sayfa'],
+            ['count' => $this->document_count, 'icon' => 'heroicon-o-paper-clip', 'label' => 'belge'],
+            ['count' => $this->video_count, 'icon' => 'heroicon-o-play-circle', 'label' => 'video'],
+            ['count' => $this->map_count, 'icon' => 'heroicon-o-map', 'label' => 'harita'],
+            ['count' => $this->author_note_count, 'icon' => 'heroicon-o-pencil-square', 'label' => 'yazar notu'],
+            ['count' => $this->source_count, 'icon' => 'heroicon-o-link', 'label' => 'kaynak'],
+        ])
+            ->filter(fn (array $stat) => ! empty($stat['count']))
+            ->values()
+            ->all();
     }
 }

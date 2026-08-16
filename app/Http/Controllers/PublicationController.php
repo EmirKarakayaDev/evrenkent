@@ -69,12 +69,24 @@ class PublicationController extends Controller
             'title' => ['required', 'string', 'max:255'],
             'body' => ['required', 'string'],
             'price' => ['nullable', 'numeric', 'min:0'],
+            'page_count' => ['nullable', 'integer', 'min:0'],
+            'document_count' => ['nullable', 'integer', 'min:0'],
+            'video_count' => ['nullable', 'integer', 'min:0'],
+            'map_count' => ['nullable', 'integer', 'min:0'],
+            'author_note_count' => ['nullable', 'integer', 'min:0'],
+            'source_count' => ['nullable', 'integer', 'min:0'],
         ]);
 
         $book->update([
             'title' => $data['title'],
             'description' => $data['body'],
             'price' => $data['price'] ?? 0,
+            'page_count' => $data['page_count'] ?? null,
+            'document_count' => $data['document_count'] ?? null,
+            'video_count' => $data['video_count'] ?? null,
+            'map_count' => $data['map_count'] ?? null,
+            'author_note_count' => $data['author_note_count'] ?? null,
+            'source_count' => $data['source_count'] ?? null,
         ]);
 
         return redirect()->route($this->listRouteFor($book->status))->with('status', 'Kitap güncellendi.');

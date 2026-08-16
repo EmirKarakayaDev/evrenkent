@@ -6,37 +6,71 @@
     @php
         $isAuthor = auth()->check() && auth()->id() === $book->author_id;
         $locked = $book->price > 0 && ! ($isAuthor || $hasPurchased);
+
+        // Tür • Yıl • Yayın adı — hepsi tek yayınevi olduğu için "Evrenkent Yayınları"
+        // sabit bir metin (ayrı bir sütun gerektirmiyor), diğer ikisi boşsa satıra girmiyor.
+        $metaParts = array_filter([
+            $book->categories->first()?->name,
+            $book->published_at?->format('Y'),
+            'Evrenkent Yayınları',
+        ]);
+
+        // Bölüm sayısı gerçek bir okuma-modu verisi — yazarın panelden girdiği diğer
+        // istatistiklerle (sayfa/belge/video vb.) aynı şeritte, en başta gösteriliyor.
+        $stats = collect($chapterCount > 0 ? [['count' => $chapterCount, 'icon' => 'heroicon-o-book-open', 'label' => $chapterCount === 1 ? 'bölüm' : 'bölüm']] : [])
+            ->concat($book->contentStats());
     @endphp
 
     <div class="grid grid-cols-1 lg:grid-cols-[280px_1fr_320px] gap-8">
         <x-book-cover :book="$book" class="aspect-[3/4] rounded-lg border border-slate-200 shadow-sm" icon-class="w-10 h-10" />
 
         <div class="min-w-0">
-            <div class="text-xs text-brand-600 font-medium uppercase tracking-wide">{{ $book->author->name }}</div>
-            <h1 class="font-serif text-2xl sm:text-3xl font-semibold text-slate-900 mt-1">{{ $book->title }}</h1>
+            <h1 class="font-serif text-2xl sm:text-3xl font-semibold text-slate-900">{{ $book->title }}</h1>
+            <div class="text-sm text-brand-600 font-medium mt-1">{{ $book->author->name }}</div>
 
-            <div class="flex flex-wrap items-center gap-2 mt-3">
+            @if (count($metaParts) > 0)
+                <div class="text-sm text-slate-500 mt-1.5">{{ implode(' · ', $metaParts) }}</div>
+            @endif
+
+            {{-- Değerlendirme — gerçek bir yorum/puanlama sistemi gelene kadar Süper Admin'in
+                 elle girdiği özet değer. Hiç girilmediyse (review_count boş) hiç gösterilmiyor,
+                 sahte "0.0 (0 değerlendirme)" yazmıyoruz. --}}
+            @if ($book->review_count && $book->average_rating !== null)
+                <div class="flex items-center gap-1.5 mt-2.5">
+                    <div class="flex items-center text-amber-400">
+                        @for ($i = 1; $i <= 5; $i++)
+                            @if ($i <= round($book->average_rating))
+                                <x-heroicon-s-star class="w-4 h-4" />
+                            @else
+                                <x-heroicon-o-star class="w-4 h-4" />
+                            @endif
+                        @endfor
+                    </div>
+                    <span class="text-sm font-medium text-slate-900">{{ number_format($book->average_rating, 1) }}</span>
+                    <span class="text-sm text-slate-400">({{ $book->review_count }} değerlendirme)</span>
+                </div>
+            @endif
+
+            @if ($stats->isNotEmpty())
+                <div class="flex flex-wrap items-center gap-x-4 gap-y-1.5 mt-3 text-sm text-slate-500">
+                    @foreach ($stats as $stat)
+                        <span class="inline-flex items-center gap-1.5">
+                            <x-dynamic-component :component="$stat['icon']" class="w-4 h-4 text-slate-400" />
+                            {{ $stat['count'] }} {{ $stat['label'] }}
+                        </span>
+                    @endforeach
+                </div>
+            @endif
+
+            <div class="flex flex-wrap items-center gap-2 mt-4">
                 <x-status-badge :status="$book->status" />
                 @foreach ($book->categories as $category)
                     <span class="pill-tag !py-1 !px-3 !text-xs">{{ $category->name }}</span>
                 @endforeach
             </div>
 
-            {{-- Gerçek veriye dayanan istatistikler — mockup'taki sayfa/video/harita sayaçları yerine
-                 elimizde olanı gösteriyoruz (yorum/puanlama sistemi henüz yok, uydurmuyoruz). --}}
-            @if ($chapterCount > 0)
-                <div class="flex items-center gap-2 mt-4 text-sm text-slate-500">
-                    <x-heroicon-o-book-open class="w-4 h-4" />
-                    {{ $chapterCount }} {{ $chapterCount === 1 ? 'bölüm' : 'bölüm' }}
-                    @if ($book->published_at)
-                        <span class="text-slate-300">·</span>
-                        {{ $book->published_at->translatedFormat('d M Y') }}
-                    @endif
-                </div>
-            @endif
-
             @if ($book->description)
-                <div class="card p-5 mt-5">
+                <div class="mt-6">
                     <h2 class="font-serif text-base font-semibold text-slate-900 mb-2">Kitap Hakkında</h2>
                     <p class="text-slate-600 whitespace-pre-line leading-relaxed">{{ $book->description }}</p>
                 </div>
@@ -60,6 +94,11 @@
                                 <x-heroicon-o-shopping-bag class="w-4 h-4" /> Satın Al
                             </button>
                         </form>
+                        {{-- Sepet henüz gerçek bir özellik değil (çoklu ürün/toplu ödeme akışı yok) —
+                             diğer sepet ikonlarıyla tutarlı şekilde görsel/pasif bırakıldı. --}}
+                        <button type="button" title="Yakında" class="btn-outline-brand w-full cursor-not-allowed">
+                            <x-heroicon-o-shopping-cart class="w-4 h-4" /> Sepete Ekle
+                        </button>
                     @endif
 
                     @if ($book->status === \App\Enums\ContentStatus::Yayinda)
@@ -106,6 +145,13 @@
                         Favorilemek veya okuma listenize eklemek için de giriş yapmanız gerekiyor.
                     </p>
                 @endauth
+
+                @if ($book->status === \App\Enums\ContentStatus::Yayinda)
+                    <div class="flex items-center gap-2 rounded-lg bg-emerald-50 ring-1 ring-inset ring-emerald-200 text-emerald-800 text-xs px-3 py-2.5 mt-1">
+                        <x-heroicon-o-shield-check class="w-4 h-4 shrink-0" />
+                        Güvenli ödeme · Anında erişim · Tüm cihazlarda oku
+                    </div>
+                @endif
             </div>
         </div>
     </div>
@@ -115,11 +161,11 @@
             <div class="flex items-baseline justify-between mb-5">
                 <h2 class="font-serif text-xl font-semibold text-slate-900">Bu Eserler de Dikkatini Çekebilir</h2>
             </div>
-            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-5">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 @foreach ($relatedBooks as $related)
-                    <a href="{{ route('kitaplar.show', $related) }}" class="group block card-hover overflow-hidden">
-                        <x-book-cover :book="$related" class="aspect-[3/4]" />
-                        <div class="p-3">
+                    <a href="{{ route('kitaplar.show', $related) }}" class="group flex gap-3 card-hover overflow-hidden p-3">
+                        <x-book-cover :book="$related" class="w-20 aspect-[3/4] rounded-md shrink-0" icon-class="w-5 h-5" />
+                        <div class="min-w-0 flex flex-col justify-center">
                             <div class="text-xs text-brand-600 font-medium uppercase tracking-wide">{{ $related->author->name }}</div>
                             <div class="font-medium text-slate-900 text-sm truncate mt-0.5">{{ $related->title }}</div>
                             <div class="text-sm text-slate-500 mt-1">{{ number_format($related->price, 2, ',', '.') }} TL</div>
