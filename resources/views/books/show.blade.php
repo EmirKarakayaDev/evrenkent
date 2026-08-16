@@ -26,17 +26,17 @@
 
         <div class="min-w-0">
             <h1 class="font-serif text-2xl sm:text-3xl font-semibold text-slate-900">{{ $book->title }}</h1>
-            <div class="text-sm text-brand-600 font-medium mt-1">{{ $book->author->name }}</div>
+            <div class="text-sm text-brand-600 font-medium mt-2">{{ $book->author->name }}</div>
 
             @if (count($metaParts) > 0)
-                <div class="text-sm text-slate-500 mt-1.5">{{ implode(' · ', $metaParts) }}</div>
+                <div class="text-sm text-slate-500 mt-2">{{ implode('  ·  ', $metaParts) }}</div>
             @endif
 
             {{-- Değerlendirme — gerçek bir yorum/puanlama sistemi gelene kadar Süper Admin'in
                  elle girdiği özet değer. Hiç girilmediyse (review_count boş) hiç gösterilmiyor,
                  sahte "0.0 (0 değerlendirme)" yazmıyoruz. --}}
             @if ($book->review_count && $book->average_rating !== null)
-                <div class="flex items-center gap-1.5 mt-2.5">
+                <div class="flex items-center gap-1.5 mt-4">
                     <div class="flex items-center text-amber-400">
                         @for ($i = 1; $i <= 5; $i++)
                             @if ($i <= round($book->average_rating))
@@ -52,7 +52,7 @@
             @endif
 
             @if ($stats->isNotEmpty())
-                <div class="flex flex-wrap items-center gap-x-4 gap-y-1.5 mt-3 text-sm text-slate-500">
+                <div class="flex flex-wrap items-center gap-x-6 gap-y-2 mt-5 text-sm text-slate-500">
                     @foreach ($stats as $stat)
                         <span class="inline-flex items-center gap-1.5">
                             <x-dynamic-component :component="$stat['icon']" class="w-4 h-4 text-slate-400" />
@@ -62,7 +62,7 @@
                 </div>
             @endif
 
-            <div class="flex flex-wrap items-center gap-2 mt-4">
+            <div class="flex flex-wrap items-center gap-2 mt-5">
                 <x-status-badge :status="$book->status" />
                 @foreach ($book->categories as $category)
                     <span class="pill-tag !py-1 !px-3 !text-xs">{{ $category->name }}</span>
@@ -70,18 +70,18 @@
             </div>
 
             @if ($book->description)
-                <div class="mt-6">
+                <div class="mt-8">
                     <h2 class="font-serif text-base font-semibold text-slate-900 mb-2">Kitap Hakkında</h2>
                     <p class="text-slate-600 whitespace-pre-line leading-relaxed">{{ $book->description }}</p>
                 </div>
             @endif
         </div>
 
-        <div class="card p-5 h-fit lg:sticky lg:top-24">
+        <div class="card p-6 h-fit lg:sticky lg:top-24">
             <div class="text-2xl font-serif font-semibold text-slate-900">{{ number_format($book->price, 2, ',', '.') }} TL</div>
-            <div class="text-xs text-slate-400 mt-0.5">KDV dahil</div>
+            <div class="text-xs text-slate-400 mt-1">KDV dahil</div>
 
-            <div class="flex flex-col gap-2.5 mt-4">
+            <div class="flex flex-col gap-3 mt-5">
                 @auth
                     @if ($hasPurchased)
                         <span class="btn bg-emerald-50 text-emerald-700 ring-1 ring-inset ring-emerald-200 cursor-default">
