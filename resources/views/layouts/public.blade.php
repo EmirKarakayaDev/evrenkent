@@ -66,13 +66,13 @@
                 </div>
             </header>
 
-            <div class="flex-1 flex items-start">
+            <div class="flex-1 flex">
                 @auth
                     {{-- Panel menüsü: overlay değil, normal akışta — açılınca içerik alanı daralır (YouTube'daki gibi).
                          İçteki w-72'lik sabit genişlik, dıştaki genişlik animasyonu sırasında metnin kırılmasını önler. --}}
                     <aside
                         :class="$store.ui.sidebarOpen ? 'w-72 border-r border-slate-200' : 'w-0 border-r-0'"
-                        class="shrink-0 bg-white transition-all duration-200 sticky top-16 self-start h-[calc(100vh-4rem)] overflow-x-hidden overflow-y-auto"
+                        class="shrink-0 bg-paper transition-all duration-200 sticky top-16 self-start h-[calc(100vh-4rem)] overflow-x-hidden overflow-y-auto"
                     >
                         <div class="w-72 p-5">
                             <x-panel-nav />
