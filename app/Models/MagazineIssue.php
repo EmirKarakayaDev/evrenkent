@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\ContentStatus;
 use Database\Factories\MagazineIssueFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -40,5 +41,10 @@ class MagazineIssue extends Model
     public function reviews(): MorphMany
     {
         return $this->morphMany(ContentReview::class, 'reviewable');
+    }
+
+    public function scopePublished(Builder $query): Builder
+    {
+        return $query->where('status', ContentStatus::Yayinda);
     }
 }

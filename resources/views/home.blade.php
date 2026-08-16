@@ -11,13 +11,13 @@
                 <div class="text-sm text-slate-500">{{ $totalBooks }} eser listeleniyor</div>
             </div>
         </a>
-        <div title="Yakında" class="flex items-center gap-4 rounded-lg border border-slate-200 bg-white p-4 text-slate-400 cursor-not-allowed">
-            <x-heroicon-o-newspaper class="w-7 h-7 shrink-0" />
+        <a href="{{ route('dergiler.index') }}" class="flex items-center gap-4 rounded-lg border border-slate-200 bg-white p-4 hover:border-slate-300 transition-colors">
+            <x-heroicon-o-newspaper class="w-7 h-7 text-slate-400 shrink-0" />
             <div>
-                <div class="font-medium">Dergiler</div>
-                <div class="text-sm">Yakında</div>
+                <div class="font-medium text-slate-900">Dergiler</div>
+                <div class="text-sm text-slate-500">{{ $totalIssues }} sayı listeleniyor</div>
             </div>
-        </div>
+        </a>
         <div title="Yakında" class="flex items-center gap-4 rounded-lg border border-slate-200 bg-white p-4 text-slate-400 cursor-not-allowed">
             <x-heroicon-o-language class="w-7 h-7 shrink-0" />
             <div>
