@@ -25,49 +25,19 @@
         <x-book-cover :book="$book" class="aspect-[3/4] rounded-lg border border-slate-200 shadow-sm" icon-class="w-10 h-10" />
 
         <div class="min-w-0">
-            <h1 class="font-serif text-2xl sm:text-3xl font-semibold text-slate-900">{{ $book->title }}</h1>
-            <div class="text-sm text-brand-600 font-medium mt-2">{{ $book->author->name }}</div>
-
-            @if (count($metaParts) > 0)
-                <div class="text-sm text-slate-500 mt-2">{{ implode('  ·  ', $metaParts) }}</div>
-            @endif
-
-            {{-- Değerlendirme — gerçek bir yorum/puanlama sistemi gelene kadar Süper Admin'in
-                 elle girdiği özet değer. Hiç girilmediyse (review_count boş) hiç gösterilmiyor,
-                 sahte "0.0 (0 değerlendirme)" yazmıyoruz. --}}
-            @if ($book->review_count && $book->average_rating !== null)
-                <div class="flex items-center gap-1.5 mt-4">
-                    <div class="flex items-center text-amber-400">
-                        @for ($i = 1; $i <= 5; $i++)
-                            @if ($i <= round($book->average_rating))
-                                <x-heroicon-s-star class="w-4 h-4" />
-                            @else
-                                <x-heroicon-o-star class="w-4 h-4" />
-                            @endif
-                        @endfor
-                    </div>
-                    <span class="text-sm font-medium text-slate-900">{{ number_format($book->average_rating, 1) }}</span>
-                    <span class="text-sm text-slate-400">({{ $book->review_count }} değerlendirme)</span>
-                </div>
-            @endif
-
-            @if ($stats->isNotEmpty())
-                <div class="flex flex-wrap items-center gap-x-6 gap-y-2 mt-5 text-sm text-slate-500">
-                    @foreach ($stats as $stat)
-                        <span class="inline-flex items-center gap-1.5">
-                            <x-dynamic-component :component="$stat['icon']" class="w-4 h-4 text-slate-400" />
-                            {{ $stat['count'] }} {{ $stat['label'] }}
-                        </span>
-                    @endforeach
-                </div>
-            @endif
-
-            <div class="flex flex-wrap items-center gap-2 mt-5">
+            <x-detail-header
+                :title="$book->title"
+                :byline="$book->author->name"
+                :meta="$metaParts"
+                :rating-average="$book->average_rating"
+                :rating-count="$book->review_count"
+                :stats="$stats->all()"
+            >
                 <x-status-badge :status="$book->status" />
                 @foreach ($book->categories as $category)
                     <span class="pill-tag !py-1 !px-3 !text-xs">{{ $category->name }}</span>
                 @endforeach
-            </div>
+            </x-detail-header>
 
             @if ($book->description)
                 <div class="mt-8">

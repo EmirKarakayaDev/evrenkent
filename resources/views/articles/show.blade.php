@@ -4,17 +4,15 @@
 
 @section('content')
     <div class="max-w-3xl">
-        <div class="text-xs text-orange-700 font-medium uppercase tracking-wide">{{ $article->author->name }}</div>
-        <h1 class="font-serif text-2xl font-semibold text-slate-900 mt-1">{{ $article->title }}</h1>
-
-        <div class="flex items-center gap-2 mt-2">
+        <x-detail-header
+            :title="$article->title"
+            :byline="$article->author->name"
+            :meta="[$article->magazineIssue?->title]"
+        >
             <x-status-badge :status="$article->status" />
-            @if ($article->magazineIssue)
-                <span class="text-sm text-slate-500">{{ $article->magazineIssue->title }}</span>
-            @endif
-        </div>
+        </x-detail-header>
 
-        <div class="text-slate-700 leading-relaxed whitespace-pre-line mt-6">{{ $article->content }}</div>
+        <div class="text-slate-700 leading-relaxed whitespace-pre-line mt-8">{{ $article->content }}</div>
 
         @auth
             <div class="mt-10">

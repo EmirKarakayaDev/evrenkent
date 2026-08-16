@@ -7,21 +7,13 @@
         <x-magazine-cover :issue="$issue" class="aspect-[3/4] rounded-lg border border-slate-200 shadow-sm" icon-class="w-10 h-10" />
 
         <div class="min-w-0">
-            <div class="text-xs text-brand-600 font-medium uppercase tracking-wide">Sayı {{ $issue->issue_number }}</div>
-            <h1 class="font-serif text-2xl sm:text-3xl font-semibold text-slate-900 mt-1">{{ $issue->title }}</h1>
-
-            <div class="flex flex-wrap items-center gap-2 mt-3">
+            <x-detail-header
+                :title="$issue->title"
+                :byline="$issue->editor->name"
+                :meta="['Sayı ' . $issue->issue_number, $issue->publish_date?->translatedFormat('d M Y')]"
+            >
                 <x-status-badge :status="$issue->status" />
-            </div>
-
-            <div class="flex items-center gap-2 mt-4 text-sm text-slate-500">
-                <x-heroicon-o-user class="w-4 h-4" />
-                {{ $issue->editor->name }}
-                @if ($issue->publish_date)
-                    <span class="text-slate-300">·</span>
-                    {{ $issue->publish_date->translatedFormat('d M Y') }}
-                @endif
-            </div>
+            </x-detail-header>
 
             <div class="mt-8">
                 <h2 class="font-serif text-base font-semibold text-slate-900 mb-3">Bu Sayıdaki Makaleler</h2>
