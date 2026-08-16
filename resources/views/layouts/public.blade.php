@@ -14,8 +14,12 @@
     </head>
     <body class="font-sans antialiased bg-paper text-slate-800">
         <div class="min-h-screen flex flex-col" x-data>
+            {{-- Header artık içerikle aynı max-w-6xl kutusuna değil, tam genişliğe (edge-to-edge)
+                 yayılıyor — YouTube tarzı: hamburger/logo gerçek sol kenara, sağdaki ikonlar gerçek
+                 sağ kenara yakın duruyor, altındaki sidebar'ın sol kenarıyla dikey hizalı kalıyor.
+                 Ana içerik (@yield('content')) hâlâ max-w-6xl ile ortalı, oranı değişmedi. --}}
             <header class="sticky top-0 z-20 bg-paper/90 backdrop-blur border-b border-slate-200">
-                <div class="max-w-6xl mx-auto px-6">
+                <div class="px-6">
                     <div class="flex justify-between h-16 items-center gap-6">
                         <div class="flex items-center gap-4 shrink-0">
                             {{-- Hamburger: YouTube tarzı — sayfayı örtmez, içerik alanını daraltarak yandan panel
