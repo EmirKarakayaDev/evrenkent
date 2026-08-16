@@ -124,6 +124,57 @@ class DemoContentSeeder extends Seeder
             }
         }
 
+        // --- Editörün Seçkisi / Fırsatlar (anasayfa pillerinin altyapısı) ---
+        // Süper Admin'in ileride Filament'ten işaretleyeceği alanlar — şimdilik demo
+        // amaçlı birkaç yayında kitap üzerinde elle set ediliyor, pil boş görünmesin diye.
+        foreach (['Sislerin Ardındaki Fener', 'Toprağın Hafızası', 'Zamansız Yolculuk', 'Rüzgârın Şarkısı'] as $title) {
+            $bookModels[$title]->update(['is_editors_pick' => true]);
+        }
+
+        $discounted = [
+            'Sessiz Sokaklar' => 112,
+            'Unutulan Mektuplar' => 99,
+            'Ayna Kırıkları' => 139,
+            'Karanlığın Ötesinde' => 165,
+        ];
+        foreach ($discounted as $title => $discountPrice) {
+            $bookModels[$title]->update(['discount_price' => $discountPrice]);
+        }
+
+        // --- Çok Satanlar (anasayfa pilinin altyapısı) ---
+        // Gerçek bir "en çok satan" sıralaması satın alma sayısından türetiliyor (sahte
+        // sayaç yok) — bunun için birkaç demo okur ve dağılımlı satın alma kaydı gerekiyor.
+        $demoBuyers = collect(range(1, 6))->map(
+            fn (int $i) => User::firstOrCreate(
+                ['email' => "demo.okur{$i}@evrenkent.test"],
+                ['name' => "Demo Okur {$i}", 'password' => bcrypt('password')]
+            )
+        )->each(function (User $buyer) {
+            if (! $buyer->hasRole('okur')) {
+                $buyer->assignRole('okur');
+            }
+        });
+
+        $purchaseCounts = [
+            'Zamansız Yolculuk' => 5,
+            'Sessiz Sokaklar' => 4,
+            'Toprağın Hafızası' => 3,
+            'Sislerin Ardındaki Fener' => 3,
+            'Unutulan Mektuplar' => 2,
+            'Ayna Kırıkları' => 1,
+        ];
+        foreach ($purchaseCounts as $title => $count) {
+            $book = $bookModels[$title];
+            $price = $book->discount_price ?? $book->price;
+
+            foreach ($demoBuyers->take($count) as $buyer) {
+                $buyer->purchases()->firstOrCreate(
+                    ['book_id' => $book->id],
+                    ['amount' => $price, 'purchased_at' => now()->subDays(random_int(1, 45)), 'payment_status' => 'completed']
+                );
+            }
+        }
+
         // --- Dergi Sayıları ---
         $issues = [
             ['title' => 'Bilim Tarihi Dergisi - Sayı 23', 'number' => 23, 'status' => ContentStatus::Yayinda],

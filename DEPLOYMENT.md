@@ -8,7 +8,7 @@ Bu proje şu an **yerel geliştirme ortamı** için yapılandırılmıştır. Ge
 - [ ] **`APP_ENV=production` yap.**
 - [ ] **Gerçek bir e-posta servisi bağla** (`MAIL_MAILER`, SMTP bilgileri — SendGrid, Postmark, Mailgun vb.). Şu an `log` sürücüsü kullanılıyor, yani şifre sıfırlama/doğrulama e-postaları **hiç gönderilmiyor**, sadece log dosyasına yazılıyor.
 - [ ] **`APP_URL`'i gerçek domain'e güncelle.** Şifre sıfırlama linkleri ve diğer imzalı URL'ler bu değere göre üretiliyor.
-- [ ] **Seed edilen tüm hesapların şifresini değiştir veya hesapları sil.** (`admin@evrenkent.test`, `editor@evrenkent.test`, `author@evrenkent.test`, `reader@evrenkent.test` — hepsi `password` şifresiyle oluşturuldu, sadece geliştirme içindir.)
+- [ ] **Seed edilen tüm hesapların şifresini değiştir veya hesapları sil.** (`admin@evrenkent.test`, `editor@evrenkent.test`, `author@evrenkent.test`, `reader@evrenkent.test`, `elif.nazli@evrenkent.test`, `demo.okur1@evrenkent.test`…`demo.okur6@evrenkent.test` — hepsi `password` şifresiyle oluşturuldu, sadece geliştirme içindir. Demo okurlar "Çok Satanlar" pilini beslemek için satın alma kaydı üretir, canlıda hiç olmamalı.)
 - [ ] **`DemoContentSeeder`'ı canlıda asla çalıştırma.** Sahte kullanıcı/kitap/makale/dergi verisi oluşturur, sadece demo amaçlıdır.
 - [ ] **`php artisan migrate:fresh` gibi yıkıcı komutları canlı veritabanında asla çalıştırma.**
 

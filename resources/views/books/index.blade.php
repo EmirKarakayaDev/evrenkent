@@ -1,35 +1,13 @@
 @extends('layouts.public')
 
-@section('title', 'Ana Sayfa')
+@section('title', 'Kitaplar')
 
 @section('content')
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10">
-        <a href="{{ route('kitaplar.index') }}" class="flex items-center gap-4 rounded-lg border border-brand-300 bg-white p-4 hover:border-brand-400 transition-colors">
-            <x-heroicon-o-book-open class="w-7 h-7 text-brand-500 shrink-0" />
-            <div>
-                <div class="font-medium text-slate-900">Kitaplar</div>
-                <div class="text-sm text-slate-500">{{ $totalBooks }} eser listeleniyor</div>
-            </div>
-        </a>
-        <div title="Yakında" class="flex items-center gap-4 rounded-lg border border-slate-200 bg-white p-4 text-slate-400 cursor-not-allowed">
-            <x-heroicon-o-newspaper class="w-7 h-7 shrink-0" />
-            <div>
-                <div class="font-medium">Dergiler</div>
-                <div class="text-sm">Yakında</div>
-            </div>
-        </div>
-        <div title="Yakında" class="flex items-center gap-4 rounded-lg border border-slate-200 bg-white p-4 text-slate-400 cursor-not-allowed">
-            <x-heroicon-o-language class="w-7 h-7 shrink-0" />
-            <div>
-                <div class="font-medium">Sözlükler</div>
-                <div class="text-sm">Yakında</div>
-            </div>
-        </div>
-    </div>
+    <h1 class="font-serif text-xl font-semibold text-slate-900 mb-5">Kitaplar</h1>
 
-    <div class="flex flex-wrap gap-2.5 mb-10">
+    <div class="flex flex-wrap gap-2.5 mb-8">
         @foreach (\App\Enums\BookShelf::cases() as $tab)
-            <a href="{{ route('home', ['raf' => $tab->value]) }}" class="{{ $shelf === $tab ? 'pill-active' : 'pill-idle' }}">
+            <a href="{{ route('kitaplar.index', ['raf' => $tab->value]) }}" class="{{ $shelf === $tab ? 'pill-active' : 'pill-idle' }}">
                 <x-dynamic-component :component="match ($tab) {
                     \App\Enums\BookShelf::YeniCikanlar => $shelf === $tab ? 'heroicon-s-star' : 'heroicon-o-star',
                     \App\Enums\BookShelf::CokSatanlar => 'heroicon-o-fire',
@@ -39,13 +17,6 @@
                 {{ $tab->label() }}
             </a>
         @endforeach
-    </div>
-
-    <div class="flex items-baseline justify-between mb-5">
-        <h2 class="font-serif text-xl font-semibold text-slate-900">{{ $shelf->label() }}</h2>
-        <a href="{{ route('kitaplar.index', ['raf' => $shelf->value]) }}" class="text-sm font-medium text-brand-600 hover:text-brand-700">
-            Tümünü Gör →
-        </a>
     </div>
 
     @if ($books->isEmpty())
@@ -72,6 +43,10 @@
                     </div>
                 </a>
             @endforeach
+        </div>
+
+        <div class="mt-8">
+            {{ $books->links() }}
         </div>
     @endif
 @endsection

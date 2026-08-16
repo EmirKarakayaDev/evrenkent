@@ -19,7 +19,8 @@ class Book extends Model
 
     protected $fillable = [
         'author_id', 'title', 'slug', 'description',
-        'cover_image', 'price', 'status', 'published_at',
+        'cover_image', 'price', 'discount_price', 'status',
+        'is_editors_pick', 'published_at',
     ];
 
     protected function casts(): array
@@ -28,6 +29,8 @@ class Book extends Model
             'status' => ContentStatus::class,
             'published_at' => 'datetime',
             'price' => 'decimal:2',
+            'discount_price' => 'decimal:2',
+            'is_editors_pick' => 'boolean',
         ];
     }
 
@@ -64,5 +67,22 @@ class Book extends Model
     public function scopePublished(Builder $query): Builder
     {
         return $query->where('status', ContentStatus::Yayinda);
+    }
+
+    /** En çok satın alınandan aza doğru sıralar (Çok Satanlar). */
+    public function scopeBestsellers(Builder $query): Builder
+    {
+        return $query->withCount('purchases')->orderByDesc('purchases_count');
+    }
+
+    public function scopeEditorsPick(Builder $query): Builder
+    {
+        return $query->where('is_editors_pick', true);
+    }
+
+    /** Sadece indirimli fiyatı olan (Fırsatlar) kitaplar. */
+    public function scopeOnSale(Builder $query): Builder
+    {
+        return $query->whereNotNull('discount_price');
     }
 }
