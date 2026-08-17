@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Enums\ContentStatus;
 use App\Models\Article;
+use App\Models\MagazineIssue;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -122,5 +124,111 @@ class DergiYonetimiController extends Controller
             ->get();
 
         return view('panel.dergi.yayin-takvimi', compact('issues'));
+    }
+
+    /**
+     * Sayı oluşturma/düzenleme formunun validasyon kuralları — ikisi de aynı alanları kullanır.
+     *
+     * @return array<string, array<mixed>>
+     */
+    private function sayiValidationRules(): array
+    {
+        return [
+            'title' => ['required', 'string', 'max:255'],
+            'issue_number' => ['required', 'integer', 'min:1'],
+            'editor_note' => ['nullable', 'string'],
+            'cover_image' => ['nullable', 'image', 'max:5120'],
+            'publish_date' => ['nullable', 'date'],
+        ];
+    }
+
+    public function yeniSayiForm(): View
+    {
+        $this->authorize('create', MagazineIssue::class);
+
+        return view('panel.dergi.sayi-form', ['magazineIssue' => null]);
+    }
+
+    public function storeSayi(Request $request): RedirectResponse
+    {
+        $this->authorize('create', MagazineIssue::class);
+
+        $data = $request->validate($this->sayiValidationRules());
+
+        if ($request->hasFile('cover_image')) {
+            // Filament'in FileUpload'ıyla aynı disk/dizin — x-magazine-cover bileşeni
+            // ikisinde de aynı şekilde okuyor.
+            $data['cover_image'] = $request->file('cover_image')->store('covers/magazine-issues', 'public');
+        }
+
+        $issue = auth()->user()->editedMagazineIssues()->create([
+            ...$data,
+            'status' => ContentStatus::Taslak,
+        ]);
+
+        return redirect()->route('panel.dergi.sayilarim.duzenle', $issue)->with('status', 'Sayı oluşturuldu.');
+    }
+
+    public function sayiDuzenleForm(MagazineIssue $magazineIssue): View
+    {
+        $this->authorize('update', $magazineIssue);
+
+        return view('panel.dergi.sayi-form', ['magazineIssue' => $magazineIssue]);
+    }
+
+    public function updateSayi(Request $request, MagazineIssue $magazineIssue): RedirectResponse
+    {
+        $this->authorize('update', $magazineIssue);
+
+        $data = $request->validate($this->sayiValidationRules());
+
+        if ($request->hasFile('cover_image')) {
+            $data['cover_image'] = $request->file('cover_image')->store('covers/magazine-issues', 'public');
+        } else {
+            unset($data['cover_image']);
+        }
+
+        $magazineIssue->update($data);
+
+        return redirect()->route('panel.dergi.sayilarim.duzenle', $magazineIssue)->with('status', 'Sayı güncellendi.');
+    }
+
+    public function gonderSayi(MagazineIssue $magazineIssue): RedirectResponse
+    {
+        $this->authorize('submit', $magazineIssue);
+
+        $magazineIssue->update(['status' => ContentStatus::Gonderildi]);
+
+        $magazineIssue->reviews()->create([
+            'reviewer_id' => auth()->id(),
+            'action' => 'gonderildi',
+            'note' => 'Dergi Editörü tarafından Süper Admin onayına gönderildi.',
+        ]);
+
+        return back()->with('status', 'Sayı Süper Admin onayına gönderildi.');
+    }
+
+    public function makaleGoster(Article $article): View
+    {
+        $this->authorize('view', $article);
+
+        $article->load(['author', 'magazineIssue', 'categories']);
+
+        return view('panel.dergi.makale-goster', compact('article'));
+    }
+
+    public function inceleMakale(Article $article): RedirectResponse
+    {
+        $this->authorize('review', $article);
+
+        $article->update(['status' => ContentStatus::Incelemede]);
+
+        $article->reviews()->create([
+            'reviewer_id' => auth()->id(),
+            'action' => 'incelemede',
+            'note' => 'Dergi Editörü tarafından incelendi, Süper Admin onayına hazır.',
+        ]);
+
+        return back()->with('status', 'Makale incelendi, Süper Admin onayına gönderildi.');
     }
 }

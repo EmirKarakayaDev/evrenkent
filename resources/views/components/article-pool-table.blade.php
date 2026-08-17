@@ -46,9 +46,19 @@
                             {{ $article->created_at->format('d.m.Y') }}
                         </td>
                         <td class="px-5 py-3 text-right whitespace-nowrap">
-                            <a href="{{ \App\Filament\Resources\ArticleResource::getUrl('edit', ['record' => $article]) }}" class="inline-flex items-center gap-1.5 text-sm text-slate-600 hover:text-slate-900 transition-colors">
-                                <x-heroicon-o-eye class="w-4 h-4" /> Görüntüle
-                            </a>
+                            <div class="flex items-center justify-end gap-3">
+                                <a href="{{ route('panel.dergi.makale-havuzu.goster', $article) }}" class="inline-flex items-center gap-1.5 text-sm text-slate-600 hover:text-slate-900 transition-colors">
+                                    <x-heroicon-o-eye class="w-4 h-4" /> Görüntüle
+                                </a>
+                                @can('review', $article)
+                                    <form method="POST" action="{{ route('panel.dergi.makale-havuzu.incele', $article) }}">
+                                        @csrf
+                                        <button type="submit" class="inline-flex items-center gap-1.5 text-sm text-brand-700 hover:text-brand-800 transition-colors">
+                                            <x-heroicon-o-check-circle class="w-4 h-4" /> İncele
+                                        </button>
+                                    </form>
+                                @endcan
+                            </div>
                         </td>
                     </tr>
                 @endforeach

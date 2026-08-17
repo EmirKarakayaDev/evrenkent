@@ -73,13 +73,24 @@ Route::middleware('auth')->prefix('panel')->as('panel.')->group(function () {
         Route::delete('/kitap/{book}/bolumler/{chapter}', [ChapterController::class, 'destroy'])->name('kitap.bolumler.sil');
     });
 
-    // Dergi Yönetimi: sadece Dergi Editörü rolündeki kullanıcılar erişebilir. Gerçek
-    // onay/red/yayınla aksiyonları hâlâ Filament'te (MagazineIssueResource/ArticleResource) —
-    // bu bir özet/genel bakış paneli, mutasyon gerektiren işlemler Filament'e link verir.
+    // Dergi Yönetimi: sadece Dergi Editörü rolündeki kullanıcılar erişebilir. Sayı
+    // oluşturma/düzenleme/onaya gönderme ve makale inceleme burada gerçek — sadece
+    // Süper Admin'in onayla/reddet/yayınla aksiyonları (policy'de zaten sadece ona
+    // açık) Filament'te kalıyor.
     Route::middleware('role:dergi_editoru')->prefix('dergi')->as('dergi.')->group(function () {
         Route::get('/', [DergiYonetimiController::class, 'index'])->name('index');
+
         Route::get('/sayilarim', [DergiYonetimiController::class, 'sayilarim'])->name('sayilarim');
+        Route::get('/sayilarim/yeni', [DergiYonetimiController::class, 'yeniSayiForm'])->name('sayilarim.yeni');
+        Route::post('/sayilarim', [DergiYonetimiController::class, 'storeSayi'])->name('sayilarim.store');
+        Route::get('/sayilarim/{magazineIssue}/duzenle', [DergiYonetimiController::class, 'sayiDuzenleForm'])->name('sayilarim.duzenle');
+        Route::put('/sayilarim/{magazineIssue}', [DergiYonetimiController::class, 'updateSayi'])->name('sayilarim.guncelle');
+        Route::post('/sayilarim/{magazineIssue}/gonder', [DergiYonetimiController::class, 'gonderSayi'])->name('sayilarim.gonder');
+
         Route::get('/makale-havuzu', [DergiYonetimiController::class, 'makaleHavuzu'])->name('makale-havuzu');
+        Route::get('/makale-havuzu/{article}', [DergiYonetimiController::class, 'makaleGoster'])->name('makale-havuzu.goster');
+        Route::post('/makale-havuzu/{article}/incele', [DergiYonetimiController::class, 'inceleMakale'])->name('makale-havuzu.incele');
+
         Route::get('/yayin-takvimi', [DergiYonetimiController::class, 'yayinTakvimi'])->name('yayin-takvimi');
     });
 });

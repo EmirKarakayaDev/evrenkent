@@ -3,7 +3,12 @@
 @section('title', 'Sayılarım')
 
 @section('content')
-    <h1 class="font-serif text-xl font-semibold text-slate-900 mb-5">Sayılarım</h1>
+    <div class="flex items-center justify-between gap-3 mb-5 flex-wrap">
+        <h1 class="font-serif text-xl font-semibold text-slate-900">Sayılarım</h1>
+        <a href="{{ route('panel.dergi.sayilarim.yeni') }}" class="btn-dark btn-sm">
+            <x-heroicon-o-plus class="w-4 h-4" /> Yeni Sayı Oluştur
+        </a>
+    </div>
 
     <div class="flex flex-wrap gap-2.5 mb-8">
         <a href="{{ route('panel.dergi.sayilarim') }}" class="{{ ! $status ? 'pill-active' : 'pill-idle' }}">Tümü</a>
@@ -33,7 +38,7 @@
                     </div>
                     <div class="flex items-center gap-2 flex-wrap justify-end">
                         <a href="{{ route('dergiler.show', $issue) }}" class="btn-outline btn-sm">Görüntüle</a>
-                        <a href="{{ \App\Filament\Resources\MagazineIssueResource::getUrl('edit', ['record' => $issue]) }}" class="btn-dark btn-sm">Düzenle</a>
+                        <a href="{{ route('panel.dergi.sayilarim.duzenle', $issue) }}" class="btn-dark btn-sm">Düzenle</a>
                     </div>
                 </div>
             @endforeach

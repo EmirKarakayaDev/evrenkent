@@ -14,7 +14,7 @@
             <x-heroicon-o-newspaper class="w-8 h-8 mx-auto mb-3 text-slate-300" />
             Şu an hazırlanan bir sayınız yok.
             <div class="mt-3">
-                <a href="{{ \App\Filament\Resources\MagazineIssueResource::getUrl('create') }}" class="btn-brand btn-sm">
+                <a href="{{ route('panel.dergi.sayilarim.yeni') }}" class="btn-brand btn-sm">
                     <x-heroicon-o-plus class="w-4 h-4" /> Yeni Sayı Oluştur
                 </a>
             </div>
@@ -57,15 +57,25 @@
                         @endforeach
                     </div>
 
-                    {{-- Gerçek aksiyonlar (onay/red/yayınla/sayı düzenle) Filament'te kalıyor —
-                         burada tekrar yazılmıyor, sadece oraya link veriliyor. --}}
+                    {{-- Sayı oluşturma/düzenleme/onaya gönderme kendi panelimizde — sadece Süper
+                         Admin'in onayla/reddet/yayınla aksiyonları (policy'de zaten sadece ona
+                         açık) Filament'te kalıyor, dergi editörünün kendi akışında hiç Filament
+                         linki yok. --}}
                     <div class="flex flex-wrap gap-3 mt-5">
                         <a href="{{ route('dergiler.show', $activeIssue) }}" class="btn-outline btn-sm">
                             <x-heroicon-o-eye class="w-4 h-4" /> Sayıyı Önizle
                         </a>
-                        <a href="{{ \App\Filament\Resources\MagazineIssueResource::getUrl('edit', ['record' => $activeIssue]) }}" class="btn-dark btn-sm">
+                        <a href="{{ route('panel.dergi.sayilarim.duzenle', $activeIssue) }}" class="btn-dark btn-sm">
                             Sayı Oluşturucuya Git →
                         </a>
+                        @can('submit', $activeIssue)
+                            <form method="POST" action="{{ route('panel.dergi.sayilarim.gonder', $activeIssue) }}">
+                                @csrf
+                                <button type="submit" class="btn-outline-brand btn-sm">
+                                    <x-heroicon-o-paper-airplane class="w-4 h-4" /> Yayına Gönder
+                                </button>
+                            </form>
+                        @endcan
                     </div>
                 </div>
             </div>
