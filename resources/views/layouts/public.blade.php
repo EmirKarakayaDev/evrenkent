@@ -48,7 +48,11 @@
                             </form>
                         </div>
 
-                        <div class="flex items-center gap-3 sm:gap-5 shrink-0">
+                        {{-- justify-self-end şart: mobilde ortadaki arama kutusu display:none olduğu
+                             için CSS Grid onu tamamen sıradan çıkarıyor, bu ikon grubu (aslında 3.
+                             sütun) grid'in 2. (1fr) sütununa kayıyor — justify-self-end o geniş
+                             hücrenin içinde bile sağa yaslı kalmasını garantiliyor. --}}
+                        <div class="flex items-center gap-3 sm:gap-5 shrink-0 justify-self-end">
                             <a href="{{ route('arama') }}" title="Ara" class="sm:hidden inline-flex items-center text-slate-500 hover:text-slate-900 transition-colors">
                                 <x-heroicon-o-magnifying-glass class="w-5 h-5" />
                             </a>
