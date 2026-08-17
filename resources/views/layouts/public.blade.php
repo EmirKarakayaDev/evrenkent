@@ -58,7 +58,7 @@
                                      fetch ile tıklanınca sayfa yenilenmeden güncellenebilsin (bkz.
                                      x-add-to-cart-button). x-init her yüklemede/Turbo geçişinde sunucudan
                                      gelen gerçek sayıyla senkronluyor. --}}
-                                <a href="{{ route('panel.sepetim') }}" title="Sepetim" x-data x-init="$store.cart.count = {{ auth()->user()->cartItems()->count() }}" class="flex items-center gap-1.5 text-sm text-slate-500 hover:text-slate-900 transition-colors">
+                                <a href="{{ route('panel.sepetim') }}" title="Sepetim" x-data x-init="$store.cart.count = {{ auth()->user()->cartItems()->count() }}" class="flex items-center gap-3 text-sm text-slate-500 hover:text-slate-900 transition-colors">
                                     {{-- Rozet ikonun sağ-üst köşesine kendi boyutunun yarısı kadar
                                          translate edilerek sabitleniyor (badge'in kendi genişliğinden
                                          bağımsız, standart "corner badge" tekniği) — bu sayede "Sepetim"
