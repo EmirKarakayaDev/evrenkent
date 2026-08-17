@@ -3,7 +3,7 @@
     $latestNotifications = auth()->user()->notifications()->latest()->take(8)->get();
 @endphp
 
-<div class="relative" x-data="{ open: false }" @click.outside="open = false">
+<div class="relative inline-flex items-center" x-data="{ open: false }" @click.outside="open = false">
     <button type="button" title="Bildirimler" @click="open = !open" class="relative inline-flex items-center text-slate-500 hover:text-slate-900 transition-colors">
         <x-heroicon-o-bell class="w-5 h-5" />
         @if ($unreadCount > 0)
