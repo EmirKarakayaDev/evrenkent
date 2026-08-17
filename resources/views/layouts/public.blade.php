@@ -49,7 +49,7 @@
                         </div>
 
                         <div class="flex items-center gap-5 shrink-0">
-                            <a href="{{ route('arama') }}" title="Ara" class="sm:hidden text-slate-500 hover:text-slate-900 transition-colors">
+                            <a href="{{ route('arama') }}" title="Ara" class="sm:hidden inline-flex items-center text-slate-500 hover:text-slate-900 transition-colors">
                                 <x-heroicon-o-magnifying-glass class="w-5 h-5" />
                             </a>
 
