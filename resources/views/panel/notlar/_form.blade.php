@@ -6,7 +6,7 @@
         <p class="text-sm text-slate-500">
             Bir kitap sayfasından "{{ $type->label() }} Ekle" ile ekleme yapabilirsiniz. Aşağıdaki alanları elle doldurup da kaydedebilirsiniz.
         </p>
-        <div class="grid grid-cols-2 gap-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
                 <label for="noteable_type" class="block text-sm font-medium text-slate-700 mb-1">İçerik Türü</label>
                 <select id="noteable_type" name="noteable_type" class="w-full rounded-md border-slate-300 text-sm focus:border-slate-500 focus:ring-slate-500">

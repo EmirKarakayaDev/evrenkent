@@ -3,7 +3,7 @@
 @section('title', $title)
 
 @section('content')
-    <div class="flex items-center justify-between mb-5">
+    <div class="flex items-center justify-between gap-3 mb-5 flex-wrap">
         <h1 class="font-serif text-xl font-semibold text-slate-900">{{ $title }}</h1>
         <a href="{{ route('panel.yayinlarim.taslaklarim.yeni') }}" class="btn-dark">
             <x-heroicon-o-plus class="w-4 h-4" />

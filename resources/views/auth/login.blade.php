@@ -23,7 +23,7 @@
             <x-input-error :messages="$errors->get('password')" class="mt-2" />
         </div>
 
-        <div class="flex items-center justify-between">
+        <div class="flex items-center justify-between gap-3 flex-wrap">
             <label for="remember_me" class="inline-flex items-center">
                 <input id="remember_me" type="checkbox" class="rounded border-slate-300 text-slate-900 focus:ring-slate-500" name="remember">
                 <span class="ms-2 text-sm text-slate-600">Beni hatırla</span>
@@ -36,7 +36,7 @@
             @endif
         </div>
 
-        <div class="flex items-center justify-between pt-2">
+        <div class="flex items-center justify-between gap-3 flex-wrap pt-2">
             <a href="{{ route('register') }}" class="text-sm text-slate-500 hover:text-slate-900 transition-colors">
                 Hesabın yok mu? Kayıt ol
             </a>

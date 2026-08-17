@@ -3,14 +3,14 @@
 @section('title', 'Bölümler')
 
 @section('content')
-    <div class="flex items-center justify-between mb-5">
-        <div>
-            <h1 class="font-serif text-xl font-semibold text-slate-900">{{ $book->title }} — Bölümler</h1>
+    <div class="flex items-center justify-between gap-3 mb-5 flex-wrap">
+        <div class="min-w-0">
+            <h1 class="font-serif text-xl font-semibold text-slate-900 break-words">{{ $book->title }} — Bölümler</h1>
             <a href="{{ route('panel.yayinlarim.kitap.duzenle', $book) }}" class="text-sm text-slate-500 hover:text-slate-900 transition-colors">
                 &larr; Kitaba dön
             </a>
         </div>
-        <a href="{{ route('panel.yayinlarim.kitap.bolumler.yeni', $book) }}" class="text-sm px-4 py-2 bg-slate-900 text-white rounded-lg hover:bg-slate-800 transition-colors">
+        <a href="{{ route('panel.yayinlarim.kitap.bolumler.yeni', $book) }}" class="text-sm px-4 py-2 bg-slate-900 text-white rounded-lg hover:bg-slate-800 transition-colors shrink-0">
             Yeni Bölüm
         </a>
     </div>
@@ -23,12 +23,12 @@
     @else
         <div class="bg-white border border-slate-200 rounded-lg divide-y divide-slate-100">
             @foreach ($chapters as $chapter)
-                <div class="flex items-center justify-between px-5 py-4">
-                    <div>
+                <div class="flex items-center justify-between gap-3 px-5 py-4 flex-wrap sm:flex-nowrap">
+                    <div class="min-w-0">
                         <span class="text-xs uppercase text-orange-700 font-medium tracking-wide">Bölüm {{ $chapter->order }}</span>
-                        <div class="font-medium text-slate-900">{{ $chapter->title }}</div>
+                        <div class="font-medium text-slate-900 truncate">{{ $chapter->title }}</div>
                     </div>
-                    <div class="flex items-center gap-3 shrink-0">
+                    <div class="flex items-center gap-2 flex-wrap justify-end">
                         <a href="{{ route('panel.yayinlarim.kitap.bolumler.duzenle', [$book, $chapter]) }}" class="text-sm px-3.5 py-1.5 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 transition-colors">
                             Düzenle
                         </a>

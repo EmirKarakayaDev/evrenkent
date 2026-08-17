@@ -13,11 +13,11 @@
     @else
         <div class="card divide-y divide-slate-100">
             @foreach ($purchases as $purchase)
-                <div class="flex items-center justify-between px-5 py-4">
-                    <div class="flex items-start gap-3">
+                <div class="flex items-center justify-between gap-3 px-5 py-4">
+                    <div class="flex items-start gap-3 min-w-0">
                         <x-heroicon-o-book-open class="w-5 h-5 text-slate-300 mt-0.5 shrink-0" />
-                        <div>
-                            <div class="font-medium text-slate-900">{{ $purchase->book?->title ?? 'Silinmiş kitap' }}</div>
+                        <div class="min-w-0">
+                            <div class="font-medium text-slate-900 truncate">{{ $purchase->book?->title ?? 'Silinmiş kitap' }}</div>
                             <div class="text-xs text-slate-400 mt-0.5">
                                 {{ $purchase->book?->author?->name }} · {{ $purchase->purchased_at->format('d.m.Y') }}
                             </div>

@@ -37,7 +37,7 @@
             <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
         </div>
 
-        <div class="flex items-center justify-between pt-2">
+        <div class="flex items-center justify-between gap-3 flex-wrap pt-2">
             <a class="text-sm text-slate-500 hover:text-slate-900 transition-colors" href="{{ route('login') }}">
                 Zaten hesabın var mı? Giriş yap
             </a>

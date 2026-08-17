@@ -3,7 +3,7 @@
 @section('title', 'Kitabı Düzenle')
 
 @section('content')
-    <div class="flex items-center justify-between mb-5 max-w-2xl">
+    <div class="flex items-center justify-between gap-3 mb-5 max-w-2xl flex-wrap">
         <h1 class="font-serif text-xl font-semibold text-slate-900">Kitabı Düzenle</h1>
         <a href="{{ route('panel.yayinlarim.kitap.bolumler', $book) }}" class="text-sm px-3.5 py-1.5 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 transition-colors">
             Bölümler

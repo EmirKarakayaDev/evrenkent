@@ -6,18 +6,18 @@
 @else
     <div class="card divide-y divide-slate-100">
         @foreach ($items as $item)
-            <div class="flex items-center justify-between px-5 py-4">
-                <div class="flex items-start gap-3">
+            <div class="flex items-center justify-between gap-3 px-5 py-4 flex-wrap sm:flex-nowrap">
+                <div class="flex items-start gap-3 min-w-0">
                     <x-heroicon-o-book-open class="w-5 h-5 text-slate-300 mt-0.5 shrink-0" />
-                    <div>
+                    <div class="min-w-0">
                         <span class="text-xs uppercase text-brand-700 font-medium tracking-wide">Kitap</span>
-                        <div class="font-medium text-slate-900">{{ $item->readable?->title ?? 'Silinmiş içerik' }}</div>
+                        <div class="font-medium text-slate-900 truncate">{{ $item->readable?->title ?? 'Silinmiş içerik' }}</div>
                         @if ($item->completed_at)
                             <div class="text-xs text-slate-400 mt-1">Tamamlandı: {{ $item->completed_at->format('d.m.Y') }}</div>
                         @endif
                     </div>
                 </div>
-                <div class="flex items-center gap-3 shrink-0">
+                <div class="flex items-center gap-2 flex-wrap justify-end">
                     @if ($showComplete ?? false)
                         <form method="POST" action="{{ route('panel.okuma-listesi.tamamla', $item) }}">
                             @csrf

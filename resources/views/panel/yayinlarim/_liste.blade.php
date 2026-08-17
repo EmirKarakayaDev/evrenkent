@@ -6,12 +6,12 @@
 @else
     <div class="card divide-y divide-slate-100">
         @foreach ($books as $book)
-            <div class="flex items-center justify-between px-5 py-4">
-                <div class="flex items-start gap-3">
+            <div class="flex items-center justify-between gap-3 px-5 py-4 flex-wrap sm:flex-nowrap">
+                <div class="flex items-start gap-3 min-w-0">
                     <x-heroicon-o-book-open class="w-5 h-5 text-slate-300 mt-0.5 shrink-0" />
-                    <div>
+                    <div class="min-w-0">
                         <span class="text-xs uppercase text-brand-700 font-medium tracking-wide">Kitap</span>
-                        <div class="font-medium text-slate-900">{{ $book->title }}</div>
+                        <div class="font-medium text-slate-900 truncate">{{ $book->title }}</div>
                         <x-status-badge :status="$book->status" class="mt-1.5" />
                         @if ($book->status === \App\Enums\ContentStatus::RevizyonIstendi && $book->reviews->first()?->note)
                             <p class="text-sm text-orange-800 bg-orange-50 border border-orange-200 rounded-md px-3 py-1.5 mt-2 max-w-md">
@@ -20,7 +20,7 @@
                         @endif
                     </div>
                 </div>
-                <div class="flex items-center gap-3 shrink-0">
+                <div class="flex items-center gap-2 flex-wrap justify-end">
                     @can('update', $book)
                         <a href="{{ route('panel.yayinlarim.kitap.bolumler', $book) }}" class="btn-outline btn-sm">
                             Bölümler
@@ -42,12 +42,12 @@
         @endforeach
 
         @foreach ($articles as $article)
-            <div class="flex items-center justify-between px-5 py-4">
-                <div class="flex items-start gap-3">
+            <div class="flex items-center justify-between gap-3 px-5 py-4 flex-wrap sm:flex-nowrap">
+                <div class="flex items-start gap-3 min-w-0">
                     <x-heroicon-o-document-text class="w-5 h-5 text-slate-300 mt-0.5 shrink-0" />
-                    <div>
+                    <div class="min-w-0">
                         <span class="text-xs uppercase text-brand-700 font-medium tracking-wide">Makale</span>
-                        <div class="font-medium text-slate-900">{{ $article->title }}</div>
+                        <div class="font-medium text-slate-900 truncate">{{ $article->title }}</div>
                         <x-status-badge :status="$article->status" class="mt-1.5" />
                         @if ($article->status === \App\Enums\ContentStatus::RevizyonIstendi && $article->reviews->first()?->note)
                             <p class="text-sm text-orange-800 bg-orange-50 border border-orange-200 rounded-md px-3 py-1.5 mt-2 max-w-md">
@@ -56,7 +56,7 @@
                         @endif
                     </div>
                 </div>
-                <div class="flex items-center gap-3 shrink-0">
+                <div class="flex items-center gap-2 flex-wrap justify-end">
                     @can('update', $article)
                         <a href="{{ route('panel.yayinlarim.makale.duzenle', $article) }}" class="btn-outline btn-sm">
                             Düzenle

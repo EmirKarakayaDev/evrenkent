@@ -7,8 +7,11 @@ window.Alpine = Alpine;
 // bu yüzden panel sidebar'ının açık/kapalı durumu Alpine.store'da tutulur.
 // Böylece "Kitaplığım -> Favorilerim" gibi bir Turbo geçişinde sidebar
 // pozisyonunu kaybetmez (aksi halde her body swap'inde x-data sıfırlanırdı).
+// Başlangıç değeri ekran genişliğine göre: masaüstünde (lg ve üstü) açık,
+// mobilde kapalı — mobilde sidebar artık push değil overlay (bkz.
+// layouts/public.blade.php), açık gelmesi ekranın çoğunu kaplardı.
 Alpine.store('ui', {
-    sidebarOpen: true,
+    sidebarOpen: window.matchMedia('(min-width: 1024px)').matches,
 });
 
 // Sepet sayacı (header rozeti) ve "sepete eklendi" toast'ı — sayfa yenilenmeden

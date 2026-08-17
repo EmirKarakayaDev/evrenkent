@@ -48,7 +48,7 @@
                             </form>
                         </div>
 
-                        <div class="flex items-center gap-5 shrink-0">
+                        <div class="flex items-center gap-3 sm:gap-5 shrink-0">
                             <a href="{{ route('arama') }}" title="Ara" class="sm:hidden inline-flex items-center text-slate-500 hover:text-slate-900 transition-colors">
                                 <x-heroicon-o-magnifying-glass class="w-5 h-5" />
                             </a>
@@ -67,12 +67,14 @@
                                         <x-heroicon-o-shopping-bag class="w-5 h-5" />
                                         <span x-show="$store.cart.count > 0" x-cloak x-text="$store.cart.count" class="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 min-w-[1.1rem] h-[1.1rem] px-1 rounded-full bg-brand-500 text-white text-[10px] leading-[1.1rem] text-center"></span>
                                     </span>
-                                    Sepetim
+                                    {{-- Metin dar ekranda gizli — ikon+rozet zaten yeterince açıklayıcı,
+                                         "title" tooltip'i de her zaman var. --}}
+                                    <span class="hidden sm:inline">Sepetim</span>
                                 </a>
                             @else
                                 <a href="{{ route('login') }}" title="Sepetim" class="flex items-center gap-1.5 text-sm text-slate-400 hover:text-slate-600 transition-colors">
                                     <x-heroicon-o-shopping-bag class="w-5 h-5" />
-                                    Sepetim
+                                    <span class="hidden sm:inline">Sepetim</span>
                                 </a>
                             @endauth
 
@@ -100,11 +102,26 @@
 
             <div class="flex-1 flex">
                 @auth
-                    {{-- Panel menüsü: overlay değil, normal akışta — açılınca içerik alanı daralır (YouTube'daki gibi).
-                         İçteki w-72'lik sabit genişlik, dıştaki genişlik animasyonu sırasında metnin kırılmasını önler. --}}
+                    {{-- Mobilde (< lg) overlay drawer: fixed konumlanır, sidebarOpen'a göre kayar
+                         (translate), içerik alanını etkilemez — arkasında bir backdrop var, ona
+                         tıklayınca ya da bir menü linkine tıklayınca kapanır. lg ve üstünde eskisi
+                         gibi normal akışta, içerik alanını daraltan bir "push" paneli (YouTube'daki
+                         gibi) — içteki w-72'lik sabit genişlik, dıştaki genişlik animasyonu sırasında
+                         metnin kırılmasını önler. --}}
+                    <div
+                        x-show="$store.ui.sidebarOpen"
+                        x-cloak
+                        x-transition.opacity
+                        @click="$store.ui.sidebarOpen = false"
+                        class="fixed inset-0 top-16 z-30 bg-slate-900/40 lg:hidden"
+                    ></div>
+
                     <aside
-                        :class="$store.ui.sidebarOpen ? 'w-72 border-r border-slate-200' : 'w-0 border-r-0'"
-                        class="shrink-0 bg-paper transition-all duration-200 sticky top-16 self-start h-[calc(100vh-4rem)] overflow-x-hidden overflow-y-auto"
+                        @click="if (window.innerWidth < 1024) $store.ui.sidebarOpen = false"
+                        :class="$store.ui.sidebarOpen
+                            ? 'translate-x-0 lg:w-72 lg:border-r lg:border-slate-200'
+                            : '-translate-x-full lg:translate-x-0 lg:w-0 lg:border-r-0'"
+                        class="fixed top-16 bottom-0 left-0 z-40 w-72 shadow-xl bg-paper transition-transform duration-200 overflow-x-hidden overflow-y-auto lg:shadow-none lg:z-auto lg:static lg:sticky lg:bottom-auto lg:h-[calc(100vh-4rem)] lg:self-start lg:shrink-0 lg:transition-[width]"
                     >
                         <div class="w-72 p-5">
                             <x-panel-nav />
