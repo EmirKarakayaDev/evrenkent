@@ -68,6 +68,37 @@ class PublicationDraftEditTest extends TestCase
         $this->assertNull($book->document_count);
     }
 
+    public function test_yazar_can_suggest_a_target_publish_date(): void
+    {
+        $author = $this->yazar();
+        $book = Book::factory()->for($author, 'author')->create(['status' => ContentStatus::Taslak]);
+        $target = now()->addDays(20)->startOfMinute();
+
+        $this->actingAs($author)
+            ->put(route('panel.yayinlarim.kitap.guncelle', $book), [
+                'title' => $book->title,
+                'body' => $book->description,
+                'scheduled_publish_at' => $target->format('Y-m-d\TH:i'),
+            ])
+            ->assertRedirect();
+
+        $this->assertTrue($target->equalTo($book->fresh()->scheduled_publish_at));
+    }
+
+    public function test_scheduled_publish_date_must_be_in_the_future(): void
+    {
+        $author = $this->yazar();
+        $book = Book::factory()->for($author, 'author')->create(['status' => ContentStatus::Taslak]);
+
+        $this->actingAs($author)
+            ->put(route('panel.yayinlarim.kitap.guncelle', $book), [
+                'title' => $book->title,
+                'body' => $book->description,
+                'scheduled_publish_at' => now()->subDay()->format('Y-m-d\TH:i'),
+            ])
+            ->assertSessionHasErrors('scheduled_publish_at');
+    }
+
     public function test_yazar_can_assign_multiple_categories_and_can_also_remove_them(): void
     {
         $author = $this->yazar();

@@ -72,6 +72,11 @@ class User extends Authenticatable implements FilamentUser
         return $this->hasMany(Purchase::class);
     }
 
+    public function cartItems(): HasMany
+    {
+        return $this->hasMany(CartItem::class);
+    }
+
     public function hasFavorited(Model $favoritable): bool
     {
         return $this->favorites()
@@ -83,6 +88,28 @@ class User extends Authenticatable implements FilamentUser
     public function hasPurchased(Book $book): bool
     {
         return $this->purchases()->where('book_id', $book->id)->exists();
+    }
+
+    public function hasInCart(Book $book): bool
+    {
+        return $this->cartItems()->where('book_id', $book->id)->exists();
+    }
+
+    /**
+     * Gerçek ödeme entegrasyonu (Stripe/iyzico) gelecek bir faz — bu metod ödeme
+     * sorulmadan anında/mock tamamlanmış bir satın alma kaydı oluşturur. Hem tekil
+     * "Satın Al" (PurchaseController) hem sepet ödemesi (CartController) bunu kullanır,
+     * ki fiyat mantığı (indirimli fiyat varsa o kullanılır) tek yerde kalsın.
+     */
+    public function purchase(Book $book): Purchase
+    {
+        return $this->purchases()->firstOrCreate([
+            'book_id' => $book->id,
+        ], [
+            'amount' => $book->discount_price ?? $book->price,
+            'purchased_at' => now(),
+            'payment_status' => 'completed',
+        ]);
     }
 
     public function readingListItemFor(Model $readable): ?ReadingListItem

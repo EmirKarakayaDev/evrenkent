@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -22,4 +23,11 @@ return Application::configure(basePath: dirname(__DIR__))
         $exceptions->shouldRenderJsonWhen(
             fn (Request $request) => $request->is('api/*'),
         );
-    })->create();
+    })
+    ->withSchedule(function (Schedule $schedule): void {
+        // "Yakında Çıkacaklar" — planlanan yayın tarihi gelmiş kitapları otomatik
+        // yayına alır. Sunucuda gerçekten çalışması için cron'a `php artisan
+        // schedule:run` eklenmesi gerekiyor (bkz. DEPLOYMENT.md).
+        $schedule->command('books:publish-scheduled')->everyMinute();
+    })
+    ->create();

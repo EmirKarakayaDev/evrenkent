@@ -153,6 +153,12 @@ class BookResource extends Resource
                     ->label('Yayın Tarihi')
                     ->dateTime()
                     ->sortable(),
+                Tables\Columns\TextColumn::make('scheduled_publish_at')
+                    ->label('Planlanan Yayın Tarihi')
+                    ->dateTime()
+                    ->placeholder('—')
+                    ->sortable()
+                    ->toggleable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Oluşturulma')
                     ->dateTime()
@@ -171,12 +177,20 @@ class BookResource extends Resource
                     ->label('Onayla')
                     ->icon('heroicon-o-check-circle')
                     ->color('success')
-                    ->requiresConfirmation()
                     ->visible(fn (Book $record): bool => auth()->user()->can('approve', $record))
-                    ->action(function (Book $record): void {
+                    ->form([
+                        Forms\Components\DateTimePicker::make('scheduled_publish_at')
+                            ->label('Planlanan Yayın Tarihi')
+                            ->default(fn (Book $record) => $record->scheduled_publish_at)
+                            ->helperText('Yazarın önerdiği tarih varsa önceden dolu gelir, değiştirebilir veya boş bırakabilirsiniz. Boşsa kitap "Yayınla" aksiyonuyla elle yayınlanana kadar sadece "Onaylandı" durumunda kalır. Doluysa "Yakında Çıkacaklar" rafında teaser olarak görünür ve tarihi gelince otomatik yayınlanır.'),
+                    ])
+                    ->action(function (Book $record, array $data): void {
                         abort_unless(auth()->user()->can('approve', $record), 403);
 
-                        $record->update(['status' => ContentStatus::Onaylandi]);
+                        $record->update([
+                            'status' => ContentStatus::Onaylandi,
+                            'scheduled_publish_at' => $data['scheduled_publish_at'] ?? null,
+                        ]);
                         static::recordReview($record, 'onaylandi');
                         $record->author->notify(new ContentApproved($record));
 

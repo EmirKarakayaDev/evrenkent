@@ -53,6 +53,13 @@
         </div>
 
         <div class="border-t border-slate-100 pt-5">
+            <label for="scheduled_publish_at" class="block text-sm font-medium text-slate-700 mb-1">Hedef Yayın Tarihi (opsiyonel)</label>
+            <p class="text-xs text-slate-400 mb-2">Kesin bir taahhüt değil — kitap onaya gönderildiğinde Süper Admin bu tarihi görüp değiştirebilir/kesinleştirebilir. Dolduysa "Yakında Çıkacaklar" rafında görünür.</p>
+            <input id="scheduled_publish_at" name="scheduled_publish_at" type="datetime-local" value="{{ old('scheduled_publish_at', $book->scheduled_publish_at?->format('Y-m-d\TH:i')) }}" class="w-full max-w-xs rounded-md border-slate-300 text-sm focus:border-slate-500 focus:ring-slate-500">
+            @error('scheduled_publish_at') <p class="text-sm text-red-600 mt-1">{{ $message }}</p> @enderror
+        </div>
+
+        <div class="border-t border-slate-100 pt-5">
             <div class="text-sm font-medium text-slate-700 mb-1">İçerik İstatistikleri</div>
             <p class="text-xs text-slate-400 mb-3">Satın alma sayfasında sadece doldurduğunuz alanlar gösterilir, boş bıraktıklarınız hiç görünmez.</p>
             <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\ChapterController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\NoteController;
@@ -40,6 +41,11 @@ Route::middleware('auth')->prefix('panel')->as('panel.')->group(function () {
 
     Route::get('/satin-aldiklarim', [PurchaseController::class, 'index'])->name('satin-aldiklarim');
     Route::post('/satin-al/{book}', [PurchaseController::class, 'store'])->name('satin-al');
+
+    Route::get('/sepetim', [CartController::class, 'index'])->name('sepetim');
+    Route::post('/sepet/kitap/{book}', [CartController::class, 'store'])->name('sepet.kitap.ekle');
+    Route::delete('/sepet/kitap/{book}', [CartController::class, 'destroy'])->name('sepet.kitap.sil');
+    Route::post('/sepet/checkout', [CartController::class, 'checkout'])->name('sepet.checkout');
 
     // Yayın Yönetimi: sadece Yazar rolündeki kullanıcılar erişebilir.
     Route::middleware('role:yazar')->prefix('yayinlarim')->as('yayinlarim.')->group(function () {

@@ -20,7 +20,7 @@ class Book extends Model
     protected $fillable = [
         'author_id', 'title', 'slug', 'description',
         'cover_image', 'price', 'discount_price', 'status',
-        'is_editors_pick', 'published_at',
+        'is_editors_pick', 'published_at', 'scheduled_publish_at',
         'average_rating', 'review_count',
         'page_count', 'document_count', 'video_count',
         'map_count', 'author_note_count', 'source_count',
@@ -31,6 +31,7 @@ class Book extends Model
         return [
             'status' => ContentStatus::class,
             'published_at' => 'datetime',
+            'scheduled_publish_at' => 'datetime',
             'price' => 'decimal:2',
             'discount_price' => 'decimal:2',
             'is_editors_pick' => 'boolean',
@@ -70,6 +71,11 @@ class Book extends Model
         return $this->hasMany(Purchase::class);
     }
 
+    public function cartItems(): HasMany
+    {
+        return $this->hasMany(CartItem::class);
+    }
+
     public function chapters(): HasMany
     {
         return $this->hasMany(Chapter::class)->orderBy('order');
@@ -95,6 +101,19 @@ class Book extends Model
     public function scopeOnSale(Builder $query): Builder
     {
         return $query->whereNotNull('discount_price');
+    }
+
+    /**
+     * Onaylandı ama henüz yayınlanmamış, planlanan bir yayın tarihi olan kitaplar
+     * (Yakında Çıkacaklar). Tarih geldiğinde books:publish-scheduled komutu bunları
+     * otomatik "Yayında"ya çevirir.
+     */
+    public function scopeUpcoming(Builder $query): Builder
+    {
+        return $query->where('status', ContentStatus::Onaylandi)
+            ->whereNotNull('scheduled_publish_at')
+            ->where('scheduled_publish_at', '>', now())
+            ->orderBy('scheduled_publish_at');
     }
 
     /**

@@ -16,6 +16,7 @@ enum BookShelf: string
     case CokSatanlar = 'cok-satanlar';
     case EditorunSeckisi = 'editorun-seckisi';
     case Firsatlar = 'firsatlar';
+    case YakindaCikacaklar = 'yakinda';
 
     public function label(): string
     {
@@ -24,6 +25,7 @@ enum BookShelf: string
             self::CokSatanlar => 'Çok Satanlar',
             self::EditorunSeckisi => 'Editörün Seçkisi',
             self::Firsatlar => 'Fırsatlar',
+            self::YakindaCikacaklar => 'Yakında Çıkacaklar',
         };
     }
 
@@ -35,12 +37,17 @@ enum BookShelf: string
             self::CokSatanlar => 'Henüz satın alınmış bir kitap yok.',
             self::EditorunSeckisi => 'Editörün seçkisine henüz bir kitap eklenmedi.',
             self::Firsatlar => 'Şu an indirimde bir kitap yok.',
+            self::YakindaCikacaklar => 'Yakında çıkacak bir kitap yok.',
         };
     }
 
-    /** İlgili rafın yayınlanmış kitaplar sorgusu — sıralama/filtre bu raftan gelir. */
+    /** İlgili rafın kitap sorgusu — sıralama/filtre bu raftan gelir. */
     public function query(): Builder
     {
+        if ($this === self::YakindaCikacaklar) {
+            return Book::upcoming()->with('author');
+        }
+
         $query = Book::published()->with('author');
 
         return match ($this) {

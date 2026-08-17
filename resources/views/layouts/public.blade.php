@@ -39,25 +39,35 @@
                             </a>
                         </div>
 
-                        {{-- Arama: mockup'ta gerçek bir input kutusu — arka planda arama motoru/sorgu
-                             henüz yok, o yüzden readonly + "Yakında" ipucu ile görsel/pasif bırakıldı
-                             (sahte bir arama kutusu çalışıyormuş gibi davranmasın diye). --}}
+                        {{-- Arama: kitap/dergi/makale üzerinde gerçek (LIKE tabanlı) arama yapan
+                             /arama sayfasına GET form ile gönderiyor. --}}
                         <div class="hidden sm:block w-full max-w-md mx-auto">
-                            <div class="relative" title="Yakında">
+                            <form method="GET" action="{{ route('arama') }}" class="relative">
                                 <x-heroicon-o-magnifying-glass class="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-                                <input type="text" readonly placeholder="Kitap, yazar veya konu ara…" class="w-full rounded-lg border border-slate-200 bg-white pl-9 pr-3 py-2 text-sm text-slate-400 placeholder:text-slate-400 cursor-not-allowed focus:outline-none">
-                            </div>
+                                <input type="text" name="q" value="{{ request('q') }}" placeholder="Kitap, yazar veya konu ara…" class="w-full rounded-lg border border-slate-200 bg-white pl-9 pr-3 py-2 text-sm text-slate-700 placeholder:text-slate-400 focus:outline-none focus:border-brand-300">
+                            </form>
                         </div>
 
                         <div class="flex items-center gap-5 shrink-0">
-                            <button type="button" title="Yakında" class="sm:hidden text-slate-400 cursor-not-allowed">
+                            <a href="{{ route('arama') }}" title="Ara" class="sm:hidden text-slate-500 hover:text-slate-900 transition-colors">
                                 <x-heroicon-o-magnifying-glass class="w-5 h-5" />
-                            </button>
+                            </a>
 
-                            <button type="button" title="Yakında" class="flex items-center gap-1.5 text-sm text-slate-400 cursor-not-allowed">
-                                <x-heroicon-o-shopping-bag class="w-5 h-5" />
-                                Sepetim
-                            </button>
+                            @auth
+                                @php $cartCount = auth()->user()->cartItems()->count(); @endphp
+                                <a href="{{ route('panel.sepetim') }}" title="Sepetim" class="relative flex items-center gap-1.5 text-sm text-slate-500 hover:text-slate-900 transition-colors">
+                                    <x-heroicon-o-shopping-bag class="w-5 h-5" />
+                                    Sepetim
+                                    @if ($cartCount > 0)
+                                        <span class="absolute -top-1.5 -right-2 min-w-[1.1rem] h-[1.1rem] px-1 rounded-full bg-brand-500 text-white text-[10px] leading-[1.1rem] text-center">{{ $cartCount }}</span>
+                                    @endif
+                                </a>
+                            @else
+                                <a href="{{ route('login') }}" title="Sepetim" class="flex items-center gap-1.5 text-sm text-slate-400 hover:text-slate-600 transition-colors">
+                                    <x-heroicon-o-shopping-bag class="w-5 h-5" />
+                                    Sepetim
+                                </a>
+                            @endauth
 
                             @auth
                                 <x-notifications-bell />

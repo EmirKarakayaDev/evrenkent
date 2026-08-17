@@ -80,6 +80,9 @@ class PublicationController extends Controller
             'map_count' => ['nullable', 'integer', 'min:0'],
             'author_note_count' => ['nullable', 'integer', 'min:0'],
             'source_count' => ['nullable', 'integer', 'min:0'],
+            // Yazarın önerdiği hedef yayın tarihi — kesinleşmiş bir taahhüt değil,
+            // admin onaylarken bunu görüp değiştirebilir/kesinleştirebilir.
+            'scheduled_publish_at' => ['nullable', 'date', 'after:now'],
         ]);
 
         $book->categories()->sync($data['categories'] ?? []);
@@ -94,6 +97,7 @@ class PublicationController extends Controller
             'map_count' => $data['map_count'] ?? null,
             'author_note_count' => $data['author_note_count'] ?? null,
             'source_count' => $data['source_count'] ?? null,
+            'scheduled_publish_at' => $data['scheduled_publish_at'] ?? null,
         ]);
 
         return redirect()->route($this->listRouteFor($book->status))->with('status', 'Kitap güncellendi.');

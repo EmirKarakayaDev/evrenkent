@@ -36,6 +36,7 @@
                         \App\Enums\BookShelf::CokSatanlar => 'heroicon-o-fire',
                         \App\Enums\BookShelf::EditorunSeckisi => 'heroicon-o-sparkles',
                         \App\Enums\BookShelf::Firsatlar => 'heroicon-o-tag',
+                        \App\Enums\BookShelf::YakindaCikacaklar => 'heroicon-o-clock',
                     }" class="w-4 h-4" />
                     {{ $tab->label() }}
                 </a>
@@ -63,7 +64,9 @@
                             <div class="text-xs text-brand-600 font-medium uppercase tracking-wide">{{ $book->author->name }}</div>
                             <div class="font-medium text-slate-900 text-sm truncate mt-0.5">{{ $book->title }}</div>
                             <div class="text-sm mt-1">
-                                @if ($book->discount_price !== null)
+                                @if ($shelf === \App\Enums\BookShelf::YakindaCikacaklar)
+                                    <span class="text-brand-700 font-medium">{{ $book->scheduled_publish_at->format('d.m.Y') }}</span>
+                                @elseif ($book->discount_price !== null)
                                     <span class="text-slate-400 line-through mr-1.5">{{ number_format($book->price, 2, ',', '.') }} TL</span>
                                     <span class="text-brand-700 font-medium">{{ number_format($book->discount_price, 2, ',', '.') }} TL</span>
                                 @else

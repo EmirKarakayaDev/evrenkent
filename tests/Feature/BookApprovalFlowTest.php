@@ -49,6 +49,24 @@ class BookApprovalFlowTest extends TestCase
         $this->assertSame('onaylandi', $book->reviews()->first()->action);
     }
 
+    public function test_super_admin_can_set_a_scheduled_publish_date_while_approving(): void
+    {
+        $admin = $this->superAdmin();
+        $book = Book::factory()->for($this->yazar(), 'author')->create([
+            'status' => ContentStatus::Gonderildi,
+        ]);
+        $target = now()->addDays(10)->startOfMinute();
+
+        Livewire::actingAs($admin)
+            ->test(ListBooks::class)
+            ->callTableAction('approve', $book, data: ['scheduled_publish_at' => $target])
+            ->assertHasNoTableActionErrors();
+
+        $book->refresh();
+        $this->assertSame(ContentStatus::Onaylandi, $book->status);
+        $this->assertTrue($target->equalTo($book->scheduled_publish_at));
+    }
+
     public function test_approve_action_is_hidden_for_a_draft_book(): void
     {
         $admin = $this->superAdmin();

@@ -14,16 +14,23 @@ class BookController extends Controller
     {
         $user = auth()->user();
 
+        // "Onaylandı" + hedef tarihi olan kitaplar bir teaser (Yakında Çıkacak) olarak
+        // herkese açık — henüz satın alma/okuma yok, sadece tanıtım. Tarihsiz "Onaylandı"
+        // kitaplar hâlâ sadece yazarına görünür (henüz kamuya duyurulmaya hazır değil).
         abort_unless(
-            $book->status === ContentStatus::Yayinda || ($user && $user->id === $book->author_id),
+            $book->status === ContentStatus::Yayinda
+                || ($book->status === ContentStatus::Onaylandi && $book->scheduled_publish_at)
+                || ($user && $user->id === $book->author_id),
             404
         );
 
         $book->load(['author', 'categories']);
 
+        $isUpcoming = $book->status === ContentStatus::Onaylandi && $book->scheduled_publish_at !== null;
         $hasFavorited = $user?->hasFavorited($book) ?? false;
         $readingListItem = $user?->readingListItemFor($book);
         $hasPurchased = $user?->hasPurchased($book) ?? false;
+        $hasInCart = $user?->hasInCart($book) ?? false;
         $chapterCount = $book->chapters()->count();
 
         // Öneri şeridi: önce aynı kategorideki başka yayınlanmış kitaplar; yeterli sayıda yoksa
@@ -53,7 +60,7 @@ class BookController extends Controller
             );
         }
 
-        return view('books.show', compact('book', 'hasFavorited', 'readingListItem', 'hasPurchased', 'chapterCount', 'relatedBooks'));
+        return view('books.show', compact('book', 'isUpcoming', 'hasFavorited', 'readingListItem', 'hasPurchased', 'hasInCart', 'chapterCount', 'relatedBooks'));
     }
 
     public function read(Book $book, ?int $chapterNumber = null): View|RedirectResponse

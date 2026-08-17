@@ -21,21 +21,14 @@ class PurchaseController extends Controller
 
     /**
      * Gerçek ödeme entegrasyonu (Stripe/iyzico) gelecek bir faz —
-     * bu metod ödeme sorulmadan anında/mock tamamlanmış bir satın alma kaydı oluşturur.
+     * User::purchase() ödeme sorulmadan anında/mock tamamlanmış bir satın alma kaydı
+     * oluşturur (aynı mantık sepet ödemesinde de kullanılıyor, bkz. CartController).
      */
     public function store(Book $book): RedirectResponse
     {
         abort_unless($book->status === ContentStatus::Yayinda, 404);
 
-        $user = auth()->user();
-
-        $user->purchases()->firstOrCreate([
-            'book_id' => $book->id,
-        ], [
-            'amount' => $book->price,
-            'purchased_at' => now(),
-            'payment_status' => 'completed',
-        ]);
+        auth()->user()->purchase($book);
 
         return back()->with('status', 'Satın alma tamamlandı.');
     }

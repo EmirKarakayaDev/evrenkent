@@ -7,9 +7,11 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MagazineCatalogController;
 use App\Http\Controllers\MagazineIssueController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SearchController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/arama', [SearchController::class, 'index'])->name('arama');
 Route::get('/kitaplar', [BookCatalogController::class, 'index'])->name('kitaplar.index');
 Route::get('/kitaplar/{book:slug}', [BookController::class, 'show'])->name('kitaplar.show');
 Route::get('/kitaplar/{book:slug}/oku/{chapterNumber?}', [BookController::class, 'read'])->name('kitaplar.oku');

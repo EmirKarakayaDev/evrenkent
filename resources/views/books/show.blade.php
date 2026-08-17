@@ -55,81 +55,102 @@
         </div>
 
         <div class="card p-6 h-fit lg:sticky lg:top-24">
-            <div class="text-2xl font-serif font-semibold text-slate-900">{{ number_format($book->price, 2, ',', '.') }} TL</div>
-            <div class="text-xs text-slate-400 mt-1">KDV dahil</div>
+            @if ($isUpcoming)
+                {{-- Sadece tanıtım — henüz satın alma/okuma yok, kitap planlanan tarihte
+                     otomatik yayına açılacak (bkz. books:publish-scheduled komutu). --}}
+                <div class="flex items-center gap-2 text-brand-700 text-sm font-medium">
+                    <x-heroicon-o-clock class="w-4 h-4" /> Yakında Çıkacak
+                </div>
+                <div class="text-lg font-serif font-semibold text-slate-900 mt-2">
+                    {{ $book->scheduled_publish_at->format('d.m.Y') }} tarihinde yayınlanacak
+                </div>
+                <p class="text-sm text-slate-500 mt-2">
+                    Bu kitap şu an tanıtım aşamasında — satın alma ve okuma, yayın tarihinde açılacak.
+                </p>
+            @else
+                <div class="text-2xl font-serif font-semibold text-slate-900">{{ number_format($book->price, 2, ',', '.') }} TL</div>
+                <div class="text-xs text-slate-400 mt-1">KDV dahil</div>
 
-            <div class="flex flex-col gap-3 mt-5">
-                @auth
-                    @if ($hasPurchased)
-                        <span class="btn bg-emerald-50 text-emerald-700 ring-1 ring-inset ring-emerald-200 cursor-default">
-                            <x-heroicon-o-check-circle class="w-4 h-4" /> Satın Alındı
-                        </span>
-                    @elseif ($book->status === \App\Enums\ContentStatus::Yayinda)
-                        <form method="POST" action="{{ route('panel.satin-al', $book) }}">
-                            @csrf
-                            <button type="submit" class="btn-brand w-full">
-                                <x-heroicon-o-shopping-bag class="w-4 h-4" /> Satın Al
-                            </button>
-                        </form>
-                        {{-- Sepet henüz gerçek bir özellik değil (çoklu ürün/toplu ödeme akışı yok) —
-                             diğer sepet ikonlarıyla tutarlı şekilde görsel/pasif bırakıldı. --}}
-                        <button type="button" title="Yakında" class="btn-outline-brand w-full cursor-not-allowed">
-                            <x-heroicon-o-shopping-cart class="w-4 h-4" /> Sepete Ekle
-                        </button>
-                    @endif
-
-                    @if ($book->status === \App\Enums\ContentStatus::Yayinda)
-                        @if (! $locked)
-                            <a href="{{ route('kitaplar.oku', $book) }}" class="btn-dark w-full">
-                                <x-heroicon-o-book-open class="w-4 h-4" /> Oku
-                            </a>
+                <div class="flex flex-col gap-3 mt-5">
+                    @auth
+                        @if ($hasPurchased)
+                            <span class="btn bg-emerald-50 text-emerald-700 ring-1 ring-inset ring-emerald-200 cursor-default">
+                                <x-heroicon-o-check-circle class="w-4 h-4" /> Satın Alındı
+                            </span>
+                        @elseif ($book->status === \App\Enums\ContentStatus::Yayinda)
+                            <form method="POST" action="{{ route('panel.satin-al', $book) }}">
+                                @csrf
+                                <button type="submit" class="btn-brand w-full">
+                                    <x-heroicon-o-shopping-bag class="w-4 h-4" /> Satın Al
+                                </button>
+                            </form>
+                            @if ($hasInCart)
+                                <a href="{{ route('panel.sepetim') }}" class="btn-outline-brand w-full">
+                                    <x-heroicon-o-check class="w-4 h-4" /> Sepette
+                                </a>
+                            @else
+                                <form method="POST" action="{{ route('panel.sepet.kitap.ekle', $book) }}">
+                                    @csrf
+                                    <button type="submit" class="btn-outline-brand w-full">
+                                        <x-heroicon-o-shopping-cart class="w-4 h-4" /> Sepete Ekle
+                                    </button>
+                                </form>
+                            @endif
                         @endif
-                    @endif
 
-                    @if ($readingListItem && $readingListItem->status === \App\Enums\ReadingStatus::Tamamlandi)
-                        <span class="btn-outline w-full cursor-default text-slate-400">
-                            <x-heroicon-o-check class="w-4 h-4" /> Okundu
-                        </span>
-                    @elseif ($readingListItem)
-                        <span class="btn-outline w-full cursor-default text-slate-400">
-                            <x-heroicon-o-bookmark class="w-4 h-4" /> Okuma Listesinde
-                        </span>
-                    @else
-                        <form method="POST" action="{{ route('panel.okuma-listesi.kitap.ekle', $book) }}">
+                        @if ($book->status === \App\Enums\ContentStatus::Yayinda)
+                            @if (! $locked)
+                                <a href="{{ route('kitaplar.oku', $book) }}" class="btn-dark w-full">
+                                    <x-heroicon-o-book-open class="w-4 h-4" /> Oku
+                                </a>
+                            @endif
+                        @endif
+
+                        @if ($readingListItem && $readingListItem->status === \App\Enums\ReadingStatus::Tamamlandi)
+                            <span class="btn-outline w-full cursor-default text-slate-400">
+                                <x-heroicon-o-check class="w-4 h-4" /> Okundu
+                            </span>
+                        @elseif ($readingListItem)
+                            <span class="btn-outline w-full cursor-default text-slate-400">
+                                <x-heroicon-o-bookmark class="w-4 h-4" /> Okuma Listesinde
+                            </span>
+                        @else
+                            <form method="POST" action="{{ route('panel.okuma-listesi.kitap.ekle', $book) }}">
+                                @csrf
+                                <button type="submit" class="btn-outline w-full">
+                                    <x-heroicon-o-bookmark class="w-4 h-4" /> Okuma Listeme Ekle
+                                </button>
+                            </form>
+                        @endif
+
+                        <form method="POST" action="{{ route('panel.favoriler.kitap.toggle', $book) }}">
                             @csrf
                             <button type="submit" class="btn-outline w-full">
-                                <x-heroicon-o-bookmark class="w-4 h-4" /> Okuma Listeme Ekle
+                                <x-heroicon-o-heart class="w-4 h-4 {{ $hasFavorited ? 'text-brand-600' : '' }}" />
+                                {{ $hasFavorited ? 'Favorilerde' : 'Favorilere Ekle' }}
                             </button>
                         </form>
-                    @endif
 
-                    <form method="POST" action="{{ route('panel.favoriler.kitap.toggle', $book) }}">
-                        @csrf
-                        <button type="submit" class="btn-outline w-full">
-                            <x-heroicon-o-heart class="w-4 h-4 {{ $hasFavorited ? 'text-brand-600' : '' }}" />
-                            {{ $hasFavorited ? 'Favorilerde' : 'Favorilere Ekle' }}
-                        </button>
-                    </form>
-
-                    @if ($hasPurchased || $book->status === \App\Enums\ContentStatus::Yayinda)
-                        <p class="text-xs text-slate-400 mt-1 text-center">
-                            Not/alıntı eklemek için <a href="{{ route('panel.notlarim') }}" class="underline hover:text-slate-600">Notlarım</a>'ı kullanabilirsiniz.
+                        @if ($hasPurchased || $book->status === \App\Enums\ContentStatus::Yayinda)
+                            <p class="text-xs text-slate-400 mt-1 text-center">
+                                Not/alıntı eklemek için <a href="{{ route('panel.notlarim') }}" class="underline hover:text-slate-600">Notlarım</a>'ı kullanabilirsiniz.
+                            </p>
+                        @endif
+                    @else
+                        <a href="{{ route('login') }}" class="btn-brand w-full">Giriş Yap ve Satın Al</a>
+                        <p class="text-xs text-slate-400 text-center">
+                            Favorilemek veya okuma listenize eklemek için de giriş yapmanız gerekiyor.
                         </p>
-                    @endif
-                @else
-                    <a href="{{ route('login') }}" class="btn-brand w-full">Giriş Yap ve Satın Al</a>
-                    <p class="text-xs text-slate-400 text-center">
-                        Favorilemek veya okuma listenize eklemek için de giriş yapmanız gerekiyor.
-                    </p>
-                @endauth
+                    @endauth
 
-                @if ($book->status === \App\Enums\ContentStatus::Yayinda)
-                    <div class="flex items-center gap-2 rounded-lg bg-emerald-50 ring-1 ring-inset ring-emerald-200 text-emerald-800 text-xs px-3 py-2.5 mt-1">
-                        <x-heroicon-o-shield-check class="w-4 h-4 shrink-0" />
-                        Güvenli ödeme · Anında erişim · Tüm cihazlarda oku
-                    </div>
-                @endif
-            </div>
+                    @if ($book->status === \App\Enums\ContentStatus::Yayinda)
+                        <div class="flex items-center gap-2 rounded-lg bg-emerald-50 ring-1 ring-inset ring-emerald-200 text-emerald-800 text-xs px-3 py-2.5 mt-1">
+                            <x-heroicon-o-shield-check class="w-4 h-4 shrink-0" />
+                            Güvenli ödeme · Anında erişim · Tüm cihazlarda oku
+                        </div>
+                    @endif
+                </div>
+            @endif
         </div>
     </div>
 

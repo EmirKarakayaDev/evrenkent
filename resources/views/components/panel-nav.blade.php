@@ -17,6 +17,7 @@
             'panel.alintilarim' => ['Alıntılarım', route('panel.alintilarim')],
         ],
         'Alışveriş ve Abonelik' => [
+            'panel.sepetim' => ['Sepetim', route('panel.sepetim')],
             'panel.satin-aldiklarim' => ['Satın Aldıklarım', route('panel.satin-aldiklarim')],
             'panel.aboneligim' => ['Aboneliğim', route('panel.aboneligim')],
         ],
