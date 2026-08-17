@@ -3,14 +3,14 @@
 @section('title', 'Kitabı Düzenle')
 
 @section('content')
-    <div class="flex items-center justify-between gap-3 mb-5 max-w-2xl flex-wrap">
+    <div class="flex items-center justify-between gap-3 mb-5 max-w-2xl mx-auto flex-wrap">
         <h1 class="font-serif text-xl font-semibold text-slate-900">Kitabı Düzenle</h1>
         <a href="{{ route('panel.yayinlarim.kitap.bolumler', $book) }}" class="text-sm px-3.5 py-1.5 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 transition-colors">
             Bölümler
         </a>
     </div>
 
-    <form method="POST" action="{{ route('panel.yayinlarim.kitap.guncelle', $book) }}" class="bg-white border border-slate-200 rounded-lg p-6 space-y-5 max-w-2xl">
+    <form method="POST" action="{{ route('panel.yayinlarim.kitap.guncelle', $book) }}" class="bg-white border border-slate-200 rounded-lg p-6 space-y-5 max-w-2xl mx-auto">
         @csrf
         @method('PUT')
 

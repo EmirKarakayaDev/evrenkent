@@ -5,7 +5,7 @@
 @section('content')
     <h1 class="font-serif text-xl font-semibold text-slate-900 mb-5">Yeni Taslak Oluştur</h1>
 
-    <form method="POST" action="{{ route('panel.yayinlarim.taslaklarim.store') }}" x-data="{ type: 'kitap' }" class="bg-white border border-slate-200 rounded-lg p-6 space-y-5 max-w-2xl">
+    <form method="POST" action="{{ route('panel.yayinlarim.taslaklarim.store') }}" x-data="{ type: 'kitap' }" class="bg-white border border-slate-200 rounded-lg p-6 space-y-5 max-w-2xl mx-auto">
         @csrf
 
         <div>

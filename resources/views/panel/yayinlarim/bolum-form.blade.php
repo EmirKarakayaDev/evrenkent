@@ -8,7 +8,7 @@
     <form
         method="POST"
         action="{{ $chapter ? route('panel.yayinlarim.kitap.bolumler.guncelle', [$book, $chapter]) : route('panel.yayinlarim.kitap.bolumler.store', $book) }}"
-        class="bg-white border border-slate-200 rounded-lg p-6 space-y-5 max-w-2xl"
+        class="bg-white border border-slate-200 rounded-lg p-6 space-y-5 max-w-2xl mx-auto"
     >
         @csrf
         @if ($chapter)

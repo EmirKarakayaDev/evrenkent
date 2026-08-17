@@ -3,7 +3,7 @@
 @section('title', $article->title)
 
 @section('content')
-    <div class="max-w-3xl">
+    <div class="max-w-3xl mx-auto">
         <a href="{{ route('panel.dergi.makale-havuzu') }}" class="text-sm text-slate-500 hover:text-slate-900 transition-colors">
             &larr; Makale Havuzuna dön
         </a>

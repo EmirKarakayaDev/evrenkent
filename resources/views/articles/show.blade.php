@@ -3,7 +3,7 @@
 @section('title', $article->title)
 
 @section('content')
-    <div class="max-w-3xl">
+    <div class="max-w-3xl mx-auto">
         <x-detail-header
             :title="$article->title"
             :byline="$article->author->name"
