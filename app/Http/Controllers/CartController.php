@@ -49,9 +49,11 @@ class CartController extends Controller
             return response()->json([
                 'added' => true,
                 'cartCount' => $user->cartItems()->count(),
+                // "Sepete Git" toast linki sepet sayfasına gitmeli, kitabın kendi
+                // sayfasına değil (kullanıcı zaten o sayfadaydı).
+                'cartUrl' => route('panel.sepetim'),
                 'book' => [
                     'title' => $book->title,
-                    'url' => route('kitaplar.show', $book),
                 ],
             ]);
         }

@@ -31,7 +31,7 @@
                     if (data.added) {
                         inCart = true;
                         $store.cart.count = data.cartCount;
-                        $store.cart.showToast(data.book.title, data.book.url);
+                        $store.cart.showToast(data.book.title, data.cartUrl);
                     }
                 })
                 .catch(() => { loading = false; $event.target.submit(); });

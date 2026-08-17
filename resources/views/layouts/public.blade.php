@@ -59,9 +59,13 @@
                                      x-add-to-cart-button). x-init her yüklemede/Turbo geçişinde sunucudan
                                      gelen gerçek sayıyla senkronluyor. --}}
                                 <a href="{{ route('panel.sepetim') }}" title="Sepetim" x-data x-init="$store.cart.count = {{ auth()->user()->cartItems()->count() }}" class="flex items-center gap-1.5 text-sm text-slate-500 hover:text-slate-900 transition-colors">
-                                    <span class="relative">
+                                    {{-- Rozet ikonun sağ-üst köşesine kendi boyutunun yarısı kadar
+                                         translate edilerek sabitleniyor (badge'in kendi genişliğinden
+                                         bağımsız, standart "corner badge" tekniği) — bu sayede "Sepetim"
+                                         yazısına taşmıyor, kaç haneli sayı olursa olsun doğru köşede kalır. --}}
+                                    <span class="relative inline-flex shrink-0">
                                         <x-heroicon-o-shopping-bag class="w-5 h-5" />
-                                        <span x-show="$store.cart.count > 0" x-cloak x-text="$store.cart.count" class="absolute -top-1.5 -right-2 min-w-[1.1rem] h-[1.1rem] px-1 rounded-full bg-brand-500 text-white text-[10px] leading-[1.1rem] text-center"></span>
+                                        <span x-show="$store.cart.count > 0" x-cloak x-text="$store.cart.count" class="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 min-w-[1.1rem] h-[1.1rem] px-1 rounded-full bg-brand-500 text-white text-[10px] leading-[1.1rem] text-center"></span>
                                     </span>
                                     Sepetim
                                 </a>
