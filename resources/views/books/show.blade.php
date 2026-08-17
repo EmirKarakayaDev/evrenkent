@@ -84,18 +84,7 @@
                                     <x-heroicon-o-shopping-bag class="w-4 h-4" /> Satın Al
                                 </button>
                             </form>
-                            @if ($hasInCart)
-                                <a href="{{ route('panel.sepetim') }}" class="btn-outline-brand w-full">
-                                    <x-heroicon-o-check class="w-4 h-4" /> Sepette
-                                </a>
-                            @else
-                                <form method="POST" action="{{ route('panel.sepet.kitap.ekle', $book) }}">
-                                    @csrf
-                                    <button type="submit" class="btn-outline-brand w-full">
-                                        <x-heroicon-o-shopping-cart class="w-4 h-4" /> Sepete Ekle
-                                    </button>
-                                </form>
-                            @endif
+                            <x-add-to-cart-button :book="$book" :in-cart="$hasInCart" />
                         @endif
 
                         @if ($book->status === \App\Enums\ContentStatus::Yayinda)

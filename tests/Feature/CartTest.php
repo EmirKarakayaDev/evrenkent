@@ -114,4 +114,34 @@ class CartTest extends TestCase
         $this->get(route('panel.sepetim'))->assertRedirect(route('login'));
         $this->post(route('panel.sepet.kitap.ekle', $book))->assertRedirect(route('login'));
     }
+
+    public function test_add_to_cart_returns_json_when_requested_for_the_toast_ui(): void
+    {
+        $user = $this->okur();
+        $book = Book::factory()->create(['status' => ContentStatus::Yayinda, 'title' => 'Rüzgârın Şarkısı']);
+
+        $response = $this->actingAs($user)
+            ->postJson(route('panel.sepet.kitap.ekle', $book))
+            ->assertOk();
+
+        $response->assertJson([
+            'added' => true,
+            'cartCount' => 1,
+            'book' => ['title' => 'Rüzgârın Şarkısı'],
+        ]);
+    }
+
+    public function test_add_to_cart_json_response_reports_already_purchased_without_adding(): void
+    {
+        $user = $this->okur();
+        $book = Book::factory()->create(['status' => ContentStatus::Yayinda]);
+        $user->purchase($book);
+
+        $this->actingAs($user)
+            ->postJson(route('panel.sepet.kitap.ekle', $book))
+            ->assertOk()
+            ->assertJson(['added' => false]);
+
+        $this->assertDatabaseMissing('cart_items', ['user_id' => $user->id, 'book_id' => $book->id]);
+    }
 }

@@ -11,4 +11,22 @@ Alpine.store('ui', {
     sidebarOpen: true,
 });
 
+// Sepet sayacı (header rozeti) ve "sepete eklendi" toast'ı — sayfa yenilenmeden
+// (fetch ile) güncellenebilsin diye Alpine store'da tutuluyor. Her Turbo geçişinde
+// header'daki x-init sunucudan gelen gerçek sayıyla senkronlar (bkz. layouts/public.blade.php).
+Alpine.store('cart', {
+    count: 0,
+    toast: { visible: false, title: '', url: '' },
+    toastTimeout: null,
+    showToast(title, url) {
+        this.toast.title = title;
+        this.toast.url = url;
+        this.toast.visible = true;
+        clearTimeout(this.toastTimeout);
+        this.toastTimeout = setTimeout(() => {
+            this.toast.visible = false;
+        }, 4000);
+    },
+});
+
 Alpine.start();

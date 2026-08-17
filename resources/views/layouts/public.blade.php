@@ -54,13 +54,16 @@
                             </a>
 
                             @auth
-                                @php $cartCount = auth()->user()->cartItems()->count(); @endphp
-                                <a href="{{ route('panel.sepetim') }}" title="Sepetim" class="relative flex items-center gap-1.5 text-sm text-slate-500 hover:text-slate-900 transition-colors">
-                                    <x-heroicon-o-shopping-bag class="w-5 h-5" />
+                                {{-- Sayaç Alpine store'da (Alpine.store('cart').count) tutuluyor ki "Sepete Ekle"
+                                     fetch ile tıklanınca sayfa yenilenmeden güncellenebilsin (bkz.
+                                     x-add-to-cart-button). x-init her yüklemede/Turbo geçişinde sunucudan
+                                     gelen gerçek sayıyla senkronluyor. --}}
+                                <a href="{{ route('panel.sepetim') }}" title="Sepetim" x-data x-init="$store.cart.count = {{ auth()->user()->cartItems()->count() }}" class="flex items-center gap-1.5 text-sm text-slate-500 hover:text-slate-900 transition-colors">
+                                    <span class="relative">
+                                        <x-heroicon-o-shopping-bag class="w-5 h-5" />
+                                        <span x-show="$store.cart.count > 0" x-cloak x-text="$store.cart.count" class="absolute -top-1.5 -right-2 min-w-[1.1rem] h-[1.1rem] px-1 rounded-full bg-brand-500 text-white text-[10px] leading-[1.1rem] text-center"></span>
+                                    </span>
                                     Sepetim
-                                    @if ($cartCount > 0)
-                                        <span class="absolute -top-1.5 -right-2 min-w-[1.1rem] h-[1.1rem] px-1 rounded-full bg-brand-500 text-white text-[10px] leading-[1.1rem] text-center">{{ $cartCount }}</span>
-                                    @endif
                                 </a>
                             @else
                                 <a href="{{ route('login') }}" title="Sepetim" class="flex items-center gap-1.5 text-sm text-slate-400 hover:text-slate-600 transition-colors">
@@ -125,5 +128,9 @@
                 </div>
             </div>
         </div>
+
+        @auth
+            <x-cart-toast />
+        @endauth
     </body>
 </html>
