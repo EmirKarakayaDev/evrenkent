@@ -90,21 +90,8 @@
     @if ($recentArticles->isEmpty())
         <div class="card p-8 text-center text-slate-400 mb-8">Henüz makale gönderilmedi.</div>
     @else
-        <div class="card divide-y divide-slate-100 mb-8">
-            @foreach ($recentArticles as $article)
-                <div class="flex items-center justify-between gap-3 px-5 py-4 flex-wrap sm:flex-nowrap">
-                    <div class="min-w-0">
-                        <div class="font-medium text-slate-900 truncate">{{ $article->title }}</div>
-                        <div class="text-xs text-slate-400 mt-0.5">
-                            {{ $article->author->name }}
-                            @if ($article->magazineIssue)
-                                · {{ $article->magazineIssue->title }}
-                            @endif
-                        </div>
-                    </div>
-                    <x-status-badge :status="$article->status" />
-                </div>
-            @endforeach
+        <div class="mb-8">
+            <x-article-pool-table :articles="$recentArticles" />
         </div>
     @endif
 
@@ -119,7 +106,7 @@
             @foreach ($recentIssues as $issue)
                 <div class="flex items-center justify-between gap-3 px-5 py-4">
                     <div class="min-w-0">
-                        <div class="font-medium text-slate-900 truncate">{{ $issue->title }} — Sayı {{ $issue->issue_number }}</div>
+                        <div class="font-medium text-slate-900 truncate">{{ $issue->title }}</div>
                         <div class="text-xs text-slate-400 mt-0.5">
                             {{ $issue->publish_date ? $issue->publish_date->format('d.m.Y') : 'Tarih belirlenmedi' }}
                         </div>

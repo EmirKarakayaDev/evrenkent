@@ -19,29 +19,7 @@
             Bu sekmede bir makale yok.
         </div>
     @else
-        <div class="card divide-y divide-slate-100">
-            @foreach ($articles as $article)
-                <div class="flex items-center justify-between gap-3 px-5 py-4 flex-wrap sm:flex-nowrap">
-                    <div class="min-w-0">
-                        <div class="font-medium text-slate-900 truncate">{{ $article->title }}</div>
-                        <div class="text-xs text-slate-400 mt-0.5">
-                            {{ $article->author->name }}
-                            @if ($article->magazineIssue)
-                                · {{ $article->magazineIssue->title }}
-                            @endif
-                            @if ($article->categories->isNotEmpty())
-                                · {{ $article->categories->pluck('name')->join(', ') }}
-                            @endif
-                            · {{ $article->created_at->format('d.m.Y') }}
-                        </div>
-                        <x-status-badge :status="$article->status" class="mt-1.5" />
-                    </div>
-                    <a href="{{ \App\Filament\Resources\ArticleResource::getUrl('edit', ['record' => $article]) }}" class="btn-outline btn-sm shrink-0">
-                        Görüntüle
-                    </a>
-                </div>
-            @endforeach
-        </div>
+        <x-article-pool-table :articles="$articles" />
 
         <div class="mt-8">
             {{ $articles->links() }}

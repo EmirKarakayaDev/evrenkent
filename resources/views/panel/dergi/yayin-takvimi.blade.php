@@ -15,7 +15,7 @@
             @foreach ($issues as $issue)
                 <div class="flex items-center justify-between gap-3 px-5 py-4">
                     <div class="min-w-0">
-                        <div class="font-medium text-slate-900 truncate">{{ $issue->title }} — Sayı {{ $issue->issue_number }}</div>
+                        <div class="font-medium text-slate-900 truncate">{{ $issue->title }}</div>
                         <div class="text-xs text-slate-400 mt-0.5">
                             {{ $issue->publish_date ? $issue->publish_date->format('d.m.Y') : 'Tarih belirlenmedi' }}
                         </div>

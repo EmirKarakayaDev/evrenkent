@@ -1,0 +1,58 @@
+@props(['articles'])
+
+{{--
+    Makale Havuzu tablosu — hem Dergi Yönetimi ana sayfasındaki önizlemede hem tam
+    Makale Havuzu sayfasında kullanılıyor, tek yerden değişir. 6 sütun olduğu için
+    mobilde overflow-x-auto ile yatay kaydırılabilir (bu genişlikte bir veri tablosunu
+    375px'e sığdırmak okunurluğu bozar — yatay scroll burada bilinçli bir istisna).
+--}}
+<div class="card overflow-hidden">
+    <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+            <thead>
+                <tr class="border-b border-slate-100 text-left text-xs text-slate-400 uppercase tracking-wide">
+                    <th class="px-5 py-3 font-medium">Yazar</th>
+                    <th class="px-5 py-3 font-medium">Makale Başlığı</th>
+                    <th class="px-5 py-3 font-medium">Kategori</th>
+                    <th class="px-5 py-3 font-medium">Durum</th>
+                    <th class="px-5 py-3 font-medium">Gönderim Tarihi</th>
+                    <th class="px-5 py-3 font-medium text-right">İşlemler</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+                @foreach ($articles as $article)
+                    <tr class="hover:bg-slate-50/60 transition-colors">
+                        <td class="px-5 py-3 whitespace-nowrap">
+                            <div class="flex items-center gap-2.5">
+                                <x-avatar :name="$article->author->name" :id="$article->author->id" />
+                                <span class="font-medium text-slate-900">{{ $article->author->name }}</span>
+                            </div>
+                        </td>
+                        <td class="px-5 py-3 max-w-xs">
+                            <div class="text-slate-900 truncate">{{ $article->title }}</div>
+                            @if ($article->magazineIssue)
+                                {{-- Not: demo verideki sayı başlıkları zaten "- Sayı N" formatında yazılmış,
+                                     bu yüzden numara burada ayrıca eklenmiyor (tekrar olmasın diye). --}}
+                                <div class="text-xs text-slate-400 truncate">{{ $article->magazineIssue->title }}</div>
+                            @endif
+                        </td>
+                        <td class="px-5 py-3 text-slate-500 whitespace-nowrap">
+                            {{ $article->categories->pluck('name')->join(', ') ?: '—' }}
+                        </td>
+                        <td class="px-5 py-3 whitespace-nowrap">
+                            <x-status-badge :status="$article->status" />
+                        </td>
+                        <td class="px-5 py-3 text-slate-500 whitespace-nowrap">
+                            {{ $article->created_at->format('d.m.Y') }}
+                        </td>
+                        <td class="px-5 py-3 text-right whitespace-nowrap">
+                            <a href="{{ \App\Filament\Resources\ArticleResource::getUrl('edit', ['record' => $article]) }}" class="inline-flex items-center gap-1.5 text-sm text-slate-600 hover:text-slate-900 transition-colors">
+                                <x-heroicon-o-eye class="w-4 h-4" /> Görüntüle
+                            </a>
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+</div>
