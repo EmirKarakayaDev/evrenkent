@@ -127,14 +127,20 @@ class User extends Authenticatable implements FilamentUser
 
     /**
      * Girişten sonra role göre yönlendirilecek yol.
-     * Süper Admin/Dergi Editörü -> Filament admin paneli, Yazar -> Yayınlarım,
-     * Okur -> Anasayfa (panele değil — sidebar zaten açık geliyor, "Kitaplığım"
-     * bir tık uzakta, ayrıca kullanıcı doğrudan panele düşürülmek istemedi).
+     * Süper Admin -> Filament admin paneli, Dergi Editörü -> kendi dashboard'u
+     * (yazarın /panel/yayinlarim'e yönlenmesiyle tutarlı — Filament hâlâ erişilebilir
+     * ama zorunlu ilk durak değil), Yazar -> Yayınlarım, Okur -> Anasayfa (panele
+     * değil — sidebar zaten açık geliyor, "Kitaplığım" bir tık uzakta, ayrıca
+     * kullanıcı doğrudan panele düşürülmek istemedi).
      */
     public function redirectPath(): string
     {
-        if ($this->hasAnyRole(['super_admin', 'dergi_editoru'])) {
+        if ($this->hasRole('super_admin')) {
             return '/admin';
+        }
+
+        if ($this->hasRole('dergi_editoru')) {
+            return '/panel/dergi';
         }
 
         if ($this->hasRole('yazar')) {

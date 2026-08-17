@@ -17,7 +17,7 @@ class MagazineIssue extends Model
     use HasFactory;
 
     protected $fillable = [
-        'editor_id', 'title', 'issue_number', 'cover_image', 'status', 'publish_date',
+        'editor_id', 'title', 'issue_number', 'cover_image', 'editor_note', 'status', 'publish_date',
     ];
 
     protected function casts(): array

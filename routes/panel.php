@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\ChapterController;
+use App\Http\Controllers\DergiYonetimiController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\NoteController;
 use App\Http\Controllers\NotificationController;
@@ -70,5 +71,15 @@ Route::middleware('auth')->prefix('panel')->as('panel.')->group(function () {
         Route::get('/kitap/{book}/bolumler/{chapter}/duzenle', [ChapterController::class, 'edit'])->name('kitap.bolumler.duzenle');
         Route::put('/kitap/{book}/bolumler/{chapter}', [ChapterController::class, 'update'])->name('kitap.bolumler.guncelle');
         Route::delete('/kitap/{book}/bolumler/{chapter}', [ChapterController::class, 'destroy'])->name('kitap.bolumler.sil');
+    });
+
+    // Dergi Yönetimi: sadece Dergi Editörü rolündeki kullanıcılar erişebilir. Gerçek
+    // onay/red/yayınla aksiyonları hâlâ Filament'te (MagazineIssueResource/ArticleResource) —
+    // bu bir özet/genel bakış paneli, mutasyon gerektiren işlemler Filament'e link verir.
+    Route::middleware('role:dergi_editoru')->prefix('dergi')->as('dergi.')->group(function () {
+        Route::get('/', [DergiYonetimiController::class, 'index'])->name('index');
+        Route::get('/sayilarim', [DergiYonetimiController::class, 'sayilarim'])->name('sayilarim');
+        Route::get('/makale-havuzu', [DergiYonetimiController::class, 'makaleHavuzu'])->name('makale-havuzu');
+        Route::get('/yayin-takvimi', [DergiYonetimiController::class, 'yayinTakvimi'])->name('yayin-takvimi');
     });
 });

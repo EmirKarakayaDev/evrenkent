@@ -49,6 +49,24 @@
     </div>
 @endif
 
+@if (auth()->user()->hasRole('dergi_editoru'))
+    <div class="mb-7">
+        <div class="text-xs font-semibold text-brand-700 uppercase tracking-wider mb-2.5">Dergi Yönetimi</div>
+        <div class="space-y-0.5">
+            @foreach ([
+                'panel.dergi.index' => ['Ana Sayfa', route('panel.dergi.index')],
+                'panel.dergi.sayilarim' => ['Sayılarım', route('panel.dergi.sayilarim')],
+                'panel.dergi.makale-havuzu' => ['Makale Havuzu', route('panel.dergi.makale-havuzu')],
+                'panel.dergi.yayin-takvimi' => ['Yayın Takvimi', route('panel.dergi.yayin-takvimi')],
+            ] as $routeName => [$label, $href])
+                <a href="{{ $href }}" class="block px-3 py-1.5 rounded-lg text-sm {{ request()->routeIs($routeName) ? 'bg-brand-50 text-brand-800 font-medium ring-1 ring-inset ring-brand-200' : 'text-slate-600 hover:bg-slate-100' }}">
+                    {{ $label }}
+                </a>
+            @endforeach
+        </div>
+    </div>
+@endif
+
 @foreach ($navGroups as $group => $links)
     <div class="mb-7">
         <div class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2.5">{{ $group }}</div>

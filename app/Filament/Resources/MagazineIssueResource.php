@@ -52,6 +52,9 @@ class MagazineIssueResource extends Resource
                     ->disk('public')
                     ->directory('covers/magazine-issues')
                     ->maxSize(5120),
+                Forms\Components\Textarea::make('editor_note')
+                    ->label('Editör Yazısı')
+                    ->columnSpanFull(),
                 Forms\Components\Select::make('status')
                     ->label('Durum')
                     ->options(collect(ContentStatus::cases())->mapWithKeys(fn ($case) => [$case->value => $case->label()]))
