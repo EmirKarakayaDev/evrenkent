@@ -61,3 +61,16 @@
         </div>
     </div>
 @endforeach
+
+{{-- Çıkış Yap — bilerek diğer linklerden ayrı ve kırmızı: hem header'ı
+     kalabalıklaştırmasın (mobilde daha da sıkışıktı) hem de yanlışlıkla
+     tıklanmasın diye görsel olarak ayrışıyor. --}}
+<div class="pt-3 mt-1 border-t border-slate-200">
+    <form method="POST" action="{{ route('logout') }}">
+        @csrf
+        <button type="submit" class="w-full flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm text-red-600 hover:bg-red-50 transition-colors">
+            <x-heroicon-o-arrow-right-on-rectangle class="w-4 h-4" />
+            Çıkış Yap
+        </button>
+    </form>
+</div>

@@ -79,14 +79,9 @@
                             @endauth
 
                             @auth
+                                {{-- "Çıkış Yap" artık header'da değil — panel-nav.blade.php'nin altında,
+                                     hesap işlemleri diğer linklerle karışmasın diye. --}}
                                 <x-notifications-bell />
-
-                                <form method="POST" action="{{ route('logout') }}">
-                                    @csrf
-                                    <button type="submit" class="text-sm text-slate-500 hover:text-slate-900 transition-colors">
-                                        Çıkış Yap
-                                    </button>
-                                </form>
                             @else
                                 <a href="{{ route('login') }}" class="text-sm text-slate-600 hover:text-slate-900 transition-colors">
                                     Giriş Yap
