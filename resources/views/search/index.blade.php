@@ -3,10 +3,11 @@
 @section('title', $q !== '' ? "\"{$q}\" için arama sonuçları" : 'Arama')
 
 @section('content')
-    <form method="GET" action="{{ route('arama') }}" class="relative max-w-md mb-8">
-        <x-heroicon-o-magnifying-glass class="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-        <input type="text" name="q" value="{{ $q }}" autofocus placeholder="Kitap, yazar veya konu ara…" class="w-full rounded-lg border border-slate-200 bg-white pl-9 pr-3 py-2.5 text-sm text-slate-700 placeholder:text-slate-400 focus:outline-none focus:border-brand-300">
-    </form>
+    {{-- Ayrı bir arama kutusu yok — header'daki (sticky, her sayfada görünür) arama kutusu
+       zaten mevcut sorguyu dolu gösteriyor, burada aynısını tekrarlamak gereksiz. --}}
+    @if ($q !== '')
+        <h1 class="font-serif text-xl font-semibold text-slate-900 mb-8">"{{ $q }}" için arama sonuçları</h1>
+    @endif
 
     @if ($q === '')
         <div class="card p-12 text-center text-slate-400">
