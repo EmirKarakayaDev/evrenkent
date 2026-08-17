@@ -38,7 +38,12 @@
                     </div>
                     <div class="flex items-center gap-2 flex-wrap justify-end">
                         <a href="{{ route('dergiler.show', $issue) }}" class="btn-outline btn-sm">Görüntüle</a>
-                        <a href="{{ route('panel.dergi.sayilarim.duzenle', $issue) }}" class="btn-dark btn-sm">Düzenle</a>
+                        {{-- Onaya gönderildikten sonra (Süper Admin onaylayana/reddedene kadar)
+                             düzenlenemiyor — buton o durumda hiç gösterilmiyor, yazarın kendi
+                             yayın listesindeki (_liste.blade.php) @can deseniyle aynı. --}}
+                        @can('update', $issue)
+                            <a href="{{ route('panel.dergi.sayilarim.duzenle', $issue) }}" class="btn-dark btn-sm">Düzenle</a>
+                        @endcan
                     </div>
                 </div>
             @endforeach

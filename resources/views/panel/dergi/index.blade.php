@@ -65,9 +65,13 @@
                         <a href="{{ route('dergiler.show', $activeIssue) }}" class="btn-outline btn-sm">
                             <x-heroicon-o-eye class="w-4 h-4" /> Sayıyı Önizle
                         </a>
-                        <a href="{{ route('panel.dergi.sayilarim.duzenle', $activeIssue) }}" class="btn-dark btn-sm">
-                            Sayı Oluşturucuya Git →
-                        </a>
+                        @can('update', $activeIssue)
+                            <a href="{{ route('panel.dergi.sayilarim.duzenle', $activeIssue) }}" class="btn-dark btn-sm">
+                                Sayı Oluşturucuya Git →
+                            </a>
+                        @else
+                            <span class="text-xs text-slate-400 self-center">Onay bekleniyor, düzenlenemiyor.</span>
+                        @endcan
                         @can('submit', $activeIssue)
                             <form method="POST" action="{{ route('panel.dergi.sayilarim.gonder', $activeIssue) }}">
                                 @csrf

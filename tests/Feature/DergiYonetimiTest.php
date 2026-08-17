@@ -106,6 +106,19 @@ class DergiYonetimiTest extends TestCase
         $response->assertSee('İncelemedeki Makale')->assertDontSee('Revizyondaki Makale');
     }
 
+    public function test_duzenle_button_is_hidden_for_issues_that_cannot_be_edited(): void
+    {
+        $editor = $this->dergiEditoru();
+        $editable = MagazineIssue::factory()->for($editor, 'editor')->create(['status' => ContentStatus::Taslak]);
+        $submitted = MagazineIssue::factory()->for($editor, 'editor')->create(['status' => ContentStatus::Gonderildi]);
+
+        $response = $this->actingAs($editor)->get(route('panel.dergi.sayilarim'))->assertOk();
+        $html = $response->getContent();
+
+        $this->assertStringContainsString(route('panel.dergi.sayilarim.duzenle', $editable), $html);
+        $this->assertStringNotContainsString(route('panel.dergi.sayilarim.duzenle', $submitted), $html);
+    }
+
     public function test_sayilarim_only_lists_own_issues_and_filters_by_status(): void
     {
         $editor = $this->dergiEditoru();

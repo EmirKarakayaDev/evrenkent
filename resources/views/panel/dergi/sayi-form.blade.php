@@ -3,7 +3,8 @@
 @section('title', $magazineIssue ? 'Sayıyı Düzenle' : 'Yeni Sayı Oluştur')
 
 @section('content')
-    <div class="flex items-center justify-between gap-3 mb-5 max-w-2xl flex-wrap">
+    <div class="max-w-2xl mx-auto">
+    <div class="flex items-center justify-between gap-3 mb-5 flex-wrap">
         <h1 class="font-serif text-xl font-semibold text-slate-900">
             {{ $magazineIssue ? 'Sayıyı Düzenle' : 'Yeni Sayı Oluştur' }}
         </h1>
@@ -16,7 +17,7 @@
         method="POST"
         action="{{ $magazineIssue ? route('panel.dergi.sayilarim.guncelle', $magazineIssue) : route('panel.dergi.sayilarim.store') }}"
         enctype="multipart/form-data"
-        class="card p-6 space-y-5 max-w-2xl"
+        class="card p-6 space-y-5"
     >
         @csrf
         @if ($magazineIssue)
@@ -69,7 +70,7 @@
 
     @if ($magazineIssue)
         @can('submit', $magazineIssue)
-            <div class="card p-6 max-w-2xl mt-6">
+            <div class="card p-6 mt-6">
                 <h2 class="font-medium text-slate-900 mb-1">Sayıyı onaya gönder</h2>
                 <p class="text-sm text-slate-500 mb-4">Bu sayı Süper Admin onayına gönderilecek, siz onaylanana/reddedilene kadar düzenleyemeyeceksiniz.</p>
                 <form method="POST" action="{{ route('panel.dergi.sayilarim.gonder', $magazineIssue) }}">
@@ -81,4 +82,5 @@
             </div>
         @endcan
     @endif
+    </div>
 @endsection
