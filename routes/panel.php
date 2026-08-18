@@ -10,6 +10,7 @@ use App\Http\Controllers\PanelController;
 use App\Http\Controllers\PublicationController;
 use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\ReadingListController;
+use App\Http\Controllers\SuperAdminController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth')->prefix('panel')->as('panel.')->group(function () {
@@ -92,5 +93,13 @@ Route::middleware('auth')->prefix('panel')->as('panel.')->group(function () {
         Route::post('/makale-havuzu/{article}/incele', [DergiYonetimiController::class, 'inceleMakale'])->name('makale-havuzu.incele');
 
         Route::get('/yayin-takvimi', [DergiYonetimiController::class, 'yayinTakvimi'])->name('yayin-takvimi');
+    });
+
+    // Süper Admin dashboard'u: gerçek verili özet + Filament'e linkler. Onay/red/
+    // yayınla ve kullanıcı/rol yönetimi aksiyonları (zaten policy'de sadece bu role
+    // açık) Filament'te kalıyor — burada tekrar yazılmıyor.
+    Route::middleware('role:super_admin')->prefix('admin-panel')->as('adminpanel.')->group(function () {
+        Route::get('/', [SuperAdminController::class, 'index'])->name('index');
+        Route::get('/yakinda/{section}', [SuperAdminController::class, 'placeholder'])->name('placeholder');
     });
 });
