@@ -21,52 +21,64 @@
     --}}
     <body class="font-sans antialiased bg-slate-100 text-slate-800" x-data @keydown.window.ctrl.k.prevent="$refs.adminSearch?.focus()">
         <div class="min-h-screen flex flex-col">
-            <header class="sticky top-0 z-20 bg-slate-950 border-b border-slate-800">
-                <div class="px-6">
-                    <div class="grid grid-cols-[auto_1fr_auto] h-16 items-center gap-6">
+            {{-- Üst bar bilerek tek renkli değil: mockup'ta (dosyalar/2.4-)...png, piksel
+                 örneklendi) sadece logo hücresi sidebar'la aynı koyu lacivert, geri kalan
+                 tüm üst bar (hamburger, arama, ikonlar, avatar) sayfa arka planıyla aynı —
+                 lg ve üstünde logo hücresi tam sidebar genişliğinde (w-72) ki alttaki
+                 sidebar'la kesintisiz tek bir blok gibi görünsün. Mobilde (sidebar zaten
+                 sabit bir sütun değil, kayan bir overlay olduğu için) logo hücresi ayrı
+                 tutulmuyor, hamburger'le birlikte aynı açık renkli şeride giriyor. --}}
+            <header class="sticky top-0 z-20 bg-slate-100 border-b border-slate-200">
+                <div class="flex items-stretch h-16">
+                    <a href="{{ route('panel.adminpanel.index') }}" class="hidden lg:flex items-center gap-2.5 w-72 shrink-0 px-6 bg-navy group">
+                        <span class="flex items-center justify-center w-8 h-8 rounded-full bg-white text-slate-900">
+                            <x-heroicon-o-book-open class="w-4 h-4" />
+                        </span>
+                        <span class="font-serif text-lg font-semibold tracking-tight text-white leading-tight">
+                            Evrenkent
+                            <span class="block text-[10px] font-sans font-medium tracking-widest text-slate-400 uppercase leading-none">Süper Admin Paneli</span>
+                        </span>
+                    </a>
+
+                    <div class="flex-1 min-w-0 grid grid-cols-[auto_1fr_auto] items-center gap-6 px-6">
                         <div class="flex items-center gap-4 shrink-0">
-                            <button type="button" title="Menü" @click="$store.ui.sidebarOpen = !$store.ui.sidebarOpen" class="text-slate-300 hover:text-white transition-colors">
+                            <button type="button" title="Menü" @click="$store.ui.sidebarOpen = !$store.ui.sidebarOpen" class="text-slate-500 hover:text-slate-900 transition-colors">
                                 <x-heroicon-o-bars-3 class="w-6 h-6" />
                             </button>
 
-                            <a href="{{ route('panel.adminpanel.index') }}" class="flex items-center gap-2.5 group">
-                                <span class="flex items-center justify-center w-8 h-8 rounded-full bg-white text-slate-900">
+                            <a href="{{ route('panel.adminpanel.index') }}" class="flex items-center gap-2.5 group lg:hidden">
+                                <span class="flex items-center justify-center w-8 h-8 rounded-full bg-navy text-white">
                                     <x-heroicon-o-book-open class="w-4 h-4" />
                                 </span>
-                                <span class="font-serif text-lg font-semibold tracking-tight text-white leading-tight">
+                                <span class="font-serif text-lg font-semibold tracking-tight text-slate-900 leading-tight">
                                     Evrenkent
-                                    <span class="block text-[10px] font-sans font-medium tracking-widest text-slate-400 uppercase leading-none">Süper Admin Paneli</span>
                                 </span>
                             </a>
                         </div>
 
                         <div class="hidden sm:block w-full max-w-md mx-auto">
                             <form method="GET" action="{{ route('arama') }}" class="relative">
-                                <x-heroicon-o-magnifying-glass class="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
-                                <input x-ref="adminSearch" type="text" name="q" value="{{ request('q') }}" placeholder="Ara…" class="w-full rounded-lg border border-slate-700 bg-slate-900 pl-9 pr-14 py-2 text-sm text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-slate-500">
-                                <span class="hidden md:inline absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-slate-500 border border-slate-700 rounded px-1.5 py-0.5">Ctrl+K</span>
+                                <x-heroicon-o-magnifying-glass class="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                                <input x-ref="adminSearch" type="text" name="q" value="{{ request('q') }}" placeholder="Ara…" class="w-full rounded-lg border border-slate-200 bg-white pl-9 pr-14 py-2 text-sm text-slate-700 placeholder:text-slate-400 focus:outline-none focus:border-slate-400">
+                                <span class="hidden md:inline absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-slate-400 border border-slate-200 rounded px-1.5 py-0.5">Ctrl+K</span>
                             </form>
                         </div>
 
                         <div class="flex items-center gap-3 sm:gap-5 shrink-0 justify-self-end">
-                            <a href="{{ route('arama') }}" title="Ara" class="sm:hidden inline-flex items-center text-slate-300 hover:text-white transition-colors">
+                            <a href="{{ route('arama') }}" title="Ara" class="sm:hidden inline-flex items-center text-slate-500 hover:text-slate-900 transition-colors">
                                 <x-heroicon-o-magnifying-glass class="w-5 h-5" />
                             </a>
 
-                            {{-- x-notifications-bell kendi renklerini (slate-500/900) sabit taşıyor;
-                                 koyu üst barda kontrast düşük kalmasın diye beyaz bir daire içine alıyoruz. --}}
-                            <div class="bg-white rounded-full p-1.5 shadow-sm">
-                                <x-notifications-bell />
-                            </div>
+                            <x-notifications-bell />
 
                             <div class="relative inline-flex items-center" x-data="{ open: false }" @click.outside="open = false">
                                 <button type="button" @click="open = !open" class="flex items-center gap-2.5 text-left">
-                                    <span class="flex items-center justify-center w-8 h-8 rounded-full bg-slate-700 text-white text-sm font-medium">
+                                    <span class="flex items-center justify-center w-8 h-8 rounded-full bg-navy text-white text-sm font-medium">
                                         {{ mb_substr(auth()->user()->name, 0, 1) }}
                                     </span>
                                     <span class="hidden md:block leading-tight">
-                                        <span class="block text-sm font-medium text-white">{{ auth()->user()->name }}</span>
-                                        <span class="block text-xs text-slate-400">Evrenkent Platformu</span>
+                                        <span class="block text-sm font-medium text-slate-900">{{ auth()->user()->name }}</span>
+                                        <span class="block text-xs text-slate-500">Evrenkent Platformu</span>
                                     </span>
                                 </button>
 
@@ -98,7 +110,7 @@
                     :class="$store.ui.sidebarOpen
                         ? 'translate-x-0 lg:w-72 lg:border-r lg:border-slate-800'
                         : '-translate-x-full lg:translate-x-0 lg:w-0 lg:border-r-0'"
-                    class="sidebar-scroll fixed top-16 bottom-0 left-0 z-40 w-72 shadow-xl bg-slate-950 transition-transform duration-200 overflow-x-hidden overflow-y-auto lg:shadow-none lg:z-auto lg:static lg:sticky lg:bottom-auto lg:h-[calc(100vh-4rem)] lg:self-start lg:shrink-0 lg:transition-[width]"
+                    class="sidebar-scroll fixed top-16 bottom-0 left-0 z-40 w-72 shadow-xl bg-navy transition-transform duration-200 overflow-x-hidden overflow-y-auto lg:shadow-none lg:z-auto lg:static lg:sticky lg:bottom-auto lg:h-[calc(100vh-4rem)] lg:self-start lg:shrink-0 lg:transition-[width]"
                 >
                     <div class="w-72 p-5">
                         <x-admin-nav />

@@ -28,6 +28,11 @@ export default {
                     600: '#C86A0C',
                     700: '#9E540A',
                 },
+                // Süper Admin panelinin koyu lacivert rengi — mockup'tan
+                // (dosyalar/2.4-)...png) piksel örneklenerek alındı (#03192F),
+                // Tailwind'in slate-950'i (neredeyse siyah) mockup'a göre fazla
+                // koyu/donuktu.
+                navy: '#03192F',
             },
         },
     },
