@@ -48,7 +48,13 @@ document.addEventListener('scroll', (event) => {
         sidebarScrollTop = event.target.scrollTop;
     }
 }, true);
-document.addEventListener('turbo:load', () => {
+// turbo:load değil turbo:render dinleniyor: Turbo yeni <body>'yi turbo:render'da
+// takıyor, turbo:load ise ondan sonra (script'ler vs. bittiğinde) ayrı bir
+// "tick"te geliyor — arada tarayıcı bir kare boyama fırsatı buluyor ve
+// scrollTop=0 olan taze sidebar'ı bir anlığına gösterip sonra bizim düzeltmemizle
+// "zıplıyordu" (kullanıcının bildirdiği "saniyelik en üste gelip düzelme").
+// turbo:render'da düzeltmek aynı task içinde kalıp o ara kareyi ortadan kaldırıyor.
+document.addEventListener('turbo:render', () => {
     const sidebar = document.querySelector('.sidebar-scroll');
     if (sidebar) {
         sidebar.scrollTop = sidebarScrollTop;
