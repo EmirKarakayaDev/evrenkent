@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminBookController;
+use App\Http\Controllers\AdminCategoryController;
 use App\Http\Controllers\AdminMagazineIssueController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\ChapterController;
@@ -148,6 +149,17 @@ Route::middleware('auth')->prefix('panel')->as('panel.')->group(function () {
             Route::get('/{magazineIssue}/duzenle', [AdminMagazineIssueController::class, 'edit'])->name('duzenle');
             Route::put('/{magazineIssue}', [AdminMagazineIssueController::class, 'update'])->name('guncelle');
             Route::delete('/{magazineIssue}', [AdminMagazineIssueController::class, 'destroy'])->name('sil');
+        });
+
+        // Kategoriler: Filament'teki CategoryResource'un list/create/edit/delete'inin
+        // birebir aynısı (Faz 4 — bkz. UI_RESTYLE_NOTES.md).
+        Route::prefix('kategoriler')->as('kategoriler.')->group(function () {
+            Route::get('/', [AdminCategoryController::class, 'index'])->name('index');
+            Route::get('/yeni', [AdminCategoryController::class, 'create'])->name('yeni');
+            Route::post('/', [AdminCategoryController::class, 'store'])->name('store');
+            Route::get('/{category}/duzenle', [AdminCategoryController::class, 'edit'])->name('duzenle');
+            Route::put('/{category}', [AdminCategoryController::class, 'update'])->name('guncelle');
+            Route::delete('/{category}', [AdminCategoryController::class, 'destroy'])->name('sil');
         });
     });
 });

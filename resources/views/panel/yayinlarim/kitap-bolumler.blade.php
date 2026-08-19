@@ -32,7 +32,10 @@
                         <a href="{{ route('panel.yayinlarim.kitap.bolumler.duzenle', [$book, $chapter]) }}" class="text-sm px-3.5 py-1.5 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 transition-colors">
                             Düzenle
                         </a>
-                        <form method="POST" action="{{ route('panel.yayinlarim.kitap.bolumler.sil', [$book, $chapter]) }}" onsubmit="return confirm('Bu bölümü silmek istediğinize emin misiniz?');">
+                        {{-- data-turbo-confirm: onsubmit="return confirm(...)" Turbo'nun kendi submit
+                             akışıyla yarışıp isteği sessizce düşürebiliyordu (bkz. UI_RESTYLE_NOTES.md) —
+                             Turbo'nun kendi confirm mekanizması kullanılıyor. --}}
+                        <form method="POST" action="{{ route('panel.yayinlarim.kitap.bolumler.sil', [$book, $chapter]) }}" data-turbo-confirm="Bu bölümü silmek istediğinize emin misiniz?">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="text-sm px-3.5 py-1.5 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 transition-colors">

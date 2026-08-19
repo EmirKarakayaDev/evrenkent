@@ -42,7 +42,7 @@
         ],
         'Platform' => [
             ['label' => 'Ana Sayfa Yönetimi', 'href' => route('panel.adminpanel.placeholder', 'ana-sayfa-yonetimi')],
-            ['label' => 'Kategoriler', 'href' => route('filament.admin.resources.categories.index'), 'external' => true],
+            ['label' => 'Kategoriler', 'href' => route('panel.adminpanel.kategoriler.index')],
             ['label' => 'Premium Sistemi', 'href' => route('panel.adminpanel.placeholder', 'premium-sistemi')],
             ['label' => 'İndirimler', 'href' => route('panel.adminpanel.placeholder', 'indirimler')],
             ['label' => 'Bildirimler', 'href' => route('panel.adminpanel.placeholder', 'bildirimler-sistemi')],

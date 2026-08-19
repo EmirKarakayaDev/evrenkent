@@ -58,7 +58,7 @@
                                     <a href="{{ route('panel.adminpanel.dergiler.duzenle', $issue) }}" class="inline-flex items-center gap-1.5 text-sm text-brand-700 hover:text-brand-800 transition-colors">
                                         <x-heroicon-o-pencil class="w-4 h-4" /> Düzenle
                                     </a>
-                                    <form method="POST" action="{{ route('panel.adminpanel.dergiler.sil', $issue) }}" onsubmit="return confirm('&quot;{{ $issue->title }}&quot; kalıcı olarak silinecek. Emin misiniz?');">
+                                    <form method="POST" action="{{ route('panel.adminpanel.dergiler.sil', $issue) }}" data-turbo-confirm="&quot;{{ $issue->title }}&quot; kalıcı olarak silinecek. Emin misiniz?">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="inline-flex items-center gap-1.5 text-sm text-red-600 hover:text-red-700 transition-colors">

@@ -65,7 +65,12 @@
                                     <a href="{{ route('panel.adminpanel.kitaplar.duzenle', $book) }}" class="inline-flex items-center gap-1.5 text-sm text-brand-700 hover:text-brand-800 transition-colors">
                                         <x-heroicon-o-pencil class="w-4 h-4" /> Düzenle
                                     </a>
-                                    <form method="POST" action="{{ route('panel.adminpanel.kitaplar.sil', $book) }}" onsubmit="return confirm('&quot;{{ $book->title }}&quot; kalıcı olarak silinecek. Emin misiniz?');">
+                                    {{-- data-turbo-confirm, plain onsubmit="return confirm(...)" yerine kullanılıyor:
+                                         Turbo Drive formu kendi submit akışına dahil ettiği için native onsubmit'in
+                                         confirm() dönüş değeri Turbo'nun kendi işleyişiyle yarışıyor ve silme isteği
+                                         hiç gönderilmeden sessizce düşebiliyordu — Turbo'nun kendi confirm mekanizması
+                                         (data-turbo-confirm) bunu doğru şekilde submission akışının içine alıyor. --}}
+                                    <form method="POST" action="{{ route('panel.adminpanel.kitaplar.sil', $book) }}" data-turbo-confirm="&quot;{{ $book->title }}&quot; kalıcı olarak silinecek. Emin misiniz?">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="inline-flex items-center gap-1.5 text-sm text-red-600 hover:text-red-700 transition-colors">
