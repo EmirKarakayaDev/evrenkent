@@ -32,4 +32,27 @@ Alpine.store('cart', {
     },
 });
 
+// Sidebar scroll pozisyonu — Turbo her geçişte <body>'yi (dolayısıyla <aside>'ı)
+// baştan render ediyor, bu yüzden aşağı kaydırıp bir linke tıklayınca sidebar
+// görsel olarak "sıfırlanıp" en başa dönüyordu. scroll event'i bubble etmediği
+// için document üzerinde capture:true ile dinleniyor; pozisyon düz bir JS
+// değişkeninde tutuluyor (bu da Turbo geçişleri arasında canlı kalıyor, aynı
+// yukarıdaki store'lar gibi) ve her yeni sayfa render olduğunda geri uygulanıyor.
+// Sidebar içeriği (aktif link vurgusu dahil) yine sunucudan taze geliyor —
+// sadece scrollTop taşınıyor, data-turbo-permanent gibi tüm elementi
+// "donduran" bir yöntem kullanılmadı çünkü o zaman aktif link vurgusu bir
+// önceki sayfadan kalma, bayat kalırdı.
+let sidebarScrollTop = 0;
+document.addEventListener('scroll', (event) => {
+    if (event.target?.classList?.contains('sidebar-scroll')) {
+        sidebarScrollTop = event.target.scrollTop;
+    }
+}, true);
+document.addEventListener('turbo:load', () => {
+    const sidebar = document.querySelector('.sidebar-scroll');
+    if (sidebar) {
+        sidebar.scrollTop = sidebarScrollTop;
+    }
+});
+
 Alpine.start();
