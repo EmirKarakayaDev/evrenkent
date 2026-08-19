@@ -21,10 +21,10 @@
             ['label' => 'Onay Bekleyenler', 'href' => route('panel.adminpanel.onaylar.index'), 'badge' => $pendingTotal],
         ],
         'Kullanıcı Yönetimi' => [
-            ['label' => 'Kullanıcılar', 'href' => route('filament.admin.resources.users.index'), 'external' => true],
-            ['label' => 'Yazarlar', 'href' => route('filament.admin.resources.users.index'), 'external' => true],
-            ['label' => 'Dergi Editörleri', 'href' => route('filament.admin.resources.users.index'), 'external' => true],
-            ['label' => 'Roller ve Yetkiler', 'href' => route('panel.adminpanel.placeholder', 'roller-yetkiler')],
+            ['label' => 'Kullanıcılar', 'href' => route('panel.adminpanel.kullanicilar.index')],
+            ['label' => 'Yazarlar', 'href' => route('panel.adminpanel.kullanicilar.index', ['rol' => 'yazar'])],
+            ['label' => 'Dergi Editörleri', 'href' => route('panel.adminpanel.kullanicilar.index', ['rol' => 'dergi_editoru'])],
+            ['label' => 'Roller ve Yetkiler', 'href' => route('panel.adminpanel.kullanicilar.roller')],
         ],
         'İstatistikler' => [
             ['label' => 'Satışlar', 'href' => route('panel.adminpanel.placeholder', 'istatistik-satislar')],

@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminBookController;
 use App\Http\Controllers\AdminCategoryController;
 use App\Http\Controllers\AdminMagazineIssueController;
+use App\Http\Controllers\AdminUserController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\ChapterController;
 use App\Http\Controllers\ContentApprovalController;
@@ -160,6 +161,19 @@ Route::middleware('auth')->prefix('panel')->as('panel.')->group(function () {
             Route::get('/{category}/duzenle', [AdminCategoryController::class, 'edit'])->name('duzenle');
             Route::put('/{category}', [AdminCategoryController::class, 'update'])->name('guncelle');
             Route::delete('/{category}', [AdminCategoryController::class, 'destroy'])->name('sil');
+        });
+
+        // Kullanıcılar/Yazarlar/Dergi Editörleri (?rol= filtresiyle aynı liste) + Roller
+        // ve Yetkiler: Filament'teki UserResource'un list/create/edit/delete'inin
+        // birebir aynısı (Faz 5 — bkz. UI_RESTYLE_NOTES.md).
+        Route::prefix('kullanicilar')->as('kullanicilar.')->group(function () {
+            Route::get('/', [AdminUserController::class, 'index'])->name('index');
+            Route::get('/roller', [AdminUserController::class, 'roles'])->name('roller');
+            Route::get('/yeni', [AdminUserController::class, 'create'])->name('yeni');
+            Route::post('/', [AdminUserController::class, 'store'])->name('store');
+            Route::get('/{user}/duzenle', [AdminUserController::class, 'edit'])->name('duzenle');
+            Route::put('/{user}', [AdminUserController::class, 'update'])->name('guncelle');
+            Route::delete('/{user}', [AdminUserController::class, 'destroy'])->name('sil');
         });
     });
 });
