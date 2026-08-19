@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminBookController;
+use App\Http\Controllers\AdminMagazineIssueController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\ChapterController;
 use App\Http\Controllers\ContentApprovalController;
@@ -136,6 +137,17 @@ Route::middleware('auth')->prefix('panel')->as('panel.')->group(function () {
             Route::get('/{book}/duzenle', [AdminBookController::class, 'edit'])->name('duzenle');
             Route::put('/{book}', [AdminBookController::class, 'update'])->name('guncelle');
             Route::delete('/{book}', [AdminBookController::class, 'destroy'])->name('sil');
+        });
+
+        // Dergi Sayıları: Filament'teki MagazineIssueResource'un list/create/edit/
+        // delete'inin birebir aynısı (Faz 3 — bkz. UI_RESTYLE_NOTES.md).
+        Route::prefix('dergiler')->as('dergiler.')->group(function () {
+            Route::get('/', [AdminMagazineIssueController::class, 'index'])->name('index');
+            Route::get('/yeni', [AdminMagazineIssueController::class, 'create'])->name('yeni');
+            Route::post('/', [AdminMagazineIssueController::class, 'store'])->name('store');
+            Route::get('/{magazineIssue}/duzenle', [AdminMagazineIssueController::class, 'edit'])->name('duzenle');
+            Route::put('/{magazineIssue}', [AdminMagazineIssueController::class, 'update'])->name('guncelle');
+            Route::delete('/{magazineIssue}', [AdminMagazineIssueController::class, 'destroy'])->name('sil');
         });
     });
 });
