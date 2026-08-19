@@ -29,6 +29,18 @@
     background-color: theme('colors.slate.300');
 }
 
+/* Turbo, bir sayfa geçişinde yeni <body>'yi takmadan önce ve sonra tarayıcıya
+   en az bir kere boyama (repaint) fırsatı veriyor (kendi render() döngüsünde
+   nextRepaint() ile bekliyor) — bu yüzden sadece scrollTop'u turbo:render'da
+   düzeltmek bile araya sıkışan o kareyi (scrollTop henüz 0'ken) engelleyemedi.
+   Bunun yerine sidebar, yeni içerik takılırken bu class ile geçici olarak
+   gizleniyor (resources/js/app.js), scrollTop doğru değere ayarlandıktan
+   hemen sonra aynı JS bu class'ı kaldırıp görünür kılıyor — böylece yanlış
+   (scrollTop=0) durum hiç boyanmıyor, sadece doğru durum görünüyor. */
+.sidebar-scroll.js-restoring-scroll {
+    visibility: hidden;
+}
+
 /*
  * Evrenkent tasarım sistemi — mockup'lardaki (dosyalar/) görünüme yakınsamak için
  * tekrar kullanılabilir bileşen sınıfları. Tek yerden değiştirilir, her sayfaya yayılır.

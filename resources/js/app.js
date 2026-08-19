@@ -37,27 +37,37 @@ Alpine.store('cart', {
 // görsel olarak "sıfırlanıp" en başa dönüyordu. scroll event'i bubble etmediği
 // için document üzerinde capture:true ile dinleniyor; pozisyon düz bir JS
 // değişkeninde tutuluyor (bu da Turbo geçişleri arasında canlı kalıyor, aynı
-// yukarıdaki store'lar gibi) ve her yeni sayfa render olduğunda geri uygulanıyor.
-// Sidebar içeriği (aktif link vurgusu dahil) yine sunucudan taze geliyor —
-// sadece scrollTop taşınıyor, data-turbo-permanent gibi tüm elementi
-// "donduran" bir yöntem kullanılmadı çünkü o zaman aktif link vurgusu bir
-// önceki sayfadan kalma, bayat kalırdı.
+// yukarıdaki store'lar gibi). Sidebar içeriği (aktif link vurgusu, rozet
+// sayıları) yine sunucudan taze geliyor — data-turbo-permanent gibi tüm
+// elementi "donduran" bir yöntem kullanılmadı, o zaman hem aktif link vurgusu
+// hem "Onay Bekleyenler" rozeti bir önceki sayfadan kalma/bayat kalırdı.
+//
+// Sadece scrollTop'u turbo:render'da (turbo:load'dan önce) düzeltmek yeterli
+// olmadı: Turbo'nun kendi render() döngüsü yeni <body>'yi takmadan önce ve
+// sonra en az bir kere nextRepaint() ile tarayıcıya boyama fırsatı veriyor,
+// yani hangi event'i dinlersek dinleyelim JS'imiz çalışana kadar tarayıcı
+// scrollTop=0 olan taze hâli zaten bir kere boyamış oluyordu (kullanıcının
+// bildirdiği "saniyelik en üste gelip düzelme"). Çözüm: yarışı kazanmaya
+// çalışmak yerine yanlış durumun hiç boyanmasını engellemek — sidebar,
+// yeni body takılırken .js-restoring-scroll ile gizleniyor (bkz. app.css),
+// scrollTop doğru değere ayarlanır ayarlanmaz aynı JS görünür kılıyor.
 let sidebarScrollTop = 0;
 document.addEventListener('scroll', (event) => {
     if (event.target?.classList?.contains('sidebar-scroll')) {
         sidebarScrollTop = event.target.scrollTop;
     }
 }, true);
-// turbo:load değil turbo:render dinleniyor: Turbo yeni <body>'yi turbo:render'da
-// takıyor, turbo:load ise ondan sonra (script'ler vs. bittiğinde) ayrı bir
-// "tick"te geliyor — arada tarayıcı bir kare boyama fırsatı buluyor ve
-// scrollTop=0 olan taze sidebar'ı bir anlığına gösterip sonra bizim düzeltmemizle
-// "zıplıyordu" (kullanıcının bildirdiği "saniyelik en üste gelip düzelme").
-// turbo:render'da düzeltmek aynı task içinde kalıp o ara kareyi ortadan kaldırıyor.
+document.addEventListener('turbo:before-render', (event) => {
+    const incomingSidebar = event.detail.newBody?.querySelector?.('.sidebar-scroll');
+    if (incomingSidebar) {
+        incomingSidebar.classList.add('js-restoring-scroll');
+    }
+});
 document.addEventListener('turbo:render', () => {
     const sidebar = document.querySelector('.sidebar-scroll');
     if (sidebar) {
         sidebar.scrollTop = sidebarScrollTop;
+        sidebar.classList.remove('js-restoring-scroll');
     }
 });
 
