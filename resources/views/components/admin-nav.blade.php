@@ -14,7 +14,7 @@
 
     $groups = [
         'Yayın Yönetimi' => [
-            ['label' => 'Kitaplar', 'href' => route('filament.admin.resources.books.index'), 'external' => true],
+            ['label' => 'Kitaplar', 'href' => route('panel.adminpanel.kitaplar.index')],
             ['label' => 'Dergiler', 'href' => route('filament.admin.resources.magazine-issues.index'), 'external' => true],
             ['label' => 'Sözlükler', 'href' => route('panel.adminpanel.placeholder', 'sozlukler')],
             ['label' => 'Tüm Yayınlar', 'href' => route('panel.adminpanel.placeholder', 'tum-yayinlar')],

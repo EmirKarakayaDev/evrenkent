@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminBookController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\ChapterController;
 use App\Http\Controllers\ContentApprovalController;
@@ -124,6 +125,17 @@ Route::middleware('auth')->prefix('panel')->as('panel.')->group(function () {
             Route::get('/makale/{article}/reddet', [ContentApprovalController::class, 'rejectArticleForm'])->name('makale.reddet-form');
             Route::post('/makale/{article}/reddet', [ContentApprovalController::class, 'rejectArticle'])->name('makale.reddet');
             Route::post('/makale/{article}/yayinla', [ContentApprovalController::class, 'publishArticle'])->name('makale.yayinla');
+        });
+
+        // Kitaplar: Filament'teki BookResource'un list/create/edit/delete'inin
+        // birebir aynısı (Faz 2 — bkz. UI_RESTYLE_NOTES.md).
+        Route::prefix('kitaplar')->as('kitaplar.')->group(function () {
+            Route::get('/', [AdminBookController::class, 'index'])->name('index');
+            Route::get('/yeni', [AdminBookController::class, 'create'])->name('yeni');
+            Route::post('/', [AdminBookController::class, 'store'])->name('store');
+            Route::get('/{book}/duzenle', [AdminBookController::class, 'edit'])->name('duzenle');
+            Route::put('/{book}', [AdminBookController::class, 'update'])->name('guncelle');
+            Route::delete('/{book}', [AdminBookController::class, 'destroy'])->name('sil');
         });
     });
 });
