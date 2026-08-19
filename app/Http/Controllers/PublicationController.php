@@ -6,6 +6,7 @@ use App\Enums\ContentStatus;
 use App\Models\Article;
 use App\Models\Book;
 use App\Models\Category;
+use App\Models\MagazineIssue;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -52,7 +53,23 @@ class PublicationController extends Controller
 
     public function yeniTaslakForm(): View
     {
-        return view('panel.yayinlarim.yeni');
+        return view('panel.yayinlarim.yeni', ['magazineIssues' => $this->assignableMagazineIssues()]);
+    }
+
+    /**
+     * Bir makalenin gönderilebileceği dergi sayıları — henüz yayınlanmamış
+     * (Yayında olmayan) her sayı, editörü kim olursa olsun. Yazar bir makale
+     * yazarken hangi sayıya gönderdiğini burada seçiyor; bu seçim olmadan
+     * makale hiçbir Dergi Editörü'nün Makale Havuzu'nda görünmüyordu (gerçek
+     * bir eşleştirme boşluğuydu, bkz. UI_RESTYLE_NOTES.md).
+     *
+     * @return \Illuminate\Support\Collection<int, MagazineIssue>
+     */
+    private function assignableMagazineIssues()
+    {
+        return MagazineIssue::where('status', '!=', ContentStatus::Yayinda)
+            ->orderBy('title')
+            ->get();
     }
 
     public function editBook(Book $book): View
@@ -107,7 +124,15 @@ class PublicationController extends Controller
     {
         $this->authorize('update', $article);
 
-        return view('panel.yayinlarim.makale-duzenle', compact('article'));
+        $magazineIssues = $this->assignableMagazineIssues();
+
+        // Makalenin şu an bağlı olduğu sayı arada Yayında'ya geçmiş olsa bile
+        // (nadir ama mümkün) seçim listesinde kaybolmasın diye ekleniyor.
+        if ($article->magazineIssue && ! $magazineIssues->contains('id', $article->magazine_issue_id)) {
+            $magazineIssues = $magazineIssues->push($article->magazineIssue)->sortBy('title')->values();
+        }
+
+        return view('panel.yayinlarim.makale-duzenle', compact('article', 'magazineIssues'));
     }
 
     public function updateArticle(Request $request, Article $article): RedirectResponse
@@ -117,11 +142,13 @@ class PublicationController extends Controller
         $data = $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'body' => ['required', 'string'],
+            'magazine_issue_id' => ['required', 'exists:magazine_issues,id'],
         ]);
 
         $article->update([
             'title' => $data['title'],
             'content' => $data['body'],
+            'magazine_issue_id' => $data['magazine_issue_id'],
         ]);
 
         return redirect()->route($this->listRouteFor($article->status))->with('status', 'Makale güncellendi.');
@@ -145,6 +172,7 @@ class PublicationController extends Controller
             'title' => ['required', 'string', 'max:255'],
             'body' => ['required', 'string'],
             'price' => ['nullable', 'numeric', 'min:0'],
+            'magazine_issue_id' => ['required_if:type,makale', 'nullable', 'exists:magazine_issues,id'],
         ]);
 
         $user = $request->user();
@@ -169,6 +197,7 @@ class PublicationController extends Controller
                 'title' => $data['title'],
                 'slug' => $slug,
                 'content' => $data['body'],
+                'magazine_issue_id' => $data['magazine_issue_id'],
                 'status' => ContentStatus::Taslak,
             ]);
         }

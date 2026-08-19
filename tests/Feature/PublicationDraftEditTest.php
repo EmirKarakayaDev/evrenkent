@@ -6,6 +6,7 @@ use App\Enums\ContentStatus;
 use App\Models\Article;
 use App\Models\Book;
 use App\Models\Category;
+use App\Models\MagazineIssue;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -180,15 +181,18 @@ class PublicationDraftEditTest extends TestCase
     public function test_yazar_can_view_and_update_own_draft_article(): void
     {
         $author = $this->yazar();
+        $issue = MagazineIssue::factory()->create();
         $article = Article::factory()->for($author, 'author')->create([
             'status' => ContentStatus::Taslak,
             'title' => 'Eski Makale',
+            'magazine_issue_id' => $issue->id,
         ]);
 
         $this->actingAs($author)
             ->put(route('panel.yayinlarim.makale.guncelle', $article), [
                 'title' => 'Yeni Makale',
                 'body' => 'Güncellenmiş içerik.',
+                'magazine_issue_id' => $issue->id,
             ])
             ->assertRedirect(route('panel.yayinlarim.taslaklarim'));
 

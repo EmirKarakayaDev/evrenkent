@@ -21,6 +21,17 @@
             @error('body') <p class="text-sm text-red-600 mt-1">{{ $message }}</p> @enderror
         </div>
 
+        <div>
+            <label for="magazine_issue_id" class="block text-sm font-medium text-slate-700 mb-1">Dergi Sayısı</label>
+            <select id="magazine_issue_id" name="magazine_issue_id" class="w-full rounded-md border-slate-300 text-sm focus:border-slate-500 focus:ring-slate-500">
+                <option value="">— Seçiniz —</option>
+                @foreach ($magazineIssues as $issue)
+                    <option value="{{ $issue->id }}" @selected(old('magazine_issue_id', $article->magazine_issue_id) == $issue->id)>{{ $issue->title }}</option>
+                @endforeach
+            </select>
+            @error('magazine_issue_id') <p class="text-sm text-red-600 mt-1">{{ $message }}</p> @enderror
+        </div>
+
         <div class="flex items-center gap-4 pt-1">
             <button type="submit" class="px-4 py-2.5 bg-slate-900 text-white text-sm font-medium rounded-lg hover:bg-slate-800 transition-colors">
                 Kaydet

@@ -33,6 +33,25 @@
             @error('price') <p class="text-sm text-red-600 mt-1">{{ $message }}</p> @enderror
         </div>
 
+        {{-- Makale hangi dergi sayısı için yazılıyorsa o seçilmeli — bu seçim
+             olmadan makale hiçbir Dergi Editörü'nün Makale Havuzu'nda görünmüyor. --}}
+        <div x-show="type === 'makale'">
+            <label for="magazine_issue_id" class="block text-sm font-medium text-slate-700 mb-1">Dergi Sayısı</label>
+            @if ($magazineIssues->isEmpty())
+                <p class="text-sm text-amber-700 bg-amber-50 border border-amber-200 rounded-md px-3 py-2">
+                    Şu an gönderilebilecek açık bir dergi sayısı yok — bir Dergi Editörü yeni bir sayı oluşturana kadar makale gönderemezsiniz.
+                </p>
+            @else
+                <select id="magazine_issue_id" name="magazine_issue_id" class="w-full rounded-md border-slate-300 text-sm focus:border-slate-500 focus:ring-slate-500">
+                    <option value="">— Seçiniz —</option>
+                    @foreach ($magazineIssues as $issue)
+                        <option value="{{ $issue->id }}" @selected(old('magazine_issue_id') == $issue->id)>{{ $issue->title }}</option>
+                    @endforeach
+                </select>
+            @endif
+            @error('magazine_issue_id') <p class="text-sm text-red-600 mt-1">{{ $message }}</p> @enderror
+        </div>
+
         <div>
             <label for="body" class="block text-sm font-medium text-slate-700 mb-1">
                 <span x-show="type === 'kitap'">Açıklama</span>
