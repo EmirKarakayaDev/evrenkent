@@ -20,7 +20,8 @@ class BookController extends Controller
         abort_unless(
             $book->status === ContentStatus::Yayinda
                 || ($book->status === ContentStatus::Onaylandi && $book->scheduled_publish_at)
-                || ($user && $user->id === $book->author_id),
+                || ($user && $user->id === $book->author_id)
+                || ($user && $user->hasRole('super_admin')),
             404
         );
 

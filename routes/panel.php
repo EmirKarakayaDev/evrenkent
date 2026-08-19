@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\ChapterController;
+use App\Http\Controllers\ContentApprovalController;
 use App\Http\Controllers\DergiYonetimiController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\NoteController;
@@ -95,11 +96,34 @@ Route::middleware('auth')->prefix('panel')->as('panel.')->group(function () {
         Route::get('/yayin-takvimi', [DergiYonetimiController::class, 'yayinTakvimi'])->name('yayin-takvimi');
     });
 
-    // Süper Admin dashboard'u: gerçek verili özet + Filament'e linkler. Onay/red/
-    // yayınla ve kullanıcı/rol yönetimi aksiyonları (zaten policy'de sadece bu role
-    // açık) Filament'te kalıyor — burada tekrar yazılmıyor.
+    // Süper Admin dashboard'u: gerçek verili özet. Kullanıcı/rol yönetimi ve
+    // Kitaplar/Dergiler tam listeleri gibi henüz taşınmamış bölümler (adım adım
+    // taşınıyor, bkz. UI_RESTYLE_NOTES.md) hâlâ Filament'e link veriyor —
+    // içerik onay akışı (bkz. altındaki "onaylar" grubu) artık taşındı.
     Route::middleware('role:super_admin')->prefix('admin-panel')->as('adminpanel.')->group(function () {
         Route::get('/', [SuperAdminController::class, 'index'])->name('index');
         Route::get('/yakinda/{section}', [SuperAdminController::class, 'placeholder'])->name('placeholder');
+
+        // İçerik Onayları: Filament'teki BookResource/ArticleResource/MagazineIssueResource
+        // approve/reject/publish action'larının kendi panelimizdeki paraleli.
+        Route::prefix('onaylar')->as('onaylar.')->group(function () {
+            Route::get('/', [ContentApprovalController::class, 'index'])->name('index');
+
+            Route::get('/kitap/{book}/onayla', [ContentApprovalController::class, 'approveBookForm'])->name('kitap.onayla-form');
+            Route::post('/kitap/{book}/onayla', [ContentApprovalController::class, 'approveBook'])->name('kitap.onayla');
+            Route::get('/kitap/{book}/reddet', [ContentApprovalController::class, 'rejectBookForm'])->name('kitap.reddet-form');
+            Route::post('/kitap/{book}/reddet', [ContentApprovalController::class, 'rejectBook'])->name('kitap.reddet');
+            Route::post('/kitap/{book}/yayinla', [ContentApprovalController::class, 'publishBook'])->name('kitap.yayinla');
+
+            Route::post('/dergi/{magazineIssue}/onayla', [ContentApprovalController::class, 'approveIssue'])->name('dergi.onayla');
+            Route::get('/dergi/{magazineIssue}/reddet', [ContentApprovalController::class, 'rejectIssueForm'])->name('dergi.reddet-form');
+            Route::post('/dergi/{magazineIssue}/reddet', [ContentApprovalController::class, 'rejectIssue'])->name('dergi.reddet');
+            Route::post('/dergi/{magazineIssue}/yayinla', [ContentApprovalController::class, 'publishIssue'])->name('dergi.yayinla');
+
+            Route::post('/makale/{article}/onayla', [ContentApprovalController::class, 'approveArticle'])->name('makale.onayla');
+            Route::get('/makale/{article}/reddet', [ContentApprovalController::class, 'rejectArticleForm'])->name('makale.reddet-form');
+            Route::post('/makale/{article}/reddet', [ContentApprovalController::class, 'rejectArticle'])->name('makale.reddet');
+            Route::post('/makale/{article}/yayinla', [ContentApprovalController::class, 'publishArticle'])->name('makale.yayinla');
+        });
     });
 });

@@ -68,9 +68,9 @@ class SuperAdminController extends Controller
         $activity = $this->liveActivity(10);
 
         $pendingApprovals = [
-            ['label' => 'Kitap Onayları', 'count' => $pendingBooks, 'route' => route('filament.admin.resources.books.index')],
-            ['label' => 'Dergi Sayısı Onayları', 'count' => $pendingIssues, 'route' => route('filament.admin.resources.magazine-issues.index')],
-            ['label' => 'Makale Onayları', 'count' => $pendingArticles, 'route' => route('filament.admin.resources.articles.index')],
+            ['label' => 'Kitap Onayları', 'count' => $pendingBooks, 'route' => route('panel.adminpanel.onaylar.index', ['tur' => 'kitaplar'])],
+            ['label' => 'Dergi Sayısı Onayları', 'count' => $pendingIssues, 'route' => route('panel.adminpanel.onaylar.index', ['tur' => 'dergiler'])],
+            ['label' => 'Makale Onayları', 'count' => $pendingArticles, 'route' => route('panel.adminpanel.onaylar.index', ['tur' => 'makaleler'])],
         ];
 
         return view('panel.admin.index', [

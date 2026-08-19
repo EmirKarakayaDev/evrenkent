@@ -18,7 +18,7 @@
             ['label' => 'Dergiler', 'href' => route('filament.admin.resources.magazine-issues.index'), 'external' => true],
             ['label' => 'Sözlükler', 'href' => route('panel.adminpanel.placeholder', 'sozlukler')],
             ['label' => 'Tüm Yayınlar', 'href' => route('panel.adminpanel.placeholder', 'tum-yayinlar')],
-            ['label' => 'Onay Bekleyenler', 'href' => route('panel.adminpanel.index').'#bekleyen-onaylar', 'badge' => $pendingTotal],
+            ['label' => 'Onay Bekleyenler', 'href' => route('panel.adminpanel.onaylar.index'), 'badge' => $pendingTotal],
         ],
         'Kullanıcı Yönetimi' => [
             ['label' => 'Kullanıcılar', 'href' => route('filament.admin.resources.users.index'), 'external' => true],

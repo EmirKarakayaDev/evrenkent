@@ -11,16 +11,17 @@ class MagazineIssueController extends Controller
     public function show(MagazineIssue $magazineIssue): View
     {
         $user = auth()->user();
+        $isOwnerOrAdmin = $user && ($user->id === $magazineIssue->editor_id || $user->hasRole('super_admin'));
 
-        abort_unless(
-            $magazineIssue->status === ContentStatus::Yayinda || ($user && $user->id === $magazineIssue->editor_id),
-            404
-        );
+        abort_unless($magazineIssue->status === ContentStatus::Yayinda || $isOwnerOrAdmin, 404);
 
         $magazineIssue->load('editor');
 
+        // Sahibi/Süper Admin önizlerken sayının içindeki taslak makaleleri de görebilir
+        // (aksi halde onay bekleyen bir sayı hep boş görünürdü) — herkes için hâlâ sadece
+        // yayınlanmış makaleler.
         $articles = $magazineIssue->articles()
-            ->where('status', ContentStatus::Yayinda)
+            ->when(! $isOwnerOrAdmin, fn ($query) => $query->where('status', ContentStatus::Yayinda))
             ->with('author')
             ->get();
 

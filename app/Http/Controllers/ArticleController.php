@@ -13,7 +13,9 @@ class ArticleController extends Controller
         $user = auth()->user();
 
         abort_unless(
-            $article->status === ContentStatus::Yayinda || ($user && $user->id === $article->author_id),
+            $article->status === ContentStatus::Yayinda
+                || ($user && $user->id === $article->author_id)
+                || ($user && $user->hasRole('super_admin')),
             404
         );
 
