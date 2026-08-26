@@ -84,6 +84,18 @@ class KitapligimTest extends TestCase
             ->assertDontSee('İlgisiz Kitap');
     }
 
+    public function test_book_entry_links_to_its_show_page(): void
+    {
+        $user = $this->okur();
+        $book = Book::factory()->create(['status' => ContentStatus::Yayinda, 'title' => 'Tıklanabilir Kitap']);
+        $user->favorites()->create(['favoritable_type' => Book::class, 'favoritable_id' => $book->id]);
+
+        $this->actingAs($user)
+            ->get(route('panel.index'))
+            ->assertOk()
+            ->assertSee(route('kitaplar.show', $book), false);
+    }
+
     public function test_empty_state_when_no_related_books(): void
     {
         $user = $this->okur();

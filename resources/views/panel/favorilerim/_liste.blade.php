@@ -7,16 +7,26 @@
     <div class="card divide-y divide-slate-100">
         @foreach ($favorites as $favorite)
             <div class="flex items-center justify-between gap-3 px-5 py-4 flex-wrap sm:flex-nowrap">
-                <div class="flex items-start gap-3 min-w-0">
-                    <x-heroicon-o-book-open class="w-5 h-5 text-slate-300 mt-0.5 shrink-0" />
-                    <div class="min-w-0">
-                        <span class="text-xs uppercase text-brand-700 font-medium tracking-wide">Kitap</span>
-                        <div class="font-medium text-slate-900 truncate">{{ $favorite->favoritable?->title ?? 'Silinmiş içerik' }}</div>
+                @if ($favorite->favoritable)
+                    <a href="{{ $favorite->favoritable->url() }}" class="group flex items-start gap-3 min-w-0">
+                        <x-heroicon-o-book-open class="w-5 h-5 text-slate-300 mt-0.5 shrink-0" />
+                        <div class="min-w-0">
+                            <span class="text-xs uppercase text-brand-700 font-medium tracking-wide">Kitap</span>
+                            <div class="font-medium text-slate-900 truncate group-hover:underline">{{ $favorite->favoritable->title }}</div>
+                        </div>
+                    </a>
+                @else
+                    <div class="flex items-start gap-3 min-w-0">
+                        <x-heroicon-o-book-open class="w-5 h-5 text-slate-300 mt-0.5 shrink-0" />
+                        <div class="min-w-0">
+                            <span class="text-xs uppercase text-brand-700 font-medium tracking-wide">Kitap</span>
+                            <div class="font-medium text-slate-900 truncate">Silinmiş içerik</div>
+                        </div>
                     </div>
-                </div>
+                @endif
                 <div class="flex items-center gap-3 shrink-0">
-                    @if ($favorite->favoritable instanceof \App\Models\Book)
-                        <a href="{{ route('kitaplar.show', $favorite->favoritable) }}" class="btn-outline btn-sm">
+                    @if ($favorite->favoritable)
+                        <a href="{{ $favorite->favoritable->url() }}" class="btn-outline btn-sm">
                             Görüntüle
                         </a>
                     @endif

@@ -14,13 +14,13 @@
         <div class="card divide-y divide-slate-100">
             @foreach ($items as $item)
                 <div class="flex items-center justify-between gap-4 px-5 py-4">
-                    <div class="flex items-start gap-4 min-w-0">
-                        <x-book-cover :book="$item->book" class="w-14 h-20 rounded-md shrink-0" icon-class="w-5 h-5" />
+                    <a href="{{ $item->book->url() }}" class="group flex items-start gap-4 min-w-0">
+                        <x-book-cover :book="$item->book" class="w-14 h-20 rounded-md shrink-0 transition-opacity group-hover:opacity-80" icon-class="w-5 h-5" />
                         <div class="min-w-0">
                             @if ($item->book->categories->isNotEmpty())
                                 <span class="pill-tag !py-1 !px-3 !text-xs mb-1">{{ $item->book->categories->first()->name }}</span>
                             @endif
-                            <div class="font-medium text-slate-900 truncate">{{ $item->book->title }}</div>
+                            <div class="font-medium text-slate-900 truncate group-hover:underline">{{ $item->book->title }}</div>
                             <div class="text-sm text-slate-500">{{ $item->book->author->name }}</div>
                             <div class="flex items-center gap-1.5 mt-1.5 flex-wrap">
                                 @if ($item->purchased)
@@ -34,7 +34,7 @@
                                 @endif
                             </div>
                         </div>
-                    </div>
+                    </a>
                     <div class="shrink-0">
                         @if ($item->readingItem?->status === \App\Enums\ReadingStatus::Listede)
                             <a href="{{ route('kitaplar.oku', $item->book) }}" class="btn-brand btn-sm">

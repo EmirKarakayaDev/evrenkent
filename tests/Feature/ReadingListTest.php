@@ -78,6 +78,22 @@ class ReadingListTest extends TestCase
         $this->assertNull($item->completed_at);
     }
 
+    public function test_reading_list_entry_links_to_the_books_show_page(): void
+    {
+        $user = $this->okur();
+        $book = Book::factory()->create(['status' => ContentStatus::Yayinda]);
+        $user->readingListItems()->create([
+            'readable_type' => Book::class,
+            'readable_id' => $book->id,
+            'status' => ReadingStatus::Listede,
+        ]);
+
+        $this->actingAs($user)
+            ->get(route('panel.okuma-listem'))
+            ->assertOk()
+            ->assertSee(route('kitaplar.show', $book), false);
+    }
+
     public function test_user_cannot_modify_another_users_reading_list_item(): void
     {
         $owner = $this->okur();

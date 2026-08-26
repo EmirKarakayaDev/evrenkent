@@ -53,6 +53,18 @@ class PurchaseTest extends TestCase
             ->assertSee('Satılan Kitap');
     }
 
+    public function test_satin_aldiklarim_entry_links_to_the_books_show_page(): void
+    {
+        $user = $this->okur();
+        $book = Book::factory()->create(['status' => ContentStatus::Yayinda]);
+        $this->actingAs($user)->post(route('panel.satin-al', $book));
+
+        $this->actingAs($user)
+            ->get(route('panel.satin-aldiklarim'))
+            ->assertOk()
+            ->assertSee(route('kitaplar.show', $book), false);
+    }
+
     public function test_purchasing_the_same_book_twice_is_idempotent(): void
     {
         $user = $this->okur();

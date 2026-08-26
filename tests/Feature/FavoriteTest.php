@@ -62,6 +62,18 @@ class FavoriteTest extends TestCase
             ->assertSee('Sevilen Kitap');
     }
 
+    public function test_favorilerim_entry_links_to_the_books_show_page(): void
+    {
+        $user = $this->okur();
+        $book = Book::factory()->create(['status' => ContentStatus::Yayinda]);
+        $user->favorites()->create(['favoritable_type' => Book::class, 'favoritable_id' => $book->id]);
+
+        $this->actingAs($user)
+            ->get(route('panel.favorilerim'))
+            ->assertOk()
+            ->assertSee(route('kitaplar.show', $book), false);
+    }
+
     public function test_user_cannot_delete_another_users_favorite(): void
     {
         $owner = $this->okur();

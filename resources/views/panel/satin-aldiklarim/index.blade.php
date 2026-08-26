@@ -14,15 +14,25 @@
         <div class="card divide-y divide-slate-100">
             @foreach ($purchases as $purchase)
                 <div class="flex items-center justify-between gap-3 px-5 py-4">
-                    <div class="flex items-start gap-3 min-w-0">
-                        <x-heroicon-o-book-open class="w-5 h-5 text-slate-300 mt-0.5 shrink-0" />
-                        <div class="min-w-0">
-                            <div class="font-medium text-slate-900 truncate">{{ $purchase->book?->title ?? 'Silinmiş kitap' }}</div>
-                            <div class="text-xs text-slate-400 mt-0.5">
-                                {{ $purchase->book?->author?->name }} · {{ $purchase->purchased_at->format('d.m.Y') }}
+                    @if ($purchase->book)
+                        <a href="{{ $purchase->book->url() }}" class="group flex items-start gap-3 min-w-0">
+                            <x-heroicon-o-book-open class="w-5 h-5 text-slate-300 mt-0.5 shrink-0" />
+                            <div class="min-w-0">
+                                <div class="font-medium text-slate-900 truncate group-hover:underline">{{ $purchase->book->title }}</div>
+                                <div class="text-xs text-slate-400 mt-0.5">
+                                    {{ $purchase->book->author?->name }} · {{ $purchase->purchased_at->format('d.m.Y') }}
+                                </div>
+                            </div>
+                        </a>
+                    @else
+                        <div class="flex items-start gap-3 min-w-0">
+                            <x-heroicon-o-book-open class="w-5 h-5 text-slate-300 mt-0.5 shrink-0" />
+                            <div class="min-w-0">
+                                <div class="font-medium text-slate-900 truncate">Silinmiş kitap</div>
+                                <div class="text-xs text-slate-400 mt-0.5">{{ $purchase->purchased_at->format('d.m.Y') }}</div>
                             </div>
                         </div>
-                    </div>
+                    @endif
                     <div class="text-sm text-slate-700 font-medium shrink-0">
                         {{ number_format($purchase->amount, 2, ',', '.') }} TL
                     </div>

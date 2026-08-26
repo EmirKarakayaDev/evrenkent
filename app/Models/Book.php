@@ -51,6 +51,16 @@ class Book extends Model
         return $this->belongsTo(User::class, 'author_id');
     }
 
+    /**
+     * Kitabın tanıtım sayfasının URL'i — Kitaplığım/Favorilerim/Okuma Listem/
+     * Satın Aldıklarım/Notlarım gibi panellerde tek tip bir "içeriğe git" linki
+     * kurabilmek için (Article::url() ile birlikte polymorphic kullanılabiliyor).
+     */
+    public function url(): string
+    {
+        return route('kitaplar.show', $this);
+    }
+
     public function categories(): BelongsToMany
     {
         return $this->belongsToMany(Category::class, 'category_book');

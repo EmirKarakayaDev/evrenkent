@@ -84,6 +84,24 @@ class NoteTest extends TestCase
         $this->actingAs($user)->get(route('panel.alintilarim'))->assertDontSee('Defter içeriği benzersiz metni');
     }
 
+    public function test_note_label_links_to_its_related_content(): void
+    {
+        $user = $this->okur();
+        $book = Book::factory()->create(['status' => ContentStatus::Yayinda]);
+        $user->notes()->create([
+            'type' => 'alinti',
+            'noteable_type' => Book::class,
+            'noteable_id' => $book->id,
+            'location' => 'Sayfa 12',
+            'content' => 'Alıntı metni.',
+        ]);
+
+        $this->actingAs($user)
+            ->get(route('panel.alintilarim'))
+            ->assertOk()
+            ->assertSee(route('kitaplar.show', $book), false);
+    }
+
     public function test_user_cannot_delete_another_users_note(): void
     {
         $owner = $this->okur();

@@ -9,7 +9,7 @@
             <div class="flex items-start justify-between px-5 py-4 gap-4">
                 <div class="min-w-0">
                     @if ($note->noteable)
-                        <span class="text-xs uppercase text-brand-700 font-medium tracking-wide">{{ $note->noteable->title }}</span>
+                        <a href="{{ $note->noteable->url() }}" class="text-xs uppercase text-brand-700 font-medium tracking-wide hover:underline">{{ $note->noteable->title }}</a>
                     @endif
                     @if ($note->title)
                         <div class="font-medium text-slate-900">{{ $note->title }}</div>

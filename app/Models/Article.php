@@ -34,6 +34,16 @@ class Article extends Model
         return $this->belongsTo(User::class, 'author_id');
     }
 
+    /**
+     * Makalenin sayfasının URL'i — Book::url() ile aynı isim/imza, panel
+     * listelerinde noteable/favoritable gibi polymorphic ilişkilerde tip
+     * kontrolü yapmadan tek tip `$item->url()` çağrılabilsin diye.
+     */
+    public function url(): string
+    {
+        return route('makaleler.show', $this);
+    }
+
     public function magazineIssue(): BelongsTo
     {
         return $this->belongsTo(MagazineIssue::class);
