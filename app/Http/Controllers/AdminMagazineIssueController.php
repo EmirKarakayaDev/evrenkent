@@ -55,8 +55,8 @@ class AdminMagazineIssueController extends Controller
 
         if ($request->hasFile('cover_image')) {
             // Filament'in FileUpload'ıyla aynı disk/dizin — x-magazine-cover bileşeni
-            // ikisinde de aynı şekilde okuyor.
-            $data['cover_image'] = $request->file('cover_image')->store('covers/magazine-issues', 'public');
+            // ikisinde de aynı şekilde okuyor. Disk adı config'ten (covers_disk).
+            $data['cover_image'] = $request->file('cover_image')->store('covers/magazine-issues', config('filesystems.covers_disk'));
         }
 
         $data['status'] = $data['status'] ?? ContentStatus::Taslak->value;
@@ -83,7 +83,7 @@ class AdminMagazineIssueController extends Controller
         $data = $request->validate($this->validationRules(create: false));
 
         if ($request->hasFile('cover_image')) {
-            $data['cover_image'] = $request->file('cover_image')->store('covers/magazine-issues', 'public');
+            $data['cover_image'] = $request->file('cover_image')->store('covers/magazine-issues', config('filesystems.covers_disk'));
         } else {
             unset($data['cover_image']);
         }
@@ -101,7 +101,7 @@ class AdminMagazineIssueController extends Controller
         $this->authorize('delete', $magazineIssue);
 
         if ($magazineIssue->cover_image) {
-            Storage::disk('public')->delete($magazineIssue->cover_image);
+            Storage::disk(config('filesystems.covers_disk'))->delete($magazineIssue->cover_image);
         }
 
         $magazineIssue->delete();

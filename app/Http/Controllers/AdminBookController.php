@@ -56,8 +56,9 @@ class AdminBookController extends Controller
 
         if ($request->hasFile('cover_image')) {
             // Filament'in FileUpload'ıyla aynı disk/dizin — x-book-cover bileşeni
-            // ikisinde de aynı şekilde okuyor.
-            $data['cover_image'] = $request->file('cover_image')->store('covers/books', 'public');
+            // ikisinde de aynı şekilde okuyor. Disk adı sabit değil, config'ten
+            // (bkz. config/filesystems.php -> covers_disk) — S3'e geçiş tek satırlık env değişikliği olsun diye.
+            $data['cover_image'] = $request->file('cover_image')->store('covers/books', config('filesystems.covers_disk'));
         }
 
         $data['is_editors_pick'] = $request->boolean('is_editors_pick');
@@ -89,7 +90,7 @@ class AdminBookController extends Controller
         $data = $request->validate($this->validationRules(create: false, book: $book));
 
         if ($request->hasFile('cover_image')) {
-            $data['cover_image'] = $request->file('cover_image')->store('covers/books', 'public');
+            $data['cover_image'] = $request->file('cover_image')->store('covers/books', config('filesystems.covers_disk'));
         } else {
             unset($data['cover_image']);
         }
@@ -110,7 +111,7 @@ class AdminBookController extends Controller
         $this->authorize('delete', $book);
 
         if ($book->cover_image) {
-            Storage::disk('public')->delete($book->cover_image);
+            Storage::disk(config('filesystems.covers_disk'))->delete($book->cover_image);
         }
 
         $book->delete();

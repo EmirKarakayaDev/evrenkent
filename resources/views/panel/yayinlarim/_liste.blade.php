@@ -37,6 +37,15 @@
                             </button>
                         </form>
                     @endif
+                    @can('delete', $book)
+                        <form method="POST" action="{{ route('panel.yayinlarim.kitap.sil', $book) }}" data-turbo-confirm="&quot;{{ $book->title }}&quot; kalıcı olarak silinecek. Emin misiniz?">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="inline-flex items-center gap-1.5 text-sm text-red-600 hover:text-red-700 transition-colors px-1">
+                                <x-heroicon-o-trash class="w-4 h-4" /> Sil
+                            </button>
+                        </form>
+                    @endcan
                 </div>
             </div>
         @endforeach
@@ -70,6 +79,15 @@
                             </button>
                         </form>
                     @endif
+                    @can('delete', $article)
+                        <form method="POST" action="{{ route('panel.yayinlarim.makale.sil', $article) }}" data-turbo-confirm="&quot;{{ $article->title }}&quot; kalıcı olarak silinecek. Emin misiniz?">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="inline-flex items-center gap-1.5 text-sm text-red-600 hover:text-red-700 transition-colors px-1">
+                                <x-heroicon-o-trash class="w-4 h-4" /> Sil
+                            </button>
+                        </form>
+                    @endcan
                 </div>
             </div>
         @endforeach

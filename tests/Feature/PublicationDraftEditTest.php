@@ -200,4 +200,75 @@ class PublicationDraftEditTest extends TestCase
         $this->assertSame('Yeni Makale', $article->title);
         $this->assertSame(ContentStatus::Taslak, $article->status);
     }
+
+    public function test_yazar_can_delete_own_draft_book(): void
+    {
+        $author = $this->yazar();
+        $book = Book::factory()->for($author, 'author')->create(['status' => ContentStatus::Taslak]);
+
+        $this->actingAs($author)
+            ->delete(route('panel.yayinlarim.kitap.sil', $book))
+            ->assertRedirect(route('panel.yayinlarim.taslaklarim'));
+
+        $this->assertModelMissing($book);
+    }
+
+    public function test_yazar_cannot_delete_a_submitted_book(): void
+    {
+        $author = $this->yazar();
+        $book = Book::factory()->for($author, 'author')->create(['status' => ContentStatus::Gonderildi]);
+
+        $this->actingAs($author)
+            ->delete(route('panel.yayinlarim.kitap.sil', $book))
+            ->assertForbidden();
+
+        $this->assertModelExists($book);
+    }
+
+    public function test_yazar_cannot_delete_someone_elses_book(): void
+    {
+        $owner = $this->yazar();
+        $intruder = $this->yazar();
+        $book = Book::factory()->for($owner, 'author')->create(['status' => ContentStatus::Taslak]);
+
+        $this->actingAs($intruder)
+            ->delete(route('panel.yayinlarim.kitap.sil', $book))
+            ->assertForbidden();
+
+        $this->assertModelExists($book);
+    }
+
+    public function test_yazar_can_delete_own_draft_article(): void
+    {
+        $author = $this->yazar();
+        $article = Article::factory()->for($author, 'author')->create(['status' => ContentStatus::Taslak]);
+
+        $this->actingAs($author)
+            ->delete(route('panel.yayinlarim.makale.sil', $article))
+            ->assertRedirect(route('panel.yayinlarim.taslaklarim'));
+
+        $this->assertModelMissing($article);
+    }
+
+    public function test_delete_button_only_appears_for_draft_items_in_taslaklarim(): void
+    {
+        $author = $this->yazar();
+        Book::factory()->for($author, 'author')->create(['status' => ContentStatus::Taslak, 'title' => 'Silinebilir Taslak']);
+
+        $this->actingAs($author)
+            ->get(route('panel.yayinlarim.taslaklarim'))
+            ->assertOk()
+            ->assertSee('Sil');
+    }
+
+    public function test_delete_button_does_not_appear_for_submitted_items(): void
+    {
+        $author = $this->yazar();
+        Book::factory()->for($author, 'author')->create(['status' => ContentStatus::Gonderildi]);
+
+        $this->actingAs($author)
+            ->get(route('panel.yayinlarim.gonderilenler'))
+            ->assertOk()
+            ->assertDontSee('Sil');
+    }
 }

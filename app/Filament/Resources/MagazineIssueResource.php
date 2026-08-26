@@ -49,7 +49,7 @@ class MagazineIssueResource extends Resource
                 Forms\Components\FileUpload::make('cover_image')
                     ->label('Kapak Görseli')
                     ->image()
-                    ->disk('public')
+                    ->disk(config('filesystems.covers_disk'))
                     ->directory('covers/magazine-issues')
                     ->maxSize(5120),
                 Forms\Components\Textarea::make('editor_note')
@@ -85,7 +85,8 @@ class MagazineIssueResource extends Resource
                     ->label('Editör')
                     ->sortable(),
                 Tables\Columns\ImageColumn::make('cover_image')
-                    ->label('Kapak'),
+                    ->label('Kapak')
+                    ->disk(config('filesystems.covers_disk')),
                 Tables\Columns\TextColumn::make('status')
                     ->label('Durum')
                     ->badge()

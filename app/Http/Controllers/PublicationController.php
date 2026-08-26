@@ -9,6 +9,7 @@ use App\Models\Category;
 use App\Models\MagazineIssue;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
 
@@ -203,6 +204,38 @@ class PublicationController extends Controller
         }
 
         return redirect()->route('panel.yayinlarim.taslaklarim')->with('status', 'Taslak oluşturuldu.');
+    }
+
+    /**
+     * Yazar kendi taslağını siler (policy: sadece Taslak durumundaki kendi
+     * kitabı — onaya gönderilmiş/yayındaki bir kitap silinemez). Taslak
+     * aşamasındaki bir kitabın kapak görseli olması beklenmez (kapak yükleme
+     * sadece Süper Admin formunda var) ama savunmacı olarak yine de temizleniyor.
+     */
+    public function destroyBook(Book $book): RedirectResponse
+    {
+        $this->authorize('delete', $book);
+
+        if ($book->cover_image) {
+            Storage::disk(config('filesystems.covers_disk'))->delete($book->cover_image);
+        }
+
+        $book->delete();
+
+        return redirect()->route('panel.yayinlarim.taslaklarim')->with('status', 'Kitap silindi.');
+    }
+
+    /**
+     * Yazar kendi taslak makalesini siler (policy: sadece Taslak durumundaki
+     * kendi makalesi).
+     */
+    public function destroyArticle(Article $article): RedirectResponse
+    {
+        $this->authorize('delete', $article);
+
+        $article->delete();
+
+        return redirect()->route('panel.yayinlarim.taslaklarim')->with('status', 'Makale silindi.');
     }
 
     public function submitBook(Book $book): RedirectResponse

@@ -68,8 +68,10 @@ Route::middleware('auth')->prefix('panel')->as('panel.')->group(function () {
         Route::post('/makale/{article}/gonder', [PublicationController::class, 'submitArticle'])->name('makale.gonder');
         Route::get('/kitap/{book}/duzenle', [PublicationController::class, 'editBook'])->name('kitap.duzenle');
         Route::put('/kitap/{book}', [PublicationController::class, 'updateBook'])->name('kitap.guncelle');
+        Route::delete('/kitap/{book}', [PublicationController::class, 'destroyBook'])->name('kitap.sil');
         Route::get('/makale/{article}/duzenle', [PublicationController::class, 'editArticle'])->name('makale.duzenle');
         Route::put('/makale/{article}', [PublicationController::class, 'updateArticle'])->name('makale.guncelle');
+        Route::delete('/makale/{article}', [PublicationController::class, 'destroyArticle'])->name('makale.sil');
 
         Route::get('/kitap/{book}/bolumler', [ChapterController::class, 'index'])->name('kitap.bolumler');
         Route::get('/kitap/{book}/bolumler/yeni', [ChapterController::class, 'create'])->name('kitap.bolumler.yeni');
@@ -91,6 +93,7 @@ Route::middleware('auth')->prefix('panel')->as('panel.')->group(function () {
         Route::post('/sayilarim', [DergiYonetimiController::class, 'storeSayi'])->name('sayilarim.store');
         Route::get('/sayilarim/{magazineIssue}/duzenle', [DergiYonetimiController::class, 'sayiDuzenleForm'])->name('sayilarim.duzenle');
         Route::put('/sayilarim/{magazineIssue}', [DergiYonetimiController::class, 'updateSayi'])->name('sayilarim.guncelle');
+        Route::delete('/sayilarim/{magazineIssue}', [DergiYonetimiController::class, 'destroySayi'])->name('sayilarim.sil');
         Route::post('/sayilarim/{magazineIssue}/gonder', [DergiYonetimiController::class, 'gonderSayi'])->name('sayilarim.gonder');
 
         Route::get('/makale-havuzu', [DergiYonetimiController::class, 'makaleHavuzu'])->name('makale-havuzu');

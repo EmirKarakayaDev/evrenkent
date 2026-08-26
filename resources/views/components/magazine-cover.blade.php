@@ -14,7 +14,7 @@
 
 <div {{ $attributes->merge(['class' => 'overflow-hidden']) }}>
     @if ($issue->cover_image)
-        <img src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($issue->cover_image) }}" alt="{{ $issue->title }}" class="w-full h-full object-cover">
+        <img src="{{ \Illuminate\Support\Facades\Storage::disk(config('filesystems.covers_disk'))->url($issue->cover_image) }}" alt="{{ $issue->title }}" class="w-full h-full object-cover">
     @else
         <div class="w-full h-full bg-gradient-to-br {{ $gradient }} flex items-center justify-center">
             <x-heroicon-o-newspaper class="{{ $iconClass }} text-white/50" />

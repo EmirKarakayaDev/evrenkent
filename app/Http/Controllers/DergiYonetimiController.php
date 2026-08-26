@@ -7,6 +7,7 @@ use App\Models\Article;
 use App\Models\MagazineIssue;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class DergiYonetimiController extends Controller
@@ -157,8 +158,8 @@ class DergiYonetimiController extends Controller
 
         if ($request->hasFile('cover_image')) {
             // Filament'in FileUpload'ıyla aynı disk/dizin — x-magazine-cover bileşeni
-            // ikisinde de aynı şekilde okuyor.
-            $data['cover_image'] = $request->file('cover_image')->store('covers/magazine-issues', 'public');
+            // ikisinde de aynı şekilde okuyor. Disk adı config'ten (covers_disk).
+            $data['cover_image'] = $request->file('cover_image')->store('covers/magazine-issues', config('filesystems.covers_disk'));
         }
 
         $issue = auth()->user()->editedMagazineIssues()->create([
@@ -183,7 +184,7 @@ class DergiYonetimiController extends Controller
         $data = $request->validate($this->sayiValidationRules());
 
         if ($request->hasFile('cover_image')) {
-            $data['cover_image'] = $request->file('cover_image')->store('covers/magazine-issues', 'public');
+            $data['cover_image'] = $request->file('cover_image')->store('covers/magazine-issues', config('filesystems.covers_disk'));
         } else {
             unset($data['cover_image']);
         }
@@ -191,6 +192,25 @@ class DergiYonetimiController extends Controller
         $magazineIssue->update($data);
 
         return redirect()->route('panel.dergi.sayilarim.duzenle', $magazineIssue)->with('status', 'Sayı güncellendi.');
+    }
+
+    /**
+     * Editör kendi taslak sayısını siler (policy: sadece Taslak durumundaki kendi
+     * sayısı — onaya gönderilmiş/yayındaki bir sayı silinemez). Süper Admin'in
+     * AdminMagazineIssueController::destroy'daki aynı deseniyle tutarlı: kapak
+     * görseli de (varsa) diskten temizlenir.
+     */
+    public function destroySayi(MagazineIssue $magazineIssue): RedirectResponse
+    {
+        $this->authorize('delete', $magazineIssue);
+
+        if ($magazineIssue->cover_image) {
+            Storage::disk(config('filesystems.covers_disk'))->delete($magazineIssue->cover_image);
+        }
+
+        $magazineIssue->delete();
+
+        return redirect()->route('panel.dergi.sayilarim')->with('status', 'Sayı silindi.');
     }
 
     public function gonderSayi(MagazineIssue $magazineIssue): RedirectResponse

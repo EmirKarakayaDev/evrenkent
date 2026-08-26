@@ -289,4 +289,57 @@ class DergiYonetimiTest extends TestCase
             ->post(route('panel.dergi.makale-havuzu.incele', $article))
             ->assertForbidden();
     }
+
+    public function test_editor_can_delete_own_draft_issue_and_its_cover_is_removed(): void
+    {
+        Storage::fake('public');
+        $editor = $this->dergiEditoru();
+        $issue = MagazineIssue::factory()->for($editor, 'editor')->create([
+            'status' => ContentStatus::Taslak,
+            'cover_image' => UploadedFile::fake()->image('kapak.jpg')->store('covers/magazine-issues', 'public'),
+        ]);
+
+        $this->actingAs($editor)
+            ->delete(route('panel.dergi.sayilarim.sil', $issue))
+            ->assertRedirect(route('panel.dergi.sayilarim'));
+
+        $this->assertModelMissing($issue);
+        Storage::disk('public')->assertMissing($issue->cover_image);
+    }
+
+    public function test_editor_cannot_delete_a_submitted_issue(): void
+    {
+        $editor = $this->dergiEditoru();
+        $issue = MagazineIssue::factory()->for($editor, 'editor')->create(['status' => ContentStatus::Gonderildi]);
+
+        $this->actingAs($editor)
+            ->delete(route('panel.dergi.sayilarim.sil', $issue))
+            ->assertForbidden();
+
+        $this->assertModelExists($issue);
+    }
+
+    public function test_editor_cannot_delete_another_editors_issue(): void
+    {
+        $editor = $this->dergiEditoru();
+        $otherEditor = $this->dergiEditoru();
+        $issue = MagazineIssue::factory()->for($otherEditor, 'editor')->create(['status' => ContentStatus::Taslak]);
+
+        $this->actingAs($editor)
+            ->delete(route('panel.dergi.sayilarim.sil', $issue))
+            ->assertForbidden();
+
+        $this->assertModelExists($issue);
+    }
+
+    public function test_delete_button_only_appears_for_draft_issues(): void
+    {
+        $editor = $this->dergiEditoru();
+        MagazineIssue::factory()->for($editor, 'editor')->create(['status' => ContentStatus::Taslak]);
+
+        $this->actingAs($editor)
+            ->get(route('panel.dergi.sayilarim'))
+            ->assertOk()
+            ->assertSee('Sil');
+    }
 }

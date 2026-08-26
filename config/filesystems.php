@@ -17,6 +17,25 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Kapak Görselleri Disk'i
+    |--------------------------------------------------------------------------
+    |
+    | Kitap/dergi sayısı kapak görselleri hep bu disk'e yazılır/okunur (kod
+    | tarafında hiçbir yerde 'public' sabit yazılmaz, hep bu config okunur).
+    | Yerelde/demo'da varsayılan 'public' (yerel disk) yeterlidir ama Railway
+    | gibi container'ın yazılabilir katmanı her deploy'da sıfırlanan bir
+    | ortamda kalıcı değildir — gerçek canlıya geçerken:
+    |   1. composer require league/flysystem-aws-s3-v3
+    |   2. .env'e AWS_* (bucket/key/secret/region) bilgilerini gir
+    |   3. COVERS_DISK=s3 yap
+    | Bu üç adım dışında kod değişikliği gerekmez, bkz. DEPLOYMENT.md.
+    |
+    */
+
+    'covers_disk' => env('COVERS_DISK', 'public'),
+
+    /*
+    |--------------------------------------------------------------------------
     | Filesystem Disks
     |--------------------------------------------------------------------------
     |

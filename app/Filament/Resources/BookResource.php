@@ -53,7 +53,7 @@ class BookResource extends Resource
                 Forms\Components\FileUpload::make('cover_image')
                     ->label('Kapak Görseli')
                     ->image()
-                    ->disk('public')
+                    ->disk(config('filesystems.covers_disk'))
                     ->directory('covers/books')
                     ->maxSize(5120),
                 Forms\Components\TextInput::make('price')
@@ -130,7 +130,8 @@ class BookResource extends Resource
                     ->label('Yazar')
                     ->sortable(),
                 Tables\Columns\ImageColumn::make('cover_image')
-                    ->label('Kapak'),
+                    ->label('Kapak')
+                    ->disk(config('filesystems.covers_disk')),
                 Tables\Columns\TextColumn::make('price')
                     ->label('Fiyat')
                     ->money('TRY')

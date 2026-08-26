@@ -19,6 +19,7 @@ Bu repo Railway için hazır bir `Dockerfile` + `railway.json` içeriyor (nginx/
    - `SESSION_SECURE_COOKIE=true`
    - `MAIL_MAILER=log` (gerçek SMTP eklenene kadar)
 4. **Volume ekleyin** (Settings → Volumes → New Volume, mount path: `/app/database`) — böylece SQLite dosyası her redeploy'da silinmez, veriler kalıcı olur. Volume eklemezseniz her deploy'da veritabanı sıfırlanır (demo için bu bile kabul edilebilir olabilir).
+   ⚠️ **Bu volume yüklenen kitap/dergi kapak görsellerini kapsamaz** (onlar `storage/app/public`'e yazılıyor, ayrı bir yol) — ya `storage/app/public`'i de ayrı bir volume'a mount edin ya da (önerilen, bkz. madde 4 altındaki not) `COVERS_DISK=s3` ile bulut depolamaya geçin.
 5. Networking → **Generate Domain** ile bir `*.up.railway.app` adresi alın, sonra `APP_URL` değişkenini bu adresle güncelleyip yeniden deploy edin.
 6. İlk deploy'da `entrypoint.sh` otomatik olarak migration çalıştırır. Demo verisi (`DemoContentSeeder`) istenirse Railway'in Shell/CLI'ından elle tetiklenebilir — otomatik çalışmaz (aşağıdaki kritik maddeye bakın).
 
@@ -38,6 +39,7 @@ Bu proje şu an **yerel geliştirme ortamı** için yapılandırılmıştır. Ge
 - [ ] **Kitap `average_rating`/`review_count` alanları şu an elle giriliyor (Filament'ten), gerçek bir yorum sistemi yok.** Demo kitaplardaki örnek puanlar (4.8/128 değerlendirme vb.) canlıya taşınmadan önce ya temizlenmeli ya da gerçek bir yorum/puanlama sistemi kurulup bu alanlar otomatik hesaplanır hale getirilmeli — kullanıcı onayıyla bilinçli bir geçici istisna (bkz. `UI_RESTYLE_NOTES.md` madde 17).
 - [ ] **Sepet/satın alma hâlâ mock ödeme.** `User::purchase()` (hem tekil "Satın Al" hem sepet checkout'u bunu kullanıyor) ödeme sorgusu yapmadan anında "tamamlandı" kaydı oluşturuyor — gerçek bir ödeme gateway'i (Stripe/iyzico) entegre edilmeden asıl parayla satış canlıya alınmamalı.
 - [ ] **`php artisan migrate:fresh` gibi yıkıcı komutları canlı veritabanında asla çalıştırma.**
+- [ ] **Kapak görselleri için kalıcı depolama kur.** Yüklenen kitap/dergi kapakları `storage/app/public` altına (yerel disk) yazılıyor — Railway gibi container'ın yazılabilir katmanı her redeploy'da sıfırlanan ortamlarda bu **kalıcı değil**. Disk adı artık koda gömülü değil, tek bir config'ten okunuyor (`config('filesystems.covers_disk')`, `.env`'de `COVERS_DISK`) — bulut depolamaya geçmek için: `composer require league/flysystem-aws-s3-v3`, `.env`'e `AWS_ACCESS_KEY_ID`/`AWS_SECRET_ACCESS_KEY`/`AWS_DEFAULT_REGION`/`AWS_BUCKET` doldurulur, `COVERS_DISK=s3` yapılır — başka hiçbir kod değişikliği gerekmez.
 
 ## 🟠 Önemli
 
